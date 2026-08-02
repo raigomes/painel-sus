@@ -9,3 +9,6 @@
 ## Diretrizes de Código
 - Framework: Next.js 15+ (App Router), React 19, Tailwind CSS, Shadcn UI, Recharts/Tremor.
 - Não altere assinaturas de componentes UI existentes sem autorização do Reviewer.
+
+## Gotchas
+- **Spec Kit**: os comandos `/speckit.*` geram artefatos de planejamento em `specs/` (spec, plan, contracts, quickstart). Esses artefatos são **insumo, não execução**. NÃO use o `tasks.md` gerado pelo Spec Kit — a lista de tarefas é `docs/TASKS.md`, fonte única mantida pelo Owner.
