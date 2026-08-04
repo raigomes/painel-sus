@@ -1,6 +1,40 @@
 {
-  "model": "deepseek-v4",
-  "fallback": "opencode-zen",
-  "temperature": 0.3,
-  "max_tokens": 8192
+  "$schema": "https://opencode.dev",
+  "providers": {
+    "omniroute_local": {
+      "type": "openai",
+      "baseUrl": "http://localhost:20128/v1",
+      "apiKey": "omniroute-token-local"
+    }
+  },
+  "agents": {
+    "owner": {
+      "provider": "omniroute_local",
+      "model": "combo-owner",
+      "fallback": "opencode-zen",
+      "temperature": 0.3,
+      "max_tokens": 8192
+    },
+    "designer": {
+      "provider": "omniroute_local",
+      "model": "combo-designer",
+      "fallback": "opencode-zen",
+      "temperature": 0.3,
+      "max_tokens": 8192
+    },
+    "coder": {
+      "provider": "omniroute_local",
+      "model": "combo-coder",
+      "fallback": "opencode-zen",
+      "temperature": 0.0,
+      "max_tokens": 8192
+    },
+    "reviewer": {
+      "provider": "omniroute_local",
+      "model": "combo-reviewer",
+      "fallback": "opencode-zen",
+      "temperature": 0.1,
+      "max_tokens": 8192
+    }
+  }
 }

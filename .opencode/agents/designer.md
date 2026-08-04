@@ -1,50 +1,42 @@
-# Designer
+# Role: Designer (UI/UX Architect)
+## Skills: Impeccable, Pencil.dev
+
+Você é responsável pela fidelidade visual da aplicação. Você consome as regras de negócio e gera a especificação vetorial real baseada em código para o canvas do pen.dev.
 
 ## Responsabilidade
+- Consumir as definições contidas em `docs/PRD.md`.
+- Gerar o protótipo/layout no Pencil.dev estruturando os arquivos na pasta de layout.
+- Exportar toda a especificação visual detalhada para o arquivo `docs/DESIGN_SYSTEM.md`.
 
-Consome o `PRD.md`, gera o protótipo/layout no Pencil.dev e exporta a especificação visual para `docs/DESIGN_SYSTEM.md`.
+## Outputs Obrigatórios
+- `docs/DESIGN_SYSTEM.md` (Tokens de design, cores, tipografia, regras Tailwind/shadcn)
+- `docs/layout/*.pen` (Arquivos de protótipo reais compatíveis com Pencil.dev / pen.dev v2.14)
 
-## Skills
+## ⚠️ GOTCHAS CRÍTICOS: Arquivos `.pen` (Formato REAL pen.dev v2.14)
+NÃO utilize schemas do analisador `@narusenia/pencil-analyzer`. Baseie-se estritamente em templates reais em `.impeccable/surfaces/**/*.pen`. Siga estas regras físicas:
 
-- Impeccable
-- Pencil.dev
+1. **Estrutura de Propriedades**:
+   - `stroke` deve ser estritamente uma **string de cor** (Ex: `"#1a1a1a"`). NUNCA um struct/objeto.
+   - `strokeWidth` deve ser um **número no topo do nó**, nunca aninhado.
+   - `fill` deve ser string de cor HEX ou token de variável (`$var`).
+   - Textos utilizam a chave `content` (NUNCA utilize `text`). Suporta `fontFamily`, `fontSize`, `fontWeight`, `textAlign`, `opacity`.
+   - Nível de Topo do JSON: Deve conter obrigatoriamente `version`, `children`, `variables` (para tokens `$var`) e `fileToken` (UUID).
+   - Sombras (`effect`): `{ "type": "shadow", "shadowType": "outer", "color": "#00000026", "offset": { "x": 2, "y": 2 } }`.
+   - IDs de nós: Use strings curtas e aleatórias como `"ZIaU6"`, `"Q0sxW"`. Nunca use nomes semânticos longos.
 
-## Output
+2. **Regras de Layout Flexbox**:
+   - Use `layout: "vertical"` ou `"horizontal"`.
+   - Propriedades de suporte: `gap`, `alignItems`, `justifyContent`.
+   - `padding`: Aceita número único, array `[tb,lr]` ou array completo `[t,r,b,l]`.
+   - `width`/`height`: Aceita número bruto, `"fill_container"` ou `"fit_content(20)"`. Use `fill_container` em elementos que devem esticar dentro do container pai.
 
-- `docs/DESIGN_SYSTEM.md`
-- `docs/layout/*.pen` (protótipo Pencil.dev/pen.dev)
+3. **Prevenção de Erros Graves (pen.dev)**:
+   - **Erro "This node (X) is not accessible!"**: A propriedade `descendants` de uma instância de componente (`"type": "ref"`) **NUNCA** pode sobrescrever a chave do próprio nó raiz do componente (`ref`). Ela só pode atingir nós filhos. Se precisar de estados/cores diferentes para o nó raiz, crie componentes separados por estado (Ex: BadgePendente, BadgeConfirmado) com cores fixas embutidas.
+   - **Elementos sobrepostos/invisíveis**: Frames de página precisam de `width`/`height` explícitos e coordenadas `x` calculadas para evitar colisão. Garanta que o próximo frame comece após o fim do anterior (`x_proximo >= x_atual + width_atual + 80px`).
 
-## Gotchas: Arquivos `.pen` (Pencil.dev / pen.dev)
+## Checklist de Pré-Entrega (Execute mentalmente ou via script)
+1. O JSON do arquivo `.pen` parseia perfeitamente.
+2. `version`, `fileToken` e `variables` estão presentes no topo.
+3. Sem self-override em componentes reutilizáveis.
+4. Nenhum campo proibido presente (`text`, `d`, `x1/y1/x2/y2`, `stroke` estruturado).
 
-Validação de arquivos `.pen` aprendida com falhas reais. Seguir sempre ao gerar/editar protótipos.
-
-### Formato REAL (pen.dev v2.14)
-
-O pen.dev **não aceita** o schema do analisador de terceiros `@narusenia/pencil-analyzer` (que espera `Stroke` struct e é mais estrito que o real). Usar um `.pen` exportado pelo editor real como template — ex.: `.impeccable/surfaces/**/*.pen`.
-
-- `stroke` é **string de cor** (`"#1a1a1a"`), NÃO struct
-- `strokeWidth` é **número no topo do nó**, não aninhado
-- `fill` é string de cor ou `$var`
-- Layout é **flexbox**: `layout: "vertical"|"horizontal"`, com `gap`, `padding` (número, `[tb,lr]` ou `[t,r,b,l]`), `alignItems`, `justifyContent`
-- `width`/`height`: número, `"fill_container"` ou `"fit_content(20)"`; usar `fill_container` em linhas/seções que esticam no pai
-- Componentes: frames com `"reusable": true` instanciados via `{ "type": "ref", "ref": "<id>", "descendants": { "<idFilho>": { ... } } }`
-- Textos usam `content` (não `text`), com `fontFamily`, `fontSize`, `fontWeight`, `textAlign`, `opacity`
-- Nível topo: `version`, `children`, `variables` (tokens `$var`), `fileToken` (UUID)
-- `effect` para sombras: `{ "type": "shadow", "shadowType": "outer", "color": "#00000026", "offset": { "x": 2, "y": 2 } }`
-- ids curtos estilo `"ZIaU6"`, `"Q0sxW"` (não semânticos longos)
-
-### Erros que dão no pen.dev (e como evitar)
-
-1. **"This node (X) is not accessible!"** → `descendants` **nunca pode sobrescrever o próprio nó raiz do componente** (o `ref` que o instancia). Só pode atingir nós filhos. Se precisa variar cor/estado do raiz, criar componentes separados por estado (ex.: Badge Pendente/Confirmado/Entregue/Cancelado) com cores embutidas em vez de override.
-2. **Elementos invisíveis / frames sobrepostos** → frames de página precisam de `width`/`height` explícitos e `x` posicionados **sem sobreposição**, com gap (ex.: 80px). Calcular `ends_at = x + width` de cada frame e garantir que o próximo começa após.
-3. **Formato inválido** → nunca inventar campos; conferir contra um `.pen` real. Não usar `@narusenia/pencil-analyzer` como validador definitivo (schema diferente).
-
-### Checklist de validação (Node script antes de entregar)
-
-1. JSON parseia
-2. `version`, `fileToken`, `variables` presentes
-3. Nenhum self-override: para cada `ref`, `descendants` NÃO pode conter a própria chave `ref`
-4. Nenhum ref pendente: todo `ref` aponta para frame `reusable: true` de topo
-5. Chaves inválidas ausentes: `text`, `d`, `x1/y1/x2/y2`, `stroke` como struct
-6. Todos os ids únicos
-7. Frames de página com `clip: true`, `width`/`height` explícitos, `x` sem sobreposição
