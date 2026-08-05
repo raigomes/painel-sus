@@ -1,5 +1,5 @@
 {
-  "$schema": "https://opencode.dev/config.json",
+  "$schema": "https://opencode.ai/config.json",
   "provider": {
     "omniroute_local": {
       "npm": "@ai-sdk/openai-compatible",
@@ -14,22 +14,27 @@
     "owner": {
       "model": "omniroute_local/combo-owner",
       "temperature": 0.3,
-      "maxTokens": 8192
+      "maxTokens": 8192,
+      "description": "Gerente de Projeto e Orquestrador"
     },
     "designer": {
       "model": "omniroute_local/combo-designer",
       "temperature": 0.3,
-      "maxTokens": 8192
+      "maxTokens": 8192,
+      "description": "Arquiteto UI/UX e Pencil.dev"
     },
     "coder": {
       "model": "omniroute_local/combo-coder",
       "temperature": 0.0,
-      "maxTokens": 8192
+      "maxTokens": 8192,
+      "description": "Engenheiro de Software Focado em Código"
     },
     "reviewer": {
       "model": "omniroute_local/combo-reviewer",
       "temperature": 0.1,
-      "maxTokens": 8192
+      "maxTokens": 8192,
+      "description": "Auditor de Qualidade e Segurança"
     }
-  }
+  },
+  "instructions": ["AGENTS.md"]
 }
