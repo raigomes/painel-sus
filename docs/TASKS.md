@@ -3,12 +3,12 @@
 > Ordenadas por dependência. Cada tarefa é atômica (< 30 min).  
 > **Schema:** ID, Files, Acceptance Criteria, Dependencies
 
-> **REVIEWER — Auditoria do layout `.pen` (2026-08-05):** REJEITADO (FAIL WITH GAPS).
-> `docs/layout/painel-sus.pen` cobre ~62% das User Stories; 3 falhas blocking impedem o início do épico 7 (PAGE-01) sem correção prévia do Designer:
-> - [ ] US-05 sem TrendChart no Dashboard (pg1) → `docs/failures/pen-missing-dashboard-trend-chart.json`
-> - [ ] US-06 sem RankingTable 15 UBS no Dashboard (pg1) → `docs/failures/pen-missing-dashboard-ranking-table.json`
-> - [ ] US-04 sem cobertura dos 3 estados semáforo (verde/vermelho ausentes) → `docs/failures/pen-semaphore-only-yellow-states.json`
-> Falhas medium/low listadas em `docs/failures/pen-*.json`. Coder não deve iniciar DASH-03/DASH-04/PAGE-01 até o Designer corrigir pg1.
+> **OWNER DECISION (2026-08-06):** Layout `.pen` revisado por @designer e @reviewer.
+> - ✅ 3 bloqueios anteriores (TrendChart, RankingTable, semáforo) RESOLVIDOS
+> - ✅ TrendChart → **BarChart** (decisão de produto: barras são mais legíveis para dados discretos mensais)
+> - ✅ IndicatorCard → **fundo tinted** (decisão de produto: cores semáforo no fundo do card para reconhecimento visual imediato)
+> - ✅ Font → **Geist Sans** no código (o .pen usa Inter como placeholder do wireframe)
+> - ℹ️ Issues moderados: badge "estável" pg3, dados amostrais, footer texto pessoal — todos anotados nas acceptance criteria das tasks
 ---
 
 ## Épico 1 — Setup & Infraestrutura
@@ -159,8 +159,12 @@
 - [ ] **ID**: `LAYOUT-03`
       **Files**: `src/components/layout/footer.tsx`
       **Acceptance**:
-  - [ ] Disclaimer: "Dados simulados para fins de demonstração"
-  - [ ] Fonte: "Fontes: CNES, e-SUS AB, DATASUS"
+  - [ ] Disclaimer: "Dados simulados para fins de demonstração."
+  - [ ] Fonte: "Fontes: CNES, e-SUS AB, DATASUS."
+  - [ ] Versão: "Protótipo v1.0 — Saúde Itapira"
+  - [ ] Background: `bg-zinc-50`, border-top: `border-zinc-200`, padding: `py-6 px-6`
+  - [ ] Texto: `text-sm text-zinc-500 text-center`
+  - [ ] **Sem** texto promocional pessoal (raigomes.dev ou similar)
   - [ ] Usa `<footer role="contentinfo">`
         **Dependencies**: `LAYOUT-01`
 
@@ -205,11 +209,12 @@
       **Files**: `src/components/dashboard/indicator-card.tsx`
       **Acceptance**:
   - [ ] Recebe props `IndicatorDisplay` (definido em types.ts)
-  - [ ] Renderiza card com borda colorida (verde/amarelo/vermelho) via COLORS
-  - [ ] Exibe: nome do indicador, valor atual com unidade, meta
-  - [ ] Badge com tendência (↑ alta, → estável, ↓ queda)
+  - [ ] Renderiza card com **fundo tinted** (verde/amarelo/vermelho) + borda esquerda 4px via COLORS
+  - [ ] Exibe: nome do indicador, valor atual com unidade (Geist Mono, tabular-nums), meta
+  - [ ] Badge com tendência (↑ alta, → estável, ↓ queda) — cores consistentes: alta=verde, estável=zinc, queda=vermelho
   - [ ] Ícone semáforo: check (verde), alerta (amarelo), erro (vermelho)
   - [ ] `role="article"` e `aria-label` descritivo
+  - [ ] Hover: elevação `shadow-sm → shadow-md` com `transition-shadow duration-200`
         **Dependencies**: `SETUP-01`, `SETUP-03`, `BIZ-01`
 
 - [ ] **ID**: `DASH-02`
@@ -224,11 +229,13 @@
 - [ ] **ID**: `DASH-03`
       **Files**: `src/components/dashboard/trend-chart.tsx`
       **Acceptance**:
-  - [ ] Usa Recharts `LineChart` com 2 `Line`: valor (sólida) e meta (tracejada)
-  - [ ] Tooltip interativo: exibe mês, valor, meta
-  - [ ] Eixo Y: 0-120% (ou dinâmico com margem)
-  - [ ] Eixo X: labels de mês em PT-BR (jan, fev, mar...)
+  - [ ] Usa Recharts `BarChart` com 12 `<Bar>` (meses) + `<ReferenceLine>` de meta (tracejada zinc-400)
+  - [ ] Barras: fill `#004B87` (primary), radius `[4, 4, 0, 0]` (topos arredondados)
+  - [ ] Tooltip interativo: exibe mês, valor, meta (CustomTooltip com card branco)
+  - [ ] Eixo Y: 0-120%, `tickFormatter={v => v + '%'}`
+  - [ ] Eixo X: labels de mês em PT-BR (jul/25, ago/25...)
   - [ ] `role="img"` e `aria-label` com resumo textual do gráfico
+  - [ ] ResponsiveContainer: alturas conforme DESIGN_SYSTEM §4.3
         **Dependencies**: `SETUP-01`
 
 - [ ] **ID**: `DASH-04`
@@ -236,10 +243,13 @@
       **Acceptance**:
   - [ ] Tabela HTML semântica: `<table>`, `<caption>`, `<thead>`, `<tbody>`
   - [ ] Colunas: # (posição), UBS, Equipe, Pontuação, Status
+  - [ ] Header row: `bg-zinc-100` `font-semibold` `text-zinc-700`
+  - [ ] Body rows: alternating `bg-white` / `bg-zinc-50`, `h-12`, `border-b border-zinc-100`
   - [ ] Cada linha é clicável (navega para /ubs/[id])
   - [ ] UBS ordenadas por pontuação decrescente
   - [ ] `scope="col"` em todos os `<th>`
   - [ ] Status exibe badge colorido (verde/amarelo/vermelho)
+  - [ ] Fonte numérica: Geist Mono, tabular-nums
         **Dependencies**: `SETUP-01`, `SETUP-03`, `BIZ-04`
 
 ---

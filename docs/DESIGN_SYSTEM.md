@@ -177,6 +177,8 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 | **Geist Sans** | `--font-sans` | `system-ui, -apple-system, sans-serif` |
 | **Geist Mono** | `--font-mono` | `ui-monospace, SFMono-Regular, monospace` |
 
+> **⚠️ Wireframe Note:** The `.pen` layout file uses `Inter` as a placeholder — Pencil's default font. The Coder must implement **Geist Sans** as specified here. Numeric values (ranks, scores, indicator percentages) must use **Geist Mono** with `tabular-nums`.
+
 ### 2.2 Type Scale
 | Token | Size | Line Height | Weight | Usage |
 |-------|------|-------------|--------|-------|
@@ -235,7 +237,8 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 **Anatomy:**
 ```
 ┌─────────────────────────────────────┐
-│ █████████████████████████████████████ │ ← 4px left border (semaphore)
+│░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│ ← tinted background (semaphore)
+│ █                                   │ ← 4px left border (semaphore, darker)
 │  💉  Cobertura Vacinal              │
 │       94.2%                         │ ← text-3xl font-bold tabular-nums
 │       Meta: 95%  ↑ alta             │ ← text-sm text-zinc-500 + badge
@@ -245,14 +248,16 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 | Property | Value | Token |
 |----------|-------|-------|
 | `border-left-width` | 4px | — |
-| `border-left-color` | Semaphore color | `colors.success/warning/error.border` |
+| `border-left-color` | Semaphore border color | `colors.success/warning/error.border` |
+| `background` | Tinted semaphore bg | `colors.success/warning/error.bg` |
 | `padding` | 24px | `spacing.6` |
 | `border-radius` | 8px | `border_radius.lg` |
 | `box-shadow` | `shadow-sm` | `shadows.sm` |
 | `hover box-shadow` | `shadow-md` | `shadows.md` |
 | `min-height` | 140px | — |
-| `background` | white | `colors.white` |
 | `transition` | `shadow 200ms ease` | `transitions.normal` |
+
+> **Owner Decision (2026-08-06):** Cards use tinted backgrounds (not white) for immediate visual status recognition. The tinted colors are very light (e.g., `#ecfdf5` for success) and maintain ≥ 4.5:1 contrast with `zinc-900` text.
 
 **Content Specs:**
 | Element | Style |
@@ -316,29 +321,35 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 
 ---
 
-### 4.3 TrendChart (Recharts LineChart)
+### 4.3 TrendChart (Recharts BarChart)
+
+> **Owner Decision (2026-08-06):** Changed from LineChart to BarChart. Bar charts provide better visual comparison for discrete monthly health indicators. The .pen wireframe confirms this choice (12 vertical bars with meta reference line).
 
 **Dimensions:**
 | Breakpoint | Height |
 |------------|--------|
 | Default (<640px) | 250px |
-| sm (≥640px) | 300px |
-| md (≥768px) | 350px |
-| lg (≥1024px) | 400px |
-| xl (≥1280px) | 400px |
+| sm (≥640px) | 280px |
+| md (≥768px) | 300px |
+| lg (≥1024px) | 300px |
+| xl (≥1280px) | 300px |
 
 **Series Configuration:**
-| Series | Stroke | Stroke Width | Stroke Dasharray | Dot |
-|--------|--------|--------------|------------------|-----|
-| Valor | `zinc-900` | 2px | Solid | `r=4`, fill white, stroke zinc-900, stroke-width 2 |
-| Meta | `zinc-400` | 1px | `5 5` | None |
+| Series | Type | Fill | Radius | Stroke | Stroke Width | Stroke Dasharray |
+|--------|------|------|--------|--------|--------------|------------------|
+| Valor | `<Bar>` | `primary` (`#004B87`) | `[4, 4, 0, 0]` (top rounded) | None | — | — |
+| Meta | `<ReferenceLine>` | — | — | `zinc-400` | 1px | `5 5` (dashed) |
+
+**Axes:**
+- **X Axis**: Month labels (MMM/YY), `tickLine={false}`, `axisLine={false}`, `tick={{ fill: zinc-500, fontSize: 12 }}`
+- **Y Axis**: 0–120% range, `tickLine={false}`, `axisLine={false}`, `tick={{ fill: zinc-500, fontSize: 12 }}`, `tickFormatter={v => v + '%'}`
 
 **Axes:**
 - **X Axis**: Month labels (MMM/YY), `tickLine={false}`, `axisLine={false}`, `tick={{ fill: zinc-500, fontSize: 12 }}`
 - **Y Axis**: 0–120% range, `tickLine={false}`, `axisLine={false}`, `tick={{ fill: zinc-500, fontSize: 12 }}`, `tickFormatter={v => v + '%'}`
 
 **Grid:**
-- `stroke={zinc-100}`, `strokeDasharray="3 3"`, vertical/horizontal
+- `stroke={zinc-100}`, `strokeDasharray="3 3"`, vertical only
 
 **Tooltip:**
 ```tsx
@@ -372,6 +383,15 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 **Responsive Container:**
 ```tsx
 <ResponsiveContainer width="100%" height={chartHeight}>
+  <BarChart data={data}>
+    <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" vertical={false} />
+    <XAxis dataKey="mes" tickLine={false} axisLine={false} tick={{ fill: '#71717a', fontSize: 12 }} />
+    <YAxis tickLine={false} axisLine={false} tick={{ fill: '#71717a', fontSize: 12 }} tickFormatter={v => `${v}%`} domain={[0, 120]} />
+    <Tooltip content={<CustomTooltip />} />
+    <ReferenceLine y={meta} stroke="#a1a1aa" strokeDasharray="5 5" strokeWidth={1} />
+    <Bar dataKey="valor" fill="#004B87" radius={[4, 4, 0, 0]} />
+  </BarChart>
+</ResponsiveContainer>
 ```
 
 ---
@@ -410,7 +430,7 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 | `font-size` | `text-sm` | `typography.scale.sm` |
 
 **Header Row:**
-- `background`: `zinc-50` (`bg-zinc-50`)
+- `background`: `zinc-100` (`bg-zinc-100`)
 - `font-weight`: `semibold` (`font-semibold`)
 - `padding`: `px-4 py-3`
 - `border-bottom`: `1px solid zinc-200`
@@ -549,7 +569,7 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 - `aria-label="Painel SUS - Início"`
 
 **Navigation:**
-- `display: flex`, `gap: 8px` (`gap-2`)
+- `display: flex`, `gap: 24px` (`gap-6`)
 - Links: `text-sm` `font-medium` `text-zinc-700` `px-3 py-2` `rounded-md`
 - **Active**: `text-primary` `border-b-2 border-primary` `pb-2` `-mb-px` + `aria-current="page"`
 - **Hover**: `text-primary` `bg-primary-light` (`bg-zinc-50` fallback)
@@ -644,17 +664,18 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 │ [UBS: Todas as UBS ▾]  [Período: Último mês ▾]        [Limpar]  │  56px
 ├────────────┬────────────┬────────────┬───────────────────────────┤
 │ 💉 Vacinal │ 🤰 Pré-Nat │ ❤️ Hiper   │ 🩸 Diabetes              │
+│░░░░░░░░░░░░│░░░░░░░░░░░░│░░░░░░░░░░░░│░░░░░░░░░░░░░░░░░░░░░░░░░│  tinted bg
 │   94.2%    │   58.1%    │   42.3%    │    48.7%                 │  140px
 │ Meta: 95%  │ Meta: 60%  │ Meta: 50%  │  Meta: 50%               │  (min)
 │ ↑ alta     │ → estável  │ ↓ queda    │  → estável               │
 ├────────────┴────────────┴────────────┴───────────────────────────┤
 │                     📈 Evolução dos Indicadores (12 meses)       │
-│    100│━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ meta                │
-│     80│      ╱╲    ╱╲                                            │
-│     60│━━━━╱──╲──╱──╲───────────────────────                     │
-│     40│──╱────╲╱────╲──────                                       │
-│     20│                                                            │
-│       └─jul─ago─set─out─nov─dez─jan─fev─mar─abr─mai─jun         │  300-400px
+│    100│▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒│ meta
+│     80│      ██    ██                                            │
+│     60│██████  ██  ██  ████████████████████████████████████████  │
+│     40│────────────────────────────────────────────────────────  │
+│     20│                                                          │
+│       └─jul─ago─set─out─nov─dez─jan─fev─mar─abr─mai─jun         │  300px
 ├──────────────────────────────────────────────────────────────────┤
 │  🏆 Ranking das UBS                                              │
 │  #  │ UBS              │ Equipe   │ Score │ Status              │
@@ -853,19 +874,29 @@ export default {
 
 ### 9.3 Component Class Patterns
 ```tsx
-// IndicatorCard - semaphore border
+// IndicatorCard - tinted background with semaphore border
 <div className={`border-l-4 ${
-  status === 'verde' ? 'border-sus-verde-border' :
-  status === 'amarelo' ? 'border-sus-amarelo-border' :
-  'border-sus-vermelho-border'
-} p-6 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow min-h-[140px]`}>
+  status === 'verde' ? 'border-sus-verde-border bg-sus-verde-bg' :
+  status === 'amarelo' ? 'border-sus-amarelo-border bg-sus-amarelo-bg' :
+  'border-sus-vermelho-border bg-sus-vermelho-bg'
+} p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow min-h-[140px]`}>
 
-// Badge variants
+// Badge variants (trend badges use same colors)
 const badgeVariants = {
-  verde: 'bg-sus-verde-bg text-sus-verde-text border-sus-verde-border',
-  amarelo: 'bg-sus-amarelo-bg text-sus-amarelo-text border-sus-amarelo-border',
-  vermelho: 'bg-sus-vermelho-bg text-sus-vermelho-text border-sus-vermelho-border',
+  verde: 'bg-sus-verde-bg text-sus-verde-text',
+  amarelo: 'bg-sus-amarelo-bg text-sus-amarelo-text',
+  vermelho: 'bg-sus-vermelho-bg text-sus-vermelho-text',
 }
+
+// TrendChart - BarChart with meta reference line
+<BarChart data={data}>
+  <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" vertical={false} />
+  <XAxis dataKey="mes" tickLine={false} axisLine={false} tick={{ fill: '#71717a', fontSize: 12 }} />
+  <YAxis tickLine={false} axisLine={false} tick={{ fill: '#71717a', fontSize: 12 }} tickFormatter={v => `${v}%`} domain={[0, 120]} />
+  <Tooltip content={<CustomTooltip />} />
+  <ReferenceLine y={meta} stroke="#a1a1aa" strokeDasharray="5 5" strokeWidth={1} />
+  <Bar dataKey="valor" fill="#004B87" radius={[4, 4, 0, 0]} />
+</BarChart>
 ```
 
 ---

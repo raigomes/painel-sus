@@ -282,7 +282,7 @@ interface TrendChartProps {
 ```
 
 **Comportamento:**
-- Gráfico de linha Recharts com 2 linhas: valor + meta (tracejada)
+- Gráfico de **barras** Recharts com 12 barras (meses) + ReferenceLine de meta (tracejada)
 - Tooltip interativo com mês, valor, meta
 - Eixo Y: 0-120% (com margem)
 - Eixo X: labels de mês (abr, mai, jun...)
@@ -373,8 +373,10 @@ interface RadarChartProps {
 ├─────────┬─────────┬─────────┬───────────────┤
 │ Card 1  │ Card 2  │ Card 3  │    Card 4     │
 │ Vacinal │ PréNat  │ Hiper   │   Diabetes    │
+│░░░░░░░░░│░░░░░░░░░│░░░░░░░░░│░░░░░░░░░░░░░░│ tinted bg
 ├─────────┴─────────┴─────────┴───────────────┤
-│         Gráfico de Linha (12 meses)         │
+│         Gráfico de Barras (12 meses)        │
+│         + Meta reference line (dashed)      │
 ├─────────────────────────────────────────────┤
 │         Tabela Ranking UBS                  │
 └─────────────────────────────────────────────┘
