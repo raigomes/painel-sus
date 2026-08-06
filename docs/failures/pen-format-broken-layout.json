@@ -1,0 +1,22 @@
+{
+  "id": "pen-format-broken-layout",
+  "date": "2025-08-05",
+  "agent": "designer",
+  "severity": "critical",
+  "description": "Arquivo .pen gerado com formato inválido impedindo abertura no editor Pencil",
+  "rootCauses": [
+    "Seção 'variables' posicionada no início do JSON (deve ser após 'children')",
+    "Chaves de variáveis com prefixo '$' (deve ser sem prefixo)",
+    "Campo 'default' em variáveis (não existe no schema)",
+    "Tipos de variável 'number' e 'string' (apenas 'color' é suportado)",
+    "Sombras como strings em vez de objetos 'effect'",
+    "Propriedades inexistentes: borderRadius, paddingX/paddingY, minHeight, underline, cursor",
+    "Nós sem propriedade 'name'"
+  ],
+  "fix": "Reformatar arquivo seguindo dashboard.pen como referência. Ver docs/pen-format-guardrails.md",
+  "prevention": "Adicionar checklist de validação .pen ao AGENTS.md do harness",
+  "relatedFiles": [
+    "docs/layout/painel-sus.pen",
+    "docs/pen-format-guardrails.md"
+  ]
+}

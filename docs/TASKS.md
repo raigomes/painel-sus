@@ -3,6 +3,12 @@
 > Ordenadas por dependência. Cada tarefa é atômica (< 30 min).  
 > **Schema:** ID, Files, Acceptance Criteria, Dependencies
 
+> **REVIEWER — Auditoria do layout `.pen` (2026-08-05):** REJEITADO (FAIL WITH GAPS).
+> `docs/layout/painel-sus.pen` cobre ~62% das User Stories; 3 falhas blocking impedem o início do épico 7 (PAGE-01) sem correção prévia do Designer:
+> - [ ] US-05 sem TrendChart no Dashboard (pg1) → `docs/failures/pen-missing-dashboard-trend-chart.json`
+> - [ ] US-06 sem RankingTable 15 UBS no Dashboard (pg1) → `docs/failures/pen-missing-dashboard-ranking-table.json`
+> - [ ] US-04 sem cobertura dos 3 estados semáforo (verde/vermelho ausentes) → `docs/failures/pen-semaphore-only-yellow-states.json`
+> Falhas medium/low listadas em `docs/failures/pen-*.json`. Coder não deve iniciar DASH-03/DASH-04/PAGE-01 até o Designer corrigir pg1.
 ---
 
 ## Épico 1 — Setup & Infraestrutura

@@ -30,23 +30,19 @@
   "agent": {
     "owner": {
       "model": "omniroute_local/combo-owner",
-      "temperature": 0.3,
-      "maxTokens": 8192
+      "temperature": 0.3
     },
     "designer": {
       "model": "omniroute_local/combo-designer",
-      "temperature": 0.3,
-      "maxTokens": 8192
+      "temperature": 0.3
     },
     "coder": {
       "model": "omniroute_local/combo-coder",
-      "temperature": 0.0,
-      "maxTokens": 8192
+      "temperature": 0.0
     },
     "reviewer": {
       "model": "omniroute_local/combo-reviewer",
-      "temperature": 0.1,
-      "maxTokens": 8192
+      "temperature": 0.1
     }
   },
   "instructions": ["AGENTS.md"]
