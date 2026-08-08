@@ -22,13 +22,13 @@
   - [x] `npm run build` passa sem erros após instalações
         **Dependencies**: `[]`
 
-- [ ] **ID**: `SETUP-02`
+- [x] **ID**: `SETUP-02`
       **Files**: `src/lib/types.ts`
       **Acceptance**:
-  - [ ] Interfaces `UBS`, `Indicator`, `HistoryRecord`, `IndicatorStatus`, `PeriodFilter`, `Filters`, `IndicatorDisplay`, `RankingRow`, `RadarDataPoint` estão definidas
-  - [ ] `IndicatorStatus` é union type `"verde" | "amarelo" | "vermelho"`
-  - [ ] `PeriodFilter` é union type com 4 valores exatos
-  - [ ] `npx tsc --noEmit` passa sem erros
+  - [x] Interfaces `UBS`, `Indicator`, `HistoryRecord`, `IndicatorStatus`, `PeriodFilter`, `Filters`, `IndicatorDisplay`, `RankingRow`, `RadarDataPoint` estão definidas
+  - [x] `IndicatorStatus` é union type `"verde" | "amarelo" | "vermelho"`
+  - [x] `PeriodFilter` é union type com 4 valores exatos
+  - [x] `npx tsc --noEmit` passa sem erros
         **Dependencies**: `[]`
 
 - [ ] **ID**: `SETUP-03`
