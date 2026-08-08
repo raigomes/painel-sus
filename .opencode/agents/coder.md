@@ -27,6 +27,11 @@ Implementar com precisão tarefas atômicas do `docs/TASKS.md` com zero erros de
 3. **TypeScript Strict**: Zero uso de `any`, zero erros de compilação. Use Zod para validação de runtime em entradas/schemas de formulários e APIs.
 4. **Design Fidelity**: Use estritamente as classes do Tailwind e tokens listados em `docs/DESIGN_SYSTEM.md`. Proibido utilizar valores mágicos (ex: cores hexadecimais brutas ou medidas inline).
 5. **No Chatter**: Entregue apenas o código necessário e alteração de arquivos. Sem saídas em texto explicativo, introduções ou considerações finais.
+6. **Git Workflow & PRs**: NUNCA commite diretamente na branch `main` nem na `develop`. Para cada tarefa:
+   - Crie uma branch descritiva a partir da `develop` (ex: `feature/TASK-001-user-login`).
+   - Crie o Pull Request para a branch `develop`.
+   - Após aprovação e verificação dos testes, faça o merge para `develop` para liberar o ciclo de auditoria do **Reviewer**.
+   - Apenas crie PR de `develop` para `main` quando um épico ou release for completamente auditado.
 
 ## Failure Protocol
 

@@ -56,7 +56,7 @@ Garantir que zero erros de tipagem, zero desvios visuais, zero problemas de perf
 
 ```bash
 # Clonar WebAuditMCP
-git clone https://github.com/iberi22/WebAuditMCP.git /opt/WebAuditMCP
+git clone [https://github.com/iberi22/WebAuditMCP.git](https://github.com/iberi22/WebAuditMCP.git) /opt/WebAuditMCP
 cd /opt/WebAuditMCP
 
 # Instalar dependências Python
