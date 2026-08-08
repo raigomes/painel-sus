@@ -17,12 +17,28 @@
 | Componentes | Shadcn/UI | latest | Acessibilidade built-in, copy-paste |
 | Gráficos | Recharts | 2.x | React-native, SVG, acessível |
 | Linguagem | TypeScript | 5.x (strict) | Type safety, DX |
+| Test runner | Vitest | 3.x | Execução rápida e integração nativa com TypeScript/Vite |
+| Testes de componentes | Testing Library React | 16.x | Verificação por comportamento e acessibilidade |
+| DOM de testes | jsdom | 26.x | Ambiente de navegador para componentes React |
+| Cobertura | Vitest Coverage V8 | 3.x | Relatórios de cobertura compatíveis com o runner |
 
 **Dependências a instalar:**
 ```bash
 npx shadcn@latest init
 npx shadcn@latest add card badge select separator skeleton tooltip
 npm install recharts
+npm install --save-dev vitest@^3 @testing-library/react@^16 @testing-library/jest-dom@^6 jsdom@^26 @vitest/coverage-v8@^3
+```
+
+**Scripts de teste em `package.json`:**
+```json
+{
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  }
+}
 ```
 
 ## 2. Estrutura de Diretórios
@@ -79,8 +95,12 @@ src/
 │   ├── indicators.ts           # Mock: 4 indicadores + metas
 │   └── history.ts              # Mock: 12 meses × 15 UBS × 4 indicadores
 │
-└── hooks/
-    └── use-filters.ts          # Hook de estado dos filtros (UBS + período)
+├── hooks/
+│   └── use-filters.ts          # Hook de estado dos filtros (UBS + período)
+└── test/
+    └── setup.ts                # Matchers globais do Testing Library
+
+vitest.config.ts                # Configuração do runner (jsdom + setup)
 ```
 
 ## 3. Modelo de Dados
@@ -353,6 +373,22 @@ interface RadarChartProps {
 - Fonte: "Fontes: CNES, e-SUS AB, DATASUS"
 - Versão do protótipo
 
+### 5.8 Testes de Componentes
+
+**Configuração:**
+- `vitest.config.ts` usa ambiente `jsdom`, carrega `src/test/setup.ts` e habilita globals
+- `src/test/setup.ts` importa `@testing-library/jest-dom/vitest`
+- Arquivos de teste usam o padrão `src/**/*.test.ts` ou `src/**/*.test.tsx`
+- `npm test` executa uma única vez e retorna código diferente de zero em falhas
+- `npm run test:coverage` usa o provider V8
+
+**Cobertura obrigatória de `IndicatorCard`:**
+- `src/components/dashboard/indicator-card.test.tsx` fica junto ao componente
+- Verifica nome, valor atual, unidade, meta, tendência, `role="article"` e nome acessível
+- Exercita os estados `verde`, `amarelo` e `vermelho`, incluindo os respectivos ícones
+- Verifica a mensagem "Abaixo da meta" no estado vermelho
+- Usa dados mínimos tipados como `IndicatorDisplay`, sem snapshots como única asserção
+
 ## 6. Layout e Responsividade
 
 ### Breakpoints (Tailwind default)
@@ -431,8 +467,10 @@ Após implementação, verificar:
 1. **`npm run build`** — Build sem erros
 2. **`npm run lint`** — Zero warnings
 3. **`npx tsc --noEmit`** — Zero erros de tipo
-4. **Acessibilidade:** Tab navigation funciona em todas as rotas
-5. **Responsivo:** Testar em 375px, 768px, 1280px
-6. **Gráficos:** Todos os 4 Recharts renderizam sem erro
-7. **Filtros:** Mudar UBS e período atualiza todos os elementos
-8. **Rotas:** /, /ubs/1, /indicadores, /sobre funcionam
+4. **`npm test`** — Todos os testes automatizados passam
+5. **`npm run test:coverage`** — Relatório V8 é gerado sem erro
+6. **Acessibilidade:** Tab navigation funciona em todas as rotas
+7. **Responsivo:** Testar em 375px, 768px, 1280px
+8. **Gráficos:** Todos os 4 Recharts renderizam sem erro
+9. **Filtros:** Mudar UBS e período atualiza todos os elementos
+10. **Rotas:** /, /ubs/1, /indicadores, /sobre funcionam

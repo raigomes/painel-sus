@@ -282,6 +282,24 @@ Cenário: Rota dinâmica para UBS
   E o breadcrumb mostra: Dashboard > UBS > UBS Jardim Paulista
 ```
 
+### US-14: Verificação Automatizada dos Cards de Indicadores
+
+**Como** responsável pela qualidade do painel, **quero** verificar automaticamente os estados dos cards, **para** evitar que alertas incorretos sejam apresentados aos gestores.
+
+```gherkin
+Cenário: Card mantém as informações essenciais
+  Dado que existe um indicador com valor, meta, status e tendência conhecidos
+  Quando a verificação automatizada do card é executada
+  Então o nome, o valor atual e a meta devem ser encontrados
+  E a descrição acessível deve comunicar o estado do indicador
+
+Cenário: Card representa todos os estados de alerta
+  Dado que existem indicadores nos estados verde, amarelo e vermelho
+  Quando cada card é verificado automaticamente
+  Então cada estado deve apresentar o ícone e a identificação visual correspondentes
+  E o estado vermelho deve comunicar que o indicador está abaixo da meta
+```
+
 ## 5. Regras de Negócio
 
 | RB-01 | Status semáforo: Verde ≥ 100% da meta; Amarelo 80-99%; Vermelho < 80% |

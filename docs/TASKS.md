@@ -9,6 +9,11 @@
 > - ✅ IndicatorCard → **fundo tinted** (decisão de produto: cores semáforo no fundo do card para reconhecimento visual imediato)
 > - ✅ Font → **Geist Sans** no código (o .pen usa Inter como placeholder do wireframe)
 > - ℹ️ Issues moderados: badge "estável" pg3, dados amostrais, footer texto pessoal — todos anotados nas acceptance criteria das tasks
+>
+> **OWNER DECISION (2026-08-08):** Blocker `dash-01-test-runner` resolvido pela aprovação da stack Vitest + Testing Library + jsdom + coverage V8.
+> - ✅ Dependências de teste isoladas em `SETUP-05` e configuração do runner em `SETUP-06`
+> - ✅ Cobertura comportamental do `IndicatorCard` isolada em `DASH-01A`
+> - ✅ Dependências e comandos definidos no `docs/SPEC.md` antes da criação das tarefas
 ---
 
 ## Épico 1 — Setup & Infraestrutura
@@ -47,6 +52,24 @@
   - [ ] Função `cn()` exportada (clsx + twMerge ou equivalente do Shadcn)
   - [ ] `npx tsc --noEmit` passa sem erros
         **Dependencies**: `SETUP-01`
+
+- [ ] **ID**: `SETUP-05`
+  - **Files**: `package.json`, `package-lock.json`
+  - **Dependencies**: `[]`
+  - **Acceptance**:
+    - [ ] `vitest@^3`, `@testing-library/react@^16`, `@testing-library/jest-dom@^6`, `jsdom@^26` e `@vitest/coverage-v8@^3` constam em `devDependencies`
+    - [ ] Scripts `test`, `test:watch` e `test:coverage` correspondem aos comandos definidos no `docs/SPEC.md`
+    - [ ] `package-lock.json` registra as versões instaladas sem conflito de peer dependencies
+    - [ ] `npm install` termina sem erros
+
+- [ ] **ID**: `SETUP-06`
+  - **Files**: `vitest.config.ts`, `src/test/setup.ts`
+  - **Dependencies**: `SETUP-05`
+  - **Acceptance**:
+    - [ ] `vitest.config.ts` usa ambiente `jsdom`
+    - [ ] `vitest.config.ts` habilita globals e carrega `src/test/setup.ts`
+    - [ ] `src/test/setup.ts` importa `@testing-library/jest-dom/vitest`
+    - [ ] `npm test -- --passWithNoTests` e `npx tsc --noEmit` terminam sem erros
 
 ---
 
@@ -216,6 +239,16 @@
   - [ ] `role="article"` e `aria-label` descritivo
   - [ ] Hover: elevação `shadow-sm → shadow-md` com `transition-shadow duration-200`
         **Dependencies**: `SETUP-01`, `SETUP-03`, `BIZ-01`
+
+- [ ] **ID**: `DASH-01A`
+  - **Files**: `src/components/dashboard/indicator-card.test.tsx`
+  - **Dependencies**: `SETUP-06`, `DASH-01`
+  - **Acceptance**:
+    - [ ] Teste happy path encontra nome, valor atual, unidade, meta e tendência do indicador
+    - [ ] Teste acessível encontra o card por `role="article"` e nome acessível descritivo
+    - [ ] Casos verde, amarelo e vermelho verificam os respectivos ícones e identificações visuais
+    - [ ] Caso vermelho verifica a mensagem "Abaixo da meta"
+    - [ ] `npm test -- src/components/dashboard/indicator-card.test.tsx` termina sem falhas
 
 - [ ] **ID**: `DASH-02`
       **Files**: `src/components/dashboard/indicator-grid.tsx`
@@ -387,6 +420,8 @@
   - [ ] `npm run build` — zero erros
   - [ ] `npm run lint` — zero warnings
   - [ ] `npx tsc --noEmit` — zero erros de tipo
+  - [ ] `npm test` — todos os testes passam
+  - [ ] `npm run test:coverage` — relatório V8 é gerado sem erro
         **Dependencies**: Todas as tasks anteriores
 
 - [ ] **ID**: `VERIFY-02`
@@ -418,6 +453,9 @@
 ```
 SETUP-01 ─┬─→ SETUP-04
           ├─→ LAYOUT-01 ─┬─→ LAYOUT-02 ─┐
+SETUP-05 ───→ SETUP-06 ───→ DASH-01A
+                              ↑
+DASH-01 ──────────────────────┘
           │               ├─→ LAYOUT-03 ─┼─→ LAYOUT-04
           │               │              │
 SETUP-02 ─┼─→ SETUP-03 ──┼─→ DATA-01 ───┼─→ DATA-03 ─→ BIZ-01
@@ -449,16 +487,16 @@ VERIFY-01 → VERIFY-02 → VERIFY-03
 
 | Épico | Tasks | Tempo estimado |
 |-------|-------|---------------|
-| 1. Setup | 4 | ~20 min |
+| 1. Setup | 6 | ~40 min |
 | 2. Dados Mock | 3 | ~25 min |
 | 3. Funções Negócio | 6 | ~30 min |
 | 4. Layout | 4 | ~25 min |
 | 5. Filtros | 2 | ~15 min |
-| 6. Componentes Dash | 4 | ~30 min |
+| 6. Componentes Dash | 5 | ~45 min |
 | 7. Página Dashboard | 2 | ~25 min |
 | 8. Página UBS | 3 | ~25 min |
 | 9. Página Indicadores | 2 | ~20 min |
 | 10. Página Sobre | 1 | ~10 min |
 | 11. Acessibilidade | 3 | ~20 min |
 | 12. Verificação | 3 | ~15 min |
-| **Total** | **37** | **~5h 40min** |
+| **Total** | **40** | **~6h 15min** |
