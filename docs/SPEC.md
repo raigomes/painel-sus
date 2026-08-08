@@ -462,7 +462,9 @@ interface RadarChartProps {
 
 ## 10. Critérios de Verificação
 
-Após implementação, verificar:
+### 10.1 Verificação de entrega pelo Coder
+
+Após implementação, o Coder deve verificar:
 
 1. **`npm run build`** — Build sem erros
 2. **`npm run lint`** — Zero warnings
@@ -474,3 +476,23 @@ Após implementação, verificar:
 8. **Gráficos:** Todos os 4 Recharts renderizam sem erro
 9. **Filtros:** Mudar UBS e período atualiza todos os elementos
 10. **Rotas:** /, /ubs/1, /indicadores, /sobre funcionam
+
+### 10.2 Gate independente do Reviewer
+
+Após `VERIFY-03`, o Reviewer executa uma fase própria e não altera arquivos em `src/`:
+
+1. **Gate estático e automatizado:** executar novamente `npx tsc --noEmit`, `npm run lint`, `npm test`, `npm run test:coverage` e `npm run build`. Qualquer falha mantém a tarefa rejeitada.
+2. **Conformidade visual:** comparar as quatro rotas com `docs/layout/*.pen` e `docs/DESIGN_SYSTEM.md`, incluindo estados semáforo e responsividade.
+3. **Quick Audit WebAuditMCP:** executar Lighthouse desktop, axe desktop e análise de headers em `http://localhost:3000`.
+4. **Gates rápidos:** Lighthouse Performance > 95, Accessibility > 98 e Security Headers > 80, com CSP presente e seguro.
+5. **Auditoria de release:** executar auditoria responsiva nos viewports `375x667`, `768x1024` e `1920x1080`, seguida de relatório consolidado com budgets Accessibility ≥ 95, Performance ≥ 90 e Security ≥ 85.
+6. **Evidências:** salvar cada resultado em `docs/audits/[task-id]-audit.json`. Qualquer violação gera também `docs/failures/[task-id]-failure.json`.
+7. **Decisão:** apenas tarefas sem falhas são marcadas como aprovadas em `docs/TASKS.md`; falhas permanecem abertas com referência ao JSON correspondente.
+
+**Tipos de auditoria do projeto:**
+- `static`: comandos executados, código de saída e resumo de typecheck, lint, build, testes e cobertura
+- `visual`: rota, viewport, referência visual comparada e desvios encontrados
+- `lighthouse`, `axe`, `security_headers` e `responsive`: resultados produzidos pelo WebAuditMCP
+- `release`: consolidação dos relatórios e decisão final do gate
+
+Todos os relatórios preservam os campos comuns `timestamp`, `audit_type`, `issues` e `passed`. Relatórios WebAuditMCP também preservam `url`, `device` e `scores`; relatórios `static`, `visual` e `release` acrescentam somente os dados necessários definidos nos critérios da respectiva tarefa.

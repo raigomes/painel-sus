@@ -412,7 +412,7 @@
 
 ---
 
-## Épico 12 — Build & Verificação Final
+## Épico 12 — Build & Verificação do Coder
 
 - [ ] **ID**: `VERIFY-01`
       **Files**: N/A (verificação)
@@ -445,6 +445,79 @@
   - [ ] Acessibilidade: tab navigation funciona em todas as 4 rotas
   - [ ] Acessibilidade: contraste ≥ 4.5:1 verificado manualmente
         **Dependencies**: `VERIFY-02`, `A11Y-03`
+
+---
+
+## Épico 13 — Gate Independente do Reviewer
+
+> Execução exclusiva do `@reviewer` após a entrega do Coder. O Reviewer registra evidências, não altera `src/` e não aprova resultados com falhas.
+
+- [ ] **ID**: `REVIEW-01`
+  - **Files**: `docs/audits/review-01-static-audit.json`, `docs/failures/review-01-failure.json`, `docs/TASKS.md`
+  - **Dependencies**: `VERIFY-03`
+  - **Acceptance**:
+    - [ ] Reviewer executa independentemente `npx tsc --noEmit`, `npm run lint` e `npm run build`
+    - [ ] Reviewer executa independentemente `npm test` e `npm run test:coverage`
+    - [ ] Todos os cinco comandos, códigos de saída e resumo dos resultados constam no arquivo de auditoria
+    - [ ] Qualquer comando com falha mantém `REVIEW-01` aberto e gera `docs/failures/review-01-failure.json`
+    - [ ] `REVIEW-01` é marcado como concluído somente quando todos os comandos passam
+
+- [ ] **ID**: `REVIEW-02`
+  - **Files**: `docs/audits/review-02-visual-audit.json`, `docs/failures/review-02-failure.json`, `docs/TASKS.md`
+  - **Dependencies**: `REVIEW-01`
+  - **Acceptance**:
+    - [ ] Reviewer compara as rotas `/`, `/ubs/1`, `/indicadores` e `/sobre` com `docs/layout/*.pen` e `docs/DESIGN_SYSTEM.md`
+    - [ ] Auditoria registra conformidade de tipografia, cores, espaçamento, componentes e estados semáforo
+    - [ ] Auditoria registra os resultados nos viewports 375px, 768px e 1280px
+    - [ ] Qualquer desvio visual mantém `REVIEW-02` aberto e gera `docs/failures/review-02-failure.json`
+
+- [ ] **ID**: `REVIEW-03`
+  - **Files**: `docs/audits/review-03-lighthouse-audit.json`, `docs/failures/review-03-failure.json`, `docs/TASKS.md`
+  - **Dependencies**: `REVIEW-02`
+  - **Acceptance**:
+    - [ ] Reviewer confirma que `http://localhost:3000` responde antes da auditoria
+    - [ ] WebAuditMCP `audit_lighthouse` é executado na rota `/` com device desktop
+    - [ ] Performance é maior que 95 e Accessibility é maior que 98
+    - [ ] Resultado completo é salvo no arquivo de auditoria
+    - [ ] Score abaixo do gate mantém `REVIEW-03` aberto e gera `docs/failures/review-03-failure.json`
+
+- [ ] **ID**: `REVIEW-04`
+  - **Files**: `docs/audits/review-04-axe-audit.json`, `docs/failures/review-04-failure.json`, `docs/TASKS.md`
+  - **Dependencies**: `REVIEW-03`
+  - **Acceptance**:
+    - [ ] WebAuditMCP `scan_axe` é executado na rota `/` com device desktop
+    - [ ] Auditoria não registra violações WCAG 2.2 AA bloqueantes ou críticas
+    - [ ] Resultado completo é salvo no arquivo de auditoria
+    - [ ] Qualquer violação mantém `REVIEW-04` aberto e gera `docs/failures/review-04-failure.json`
+
+- [ ] **ID**: `REVIEW-05`
+  - **Files**: `docs/audits/review-05-security-audit.json`, `docs/failures/review-05-failure.json`, `docs/TASKS.md`
+  - **Dependencies**: `REVIEW-04`
+  - **Acceptance**:
+    - [ ] WebAuditMCP `security_headers` é executado na rota `/`
+    - [ ] Security Headers score é maior que 80
+    - [ ] Header CSP está presente e é classificado como seguro
+    - [ ] Resultado completo é salvo no arquivo de auditoria
+    - [ ] Gate não atendido mantém `REVIEW-05` aberto e gera `docs/failures/review-05-failure.json`
+
+- [ ] **ID**: `REVIEW-06`
+  - **Files**: `docs/audits/review-06-responsive-audit.json`, `docs/failures/review-06-failure.json`, `docs/TASKS.md`
+  - **Dependencies**: `REVIEW-05`
+  - **Acceptance**:
+    - [ ] WebAuditMCP `responsive_audit` é executado com viewports `375x667`, `768x1024` e `1920x1080`
+    - [ ] Auditoria cobre overflow, legibilidade, navegação e integridade dos gráficos em cada viewport
+    - [ ] Resultado completo é salvo no arquivo de auditoria
+    - [ ] Qualquer falha responsiva mantém `REVIEW-06` aberto e gera `docs/failures/review-06-failure.json`
+
+- [ ] **ID**: `REVIEW-07`
+  - **Files**: `docs/audits/review-07-release-audit.json`, `docs/failures/review-07-failure.json`, `docs/TASKS.md`
+  - **Dependencies**: `REVIEW-06`
+  - **Acceptance**:
+    - [ ] WebAuditMCP `report_merge` consolida os resultados Lighthouse, axe, security headers e responsive
+    - [ ] Relatório aplica budgets Accessibility ≥ 95, Performance ≥ 90 e Security ≥ 85
+    - [ ] Relatório consolidado segue o schema de `docs/SPEC.md` e referencia as auditorias anteriores
+    - [ ] Qualquer budget não atendido mantém `REVIEW-07` aberto e gera `docs/failures/review-07-failure.json`
+    - [ ] Gate de release é aprovado somente quando o relatório consolidado registra `passed: true`
 
 ---
 
@@ -481,6 +554,8 @@ SETUP-02 ─┼─→ SETUP-03 ──┼─→ DATA-01 ───┼─→ DATA-0
                            └─→ PAGE-08
 
 VERIFY-01 → VERIFY-02 → VERIFY-03
+                              ↓
+REVIEW-01 → REVIEW-02 → REVIEW-03 → REVIEW-04 → REVIEW-05 → REVIEW-06 → REVIEW-07
 ```
 
 ## Estimativa de Esforço
@@ -498,5 +573,6 @@ VERIFY-01 → VERIFY-02 → VERIFY-03
 | 9. Página Indicadores | 2 | ~20 min |
 | 10. Página Sobre | 1 | ~10 min |
 | 11. Acessibilidade | 3 | ~20 min |
-| 12. Verificação | 3 | ~15 min |
-| **Total** | **40** | **~6h 15min** |
+| 12. Verificação do Coder | 3 | ~15 min |
+| 13. Gate do Reviewer | 7 | ~1h 45min |
+| **Total** | **47** | **~8h** |
