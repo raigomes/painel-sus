@@ -13,13 +13,13 @@
 
 ## Épico 1 — Setup & Infraestrutura
 
-- [ ] **ID**: `SETUP-01`
+- [x] **ID**: `SETUP-01`
       **Files**: `package.json`, `src/app/globals.css`
       **Acceptance**:
-  - [ ] `npx shadcn@latest init` executado com sucesso (components.json criado)
-  - [ ] `npx shadcn@latest add card badge select separator skeleton tooltip` instala 6 componentes em `src/components/ui/`
-  - [ ] `npm install recharts` adicionado ao package.json
-  - [ ] `npm run build` passa sem erros após instalações
+  - [x] `npx shadcn@latest init` executado com sucesso (components.json criado)
+  - [x] `npx shadcn@latest add card badge select separator skeleton tooltip` instala 6 componentes em `src/components/ui/`
+  - [x] `npm install recharts` adicionado ao package.json
+  - [x] `npm run build` passa sem erros após instalações
         **Dependencies**: `[]`
 
 - [ ] **ID**: `SETUP-02`
