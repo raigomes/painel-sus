@@ -35,6 +35,7 @@ Use the skill tool to load: pen-format-guardrails
 ```
 
 Esta skill contém:
+
 - Regras de formato JSON (ordem de chaves, variáveis, propriedades)
 - Padrões corretos para Pencil MCP execute (Frame, Text, Rectangle, shadows)
 - Checklist de validação automática
@@ -45,6 +46,7 @@ Esta skill contém:
 ## Pencil MCP Workflow
 
 ### Passo 1: Sempre `get_app_state` primeiro
+
 ```
 pencil_get_app_state({
   include_schema: true,
@@ -55,16 +57,20 @@ pencil_get_app_state({
 ```
 
 ### Passo 2: Operações de criação/edição
+
 Use `pencil_execute` com os padrões da skill:
+
 - **Frame**: Container com layout, gap, padding
 - **Text**: Use `content` (NUNCA `text`)
 - **Rectangle**: Cards, backgrounds
 - **Shadows**: Use `effect` object (NUNCA string)
 
 ### Passo 3: Validação visual
+
 Use `pencil_get_screenshot` para verificar o resultado.
 
 ### Passo 4: Validação de formato
+
 Execute o script Python da skill para validar o JSON.
 
 ## Failure Protocol
@@ -87,18 +93,21 @@ Execute o script Python da skill para validar o JSON.
 ```
 
 ### Chave: ORDEM RÍGIDA
+
 1. `version` (primeiro)
 2. `children` (segundo)
 3. `variables` (terceiro)
 4. `fileToken` (quarto/último)
 
 ### Variáveis
+
 - Chaves SEM `$` prefix: `"brand"` não `"$brand"`
 - Tipo SEMPRE `"color"` (REPO POLICY — o schema v2.15 aceita outros tipos, mas este projeto usa apenas cores)
 - SEM campo `default`
 - Nós referenciam COM `$`: `"fill": "$brand"`
 
 ### Propriedades de Nós
+
 - **SEMPRE incluir** `"name"` em todo nó
 - `cornerRadius` (NÃO `borderRadius`)
 - `padding: [y, x]` (NÃO `paddingX`/`paddingY`)
@@ -107,6 +116,7 @@ Execute o script Python da skill para validar o JSON.
 - `effect` object para sombras (NUNCA string)
 
 ### Sombras — Objeto `effect`
+
 ```json
 "effect": {
   "type": "shadow",
@@ -116,18 +126,3 @@ Execute o script Python da skill para validar o JSON.
   "blur": 4
 }
 ```
-
-## Guardrails
-
-- NUNCA use a chave `text` (use `content`).
-- NUNCA aninhe `strokeWidth` (deve ser no topo do nó).
-- NUNCA use nomes semânticos longos como IDs (use strings curtas aleatórias).
-- NUNCA use strings de sombra (use `effect` object).
-- NUNCA use `borderRadius` (use `cornerRadius`).
-- NUNCA use `paddingX`/`paddingY` (use `padding: [y, x]`).
-- NUNCA entregue um `.pen` sem rodar o script de validação.
-- SEMPRE carregue a skill `pen-format-guardrails` antes de operar.
-- SEMPRE comece com `get_app_state`.
-- SEMPRE inclua `"name"` em todo nó.
-- SEMPRE valide visualmente com `get_screenshot` após mudanças significativas.
-- Ao editar arquivos `.pen` existentes com versão `"2.14"`, migre para `"2.15"` na próxima edição.
