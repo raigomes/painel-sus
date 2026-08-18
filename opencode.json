@@ -1,47 +1,20 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "omniroute_local": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "OmniRoute Local",
-      "options": {
-        "baseURL": "http://localhost:20128/v1",
-        "apiKey": "omniroute-token-local"
-      },
-      "models": {
-        "combo-owner": {
-          "name": "Combo Owner (Planning & Strategy)"
-        },
-        "combo-designer": {
-          "name": "Combo Designer (UI/UX & Pencil)"
-        },
-        "combo-coder": {
-          "name": "Combo Coder (Implementation)"
-        },
-        "combo-reviewer": {
-          "name": "Combo Reviewer (QA & Audit)"
-        },
-        "opencode-zen": {
-          "name": "OpenCode Zen (Fallback)"
-        }
-      }
-    }
-  },
   "agent": {
     "owner": {
-      "model": "omniroute_local/combo-owner",
+      "model": "omniroute/combo-owner",
       "temperature": 0.3
     },
     "designer": {
-      "model": "omniroute_local/combo-designer",
+      "model": "omniroute/combo-designer",
       "temperature": 0.3
     },
     "coder": {
-      "model": "omniroute_local/combo-coder",
+      "model": "omniroute/combo-coder",
       "temperature": 0.0
     },
     "reviewer": {
-      "model": "omniroute_local/combo-reviewer",
+      "model": "omniroute/combo-reviewer",
       "temperature": 0.1
     }
   },
