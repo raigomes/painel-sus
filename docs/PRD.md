@@ -2,331 +2,311 @@
 
 > **Projeto:** Protótipo de Painel SUS  
 > **Cliente:** Secretaria Municipal de Saúde (fictícia: Saúde Itapira)  
-> **Versão:** 1.0  
-> **Autor:** Owner (Agent)  
-> **Data:** 2026-08-05
+> **Versão:** 1.1
+> **Data:** 2026-08-19
 
----
+## 1. Visão do produto
 
-## 1. Visão Geral
+Painel público para gestores municipais acompanharem quatro indicadores do Previne Brasil em 15 UBS. O protótipo usa dados locais simulados com nomenclaturas realistas do SUS, permite consultar janelas recentes, destaca resultados abaixo da meta e funciona sem autenticação.
 
-Dashboard público para gestores municipais de saúde visualizarem indicadores do Previne Brasil de 15 UBS, com filtros por unidade e período, alertas visuais de desempenho e navegação acessível. Dados mockados simulam estrutura real do DATASUS/e-SUS AB.
+## 2. Público e objetivos
 
-## 2. Personas
+| Público | Objetivo |
+|---|---|
+| Gestor municipal | Reconhecer rapidamente indicadores e UBS que precisam de atenção |
+| Coordenador de UBS | Consultar o desempenho e o histórico de sua unidade |
+| Assessor técnico | Apresentar séries históricas e comparações em tablet ou projetor |
 
-| Persona | Perfil | Necessidade Principal |
-|---------|--------|----------------------|
-| **Gestor Municipal** | Secretário de Saúde, 50+ anos, baixa familiaridade tech | Ver rápido se os indicadores estão OK ou em alerta |
-| **Coordenador UBS** | Enfermeiro-chefe, 35 anos, usa tablet | Acompanhar a performance da sua unidade específica |
-| **Assessor Técnico** | Analista de saúde, 28 anos, usa projetor | Exportar visualização para reunião com prefeito |
+## 3. Escopo
 
-## 3. Indicadores do Previne Brasil (4 selecionados)
+### Incluído
 
-| # | Indador | Meta | Unidade | Tendência esperada |
-|---|---------|------|---------|-------------------|
-| 1 | Cobertura Vacinal (Polio + Pentavalente) | ≥ 95% | % de crianças <1ano | Alta sazonal (campanhas) |
-| 2 | Pré-natal (6+ consultas) | ≥ 60% | % de gestantes | Estável/alta |
-| 3 | Hipertensão (PA aferida semestral) | ≥ 50% | % de hipertensos | Estável |
-| 4 | Diabetes (HbA1c solicitada) | ≥ 50% | % de diabéticos | Estável |
+- Dashboard consolidado e filtrável por UBS e janela relativa.
+- Quatro indicadores: Cobertura Vacinal, Pré-natal, Hipertensão e Diabetes.
+- Série histórica em gráfico de linha.
+- Ranking das 15 UBS.
+- Detalhe de cada UBS.
+- Detalhes expansíveis dos indicadores na rota `/indicadores`.
+- Página sobre dados, fontes e caráter simulado.
+- Navegação por teclado, contraste WCAG 2.1 AA e layout responsivo.
 
-## 4. User Stories (Gherkin)
+### Fora de escopo
 
-### US-01: Visão Geral do Dashboard
+- Autenticação e controle de acesso.
+- Exportação de PDF, planilha ou imagem.
+- Integração real com DATASUS.
+- Cadastro ou edição de UBS.
+- Rota `/indicadores/[id]`.
+- Notificações, modo offline e Service Worker.
+- Escolha de mês ou trimestre calendário específico.
 
-**Como** gestor municipal, **quero** ver um painel com os 4 indicadores em destaque, **para** identificar rapidamente o status geral da saúde pública.
+## 4. Indicadores e metas
 
-```gherkin
-Cenário: Dashboard carrega com indicadores
-  Dado que o usuário acessa a rota "/"
-  Quando a página carrega completamente
-  Então os 4 indicadores devem estar visíveis em cards
-  E cada card exibe: nome do indicador, valor atual, meta, tendência
-  E o indicador possui cores semáforo (verde ≥meta, amarelo 80-99% da meta, vermelho <80%)
+| Indicador | Meta | Unidade |
+|---|---:|---|
+| Cobertura Vacinal (Polio + Pentavalente) | 95% | Crianças menores de um ano |
+| Pré-natal (6+ consultas) | 60% | Gestantes |
+| Hipertensão (PA aferida semestralmente) | 50% | Pessoas com hipertensão |
+| Diabetes (HbA1c solicitada) | 50% | Pessoas com diabetes |
 
-Cenário: Dashboard sem dados mockados
-  Dado que os dados mockados não estão disponíveis
-  Quando a página tenta carregar
-  Então uma mensagem de erro amigável deve ser exibida
-  E o usuário pode tentar novamente
-```
+## 5. User stories e cenários
 
-### US-02: Filtro por UBS
+### US-01 — Consultar a visão geral
 
-**Como** coordenador de UBS, **quero** filtrar os dados por unidade de saúde, **para** ver apenas a performance da minha UBS.
-
-```gherkin
-Cenário: Filtro por UBS é exibido
-  Dado que o usuário está na página principal
-  Quando ele observa a barra de filtros
-  Então um seletor de UBS deve estar disponível com 15 opções
-  E a primeira opção deve ser "Todas as UBS"
-
-Cenário: Filtrar por UBS específica
-  Dado que o usuário seleciona "UBS Vila Nova" no filtro
-  Quando o dashboard atualiza
-  Então todos os indicadores mostram apenas dados da UBS Vila Nova
-  E o título da página ou header reflete a UBS selecionada
-
-Cenário: Limpar filtro de UBS
-  Dado que o usuário está vendo dados de uma UBS específica
-  Quando ele seleciona "Todas as UBS"
-  Então o dashboard volta a mostrar dados consolidados
-```
-
-### US-03: Filtro por Período
-
-**Como** gestor, **quero** filtrar por mês ou trimestre, **para** comparar períodos diferentes.
+**Como** gestor municipal, **quero** ver os quatro indicadores em destaque, **para** reconhecer rapidamente a situação do município.
 
 ```gherkin
-Cenário: Filtro de período disponível
-  Dado que o usuário está na página principal
-  Quando ele observa a barra de filtros
-  Então um seletor de período deve estar disponível
-  E deve oferecer opções: "Último mês", "Último trimestre", "Último semestre", "Último ano"
-
-Cenário: Mudar período reflete nos gráficos
-  Dado que o período selecionado é "Último trimestre"
-  Quando o dashboard atualiza
-  Então o gráfico de linha mostra apenas os 3 meses do trimestre
-  E os cards de indicadores mostram a média do trimestre
+Cenário: Exibir os indicadores consolidados
+  Dado que o gestor acessou a rota "/"
+  Quando o painel for exibido
+  Então os quatro indicadores devem aparecer em cartões
+  E cada cartão deve informar nome, valor, meta, tendência e estado
+  E os dados iniciais devem representar o último mês disponível
 ```
 
-### US-04: Alertas Visuais de Indicador
+### US-02 — Filtrar por UBS
 
-**Como** gestor, **quero** identificar rapidamente indicadores em queda ou abaixo da meta, **para** tomar ação imediata.
+**Como** coordenador, **quero** selecionar uma UBS, **para** consultar somente seus resultados.
 
 ```gherkin
-Cenário: Indicador acima da meta
-  Dado que o indicador de Cobertura Vacinal está em 97%
-  Quando o card é renderizado
-  Então a borda e ícone do card devem ser VERDES
-  E um ícone de check é exibido
+Cenário: Selecionar uma UBS
+  Dado que o gestor está vendo os dados de todas as UBS
+  Quando selecionar "UBS Vila Nova"
+  Então os cartões e o gráfico devem usar somente dados da UBS Vila Nova
+  E a unidade selecionada deve permanecer identificada no filtro
 
-Cenário: Indicador entre 80-99% da meta
-  Dado que o indicador de Pré-natal está em 52% (meta 60%)
-  Quando o card é renderizado
-  Então a borda e ícone do card devem ser AMARELOS
-  E um ícone de alerta é exibido
-
-Cenário: Indicador abaixo de 80% da meta
-  Dado que o indicador de Hipertensão está em 30% (meta 50%)
-  Quando o card é renderizado
-  Então a borda e ícone do card devem ser VERMELHOS
-  E um ícone de erro é exibido
-  E uma mensagem "Abaixo da meta" aparece no card
+Cenário: Retornar ao consolidado
+  Dado que uma UBS está selecionada
+  Quando o gestor selecionar "Todas as UBS"
+  Então os cartões e o gráfico devem voltar aos dados consolidados
 ```
 
-### US-05: Gráfico de Linha — Série Histórica
+### US-03 — Filtrar por janela relativa
 
-**Como** gestor, **quero** ver a evolução do indicador nos últimos 12 meses, **para** identificar tendências.
+**Como** gestor, **quero** escolher uma janela recente, **para** analisar diferentes extensões do histórico.
 
 ```gherkin
-Cenário: Gráfico de linha exibe 12 meses
-  Dado que o usuário está na página principal
-  Quando ele observa a seção de gráficos
-  Então um gráfico de linha deve mostrar os 12 meses
-  E a linha da meta (target) deve estar destacada como referência
-  E o eixo X mostra os meses e o eixo Y mostra o percentual
+Cenário: Escolher uma janela relativa
+  Dado que existem registros mensais locais
+  Quando o gestor selecionar Último trimestre
+  Então a janela deve incluir os três meses mais recentes presentes nos dados
+  E os cartões devem apresentar a média dessa janela
+  E o gráfico deve exibir os três meses da janela
 
-Cenário: Hover no gráfico mostra detalhes
-  Dado que o gráfico de linha está visível
-  Quando o usuário passa o mouse sobre um ponto
-  Então um tooltip deve exibir: mês, valor, meta
+Cenário: Limpar os filtros
+  Dado que filtros diferentes dos padrões estão ativos
+  Quando o gestor acionar "Limpar filtros"
+  Então a UBS deve voltar para "Todas as UBS"
+  E o período deve voltar para "Último mês"
 ```
 
-### US-06: Tabela de Ranking de UBS
+### US-04 — Reconhecer alertas
 
-**Como** gestor, **quero** ver um ranking das UBS por desempenho, **para** identificar unidades que precisam de atenção.
+**Como** gestor, **quero** distinguir resultados por estado, **para** priorizar ações.
 
 ```gherkin
-Cenário: Tabela de ranking exibe UBS
-  Dado que o usuário está na página principal
-  Quando ele rola até a seção de ranking
-  Então uma tabela deve listar as 15 UBS
-  E a tabela deve ter colunas: Posição, Nome UBS, Pontuação, Status
-  E as UBS devem estar ordenadas por pontuação (melhor primeiro)
+Cenário: Resultado verde
+  Dado que o valor alcança ou supera a meta
+  Quando o cartão for exibido
+  Então ele deve comunicar o estado verde com texto e ícone de confirmação
 
-Cenário: Click na UBS do ranking vai para detalhe
-  Dado que o usuário clica em uma UBS na tabela
-  Quando ele clica no nome ou linha
-  Então ele deve ser redirecionado para /ubs/[id] daquela unidade
+Cenário: Resultado amarelo
+  Dado que o valor alcança pelo menos 80% da meta e permanece abaixo dela
+  Quando o cartão for exibido
+  Então ele deve comunicar o estado amarelo com texto e ícone de alerta
+
+Cenário: Resultado vermelho
+  Dado que o valor fica abaixo de 80% da meta
+  Quando o cartão for exibido
+  Então ele deve comunicar o estado vermelho com texto e ícone de erro
+  E deve exibir a mensagem "Abaixo da meta"
 ```
 
-### US-07: Página de Detalhe da UBS
+### US-05 — Consultar a série histórica
 
-**Como** coordenador, **quero** ver detalhes da minha UBS com gráfico radar e histórico, **para** fazer análise completa.
+**Como** gestor, **quero** ver a evolução mensal em um gráfico de linha, **para** identificar tendências.
 
 ```gherkin
-Cenário: Detalhe da UBS carrega corretamente
-  Dado que o usuário acessa /ubs/1
-  Quando a página carrega
-  Então um card informativo exibe: nome, equipe, cadastrados
-  E um gráfico radar mostra os 4 indicadores comparados à meta
-  E uma tabela mostra o histórico mensal
+Cenário: Exibir a evolução do indicador
+  Dado que o gestor está no dashboard
+  Quando observar a seção de evolução
+  Então um gráfico de linha deve exibir os meses da janela selecionada
+  E uma linha de referência deve representar a meta
+  E os eixos devem identificar mês e percentual
 
-Cenário: UBS inexistente mostra erro
-  Dado que o usuário acessa /ubs/999
-  Quando a página carrega
-  Então uma mensagem "UBS não encontrada" é exibida
-  E um link volta para o dashboard principal
+Cenário: Consultar um ponto
+  Dado que o gráfico possui dados mensais
+  Quando o gestor posicionar o ponteiro ou o foco em um ponto
+  Então deve receber mês, valor e meta daquele ponto
 ```
 
-### US-08: Página de Indicadores
+### US-06 — Consultar o ranking das UBS
 
-**Como** analista, **quero** ver o detalhamento de cada indicador com séries históricas e comparativo entre UBS, **para** preparar relatório.
+**Como** gestor, **quero** comparar as UBS, **para** identificar unidades que precisam de atenção.
 
 ```gherkin
-Cenário: Lista de indicadores exibe todos
-  Dado que o usuário acessa /indicadores
-  Quando a página carrega
-  Então os 4 indicadores devem estar listados
-  E cada item mostra: nome, descrição, meta atual
+Cenário: Exibir ranking completo
+  Dado que há dados para as 15 UBS na janela selecionada
+  Quando o ranking for exibido
+  Então as 15 UBS devem aparecer da maior para a menor pontuação
+  E cada linha deve informar posição, UBS, equipe, pontuação e estado
 
-Cenário: Detalhe do indicador mostra comparativo
-  Dado que o usuário clica no indicador "Cobertura Vacinal"
-  Quando a página de detalhe carrega
-  Então um gráfico de série histórica é exibido
-  E uma tabela compara a performance de todas as UBS
-  E a meta é destacada visualmente
+Cenário: Abrir uma UBS
+  Dado que o ranking está visível
+  Quando o gestor ativar o nome de uma UBS
+  Então deve navegar para "/ubs/[id]" da unidade escolhida
 ```
 
-### US-09: Página Sobre
+### US-07 — Consultar uma UBS
 
-**Como** gestor, **quero** entender a fonte dos dados e o que significam os indicadores, **para** confiar no painel.
+**Como** coordenador, **quero** consultar o perfil e o histórico da UBS, **para** analisar seu desempenho.
 
 ```gherkin
-Cenário: Página sobre explica fontes
-  Dado que o usuário acessa /sobre
-  Quando a página carrega
-  Então uma explicação sobre o Previne Brasil é exibida
-  E as fontes de dados são listadas (CNES, e-SUS AB, DATASUS)
-  E um disclaimer indica que são dados simulados
+Cenário: Exibir uma UBS existente
+  Dado que o coordenador acessou "/ubs/1"
+  Quando a página for exibida
+  Então deve ver nome, CNES, equipe, cadastrados e endereço
+  E deve ver os quatro indicadores comparados às metas em gráfico radar
+  E deve ver os 12 meses de histórico em tabela
+
+Cenário: Informar UBS inexistente
+  Dado que o coordenador acessou "/ubs/999"
+  Quando nenhuma UBS corresponder ao identificador
+  Então deve ver "UBS não encontrada"
+  E deve poder voltar ao dashboard
 ```
 
-### US-10: Acessibilidade (WCAG 2.1 AA)
+### US-08 — Consultar detalhes dos indicadores
 
-**Como** usuário com necessidades especiais, **quero** navegar completamente via teclado, **para** usar o painel sem mouse.
+**Como** assessor técnico, **quero** expandir um indicador na página de indicadores, **para** comparar seu histórico e as UBS sem mudar de rota.
 
 ```gherkin
-Cenário: Navegação via Tab
-  Dado que o usuário está na página principal
-  Quando ele pressiona Tab repetidamente
-  Então todos os elementos interativos devem receber foco
-  E o foco deve ser visível (outline)
+Cenário: Listar os indicadores
+  Dado que o assessor acessou "/indicadores"
+  Quando a página for exibida
+  Então deve ver os quatro indicadores com descrição, meta e unidade
 
-Cenário: Contraste de cores
-  Dado que o dashboard está renderizado
-  Quando verificamos os contrastes de cores
-  Então todos os textos devem ter razão de contraste ≥ 4.5:1
-  E os ícones de status devem ter contraste ≥ 3:1
-
-Cenário: Labels em formulários
-  Dado que os filtros de UBS e período estão renderizados
-  Quando um leitor de tela analisa os campos
-  Então cada campo deve ter um <label> associado
-  E os filtros devem ter aria-label quando label visual não existe
+Cenário: Expandir um indicador
+  Dado que os quatro indicadores estão listados
+  Quando o assessor expandir Cobertura Vacinal
+  Então deve permanecer em "/indicadores"
+  E deve ver a série consolidada de 12 meses
+  E deve ver as 15 UBS comparadas para esse indicador
+  E a meta deve estar visualmente identificada
 ```
 
-### US-11: Layout Responsivo
+### US-09 — Entender os dados
 
-**Como** gestor que usa tablet, **quero** que o painel se adapte ao tamanho da tela, **para** apresentar em reuniões.
+**Como** gestor, **quero** conhecer fontes e limitações, **para** interpretar corretamente o protótipo.
 
 ```gherkin
-Cenário: Layout em tablet (768px)
-  Dado que o usuário abre o dashboard em tablet (768px de largura)
-  Quando a página renderiza
-  Então os cards de indicadores devem empilhar (2 colunas no máximo)
-  E os gráficos devem ocupar largura total
-  E a navegação deve ser acessível com toque
-
-Cenário: Layout em projetor (1920px)
-  Dado que o usuário abre em tela grande (1920px)
-  Quando a página renderiza
-  Then os cards de indicadores devem exibir em 4 colunas
-  E os gráficos e tabela devem usar espaço disponível
+Cenário: Exibir fontes e aviso
+  Dado que o gestor acessou "/sobre"
+  Quando a página for exibida
+  Então deve ver uma explicação do Previne Brasil
+  E deve ver CNES, e-SUS AB e DATASUS como fontes simuladas
+  E deve ver que os dados são simulados para demonstração
 ```
 
-### US-12: Performance de Carregamento
+### US-10 — Usar o painel com acessibilidade
 
-**Como** gestor em UBS com internet lenta, **quero** que o painel carregue rápido, **para** não desistir de usar.
+**Como** pessoa que utiliza teclado ou tecnologia assistiva, **quero** compreender e operar o painel, **para** acessar as mesmas informações.
 
 ```gherkin
-Cenário: Carregamento inicial
-  Dado que o usuário acessa o dashboard em conexão 3G simulada
-  Quando a página inicia o carregamento
-  Então o conteúdo principal deve aparecer em menos de 3 segundos
-  E gráficos podem carregar progressivamente (Skeleton)
+Cenário: Navegar por teclado
+  Dado que uma rota do painel está aberta
+  Quando a pessoa percorrer os controles com Tab
+  Então todos os controles devem receber foco visível em ordem lógica
+  E deve existir um atalho para o conteúdo principal
 
-Cenário: Dados mockados sem chamada de rede
-  Dado que os dados são mockados (import estático)
-  Quando a página renderiza
-  Então não deve haver chamadas HTTP para dados
-  E o bundle JavaScript deve ser < 200KB (gzipped)
+Cenário: Compreender estados sem depender somente de cor
+  Dado que cartões e tabelas apresentam estados
+  Quando uma tecnologia assistiva interpretar o conteúdo
+  Então cada estado deve possuir texto ou nome acessível
+  E textos devem atender contraste mínimo de 4,5 para 1
 ```
 
-### US-13: Navegação e Estrutura de Rotas
+### US-11 — Usar diferentes telas
 
-**Como** usuário, **quero** navegar facilmente entre as páginas, **para** encontrar a informação que preciso.
+**Como** gestor, **quero** apresentar o painel em celular, tablet ou projetor, **para** manter a informação legível.
 
 ```gherkin
-Cenário: Navegação principal visível
-  Dado que o usuário está em qualquer página
-  Quando ele observa o header
-  Então links de navegação para Dashboard, Indicadores e Sobre devem estar visíveis
-  E o link ativo deve ter indicador visual
+Cenário: Exibir em 375 pixels
+  Dado que o painel tem 375 pixels de largura
+  Quando o conteúdo for exibido
+  Então os cartões devem ficar em uma coluna
+  E tabelas devem permanecer acessíveis sem cortar conteúdo
 
-Cenário: Rota dinâmica para UBS
-  Dado que o usuário navega para /ubs/3
-  Quando a página carrega
-  Então os dados da UBS com id=3 são exibidos
-  E o breadcrumb mostra: Dashboard > UBS > UBS Jardim Paulista
+Cenário: Exibir em 768 pixels
+  Dado que o painel tem 768 pixels de largura
+  Quando o conteúdo for exibido
+  Então os cartões devem usar no máximo duas colunas
+  E gráficos devem ocupar a largura disponível
+
+Cenário: Exibir em 1920 pixels
+  Dado que o painel tem 1920 pixels de largura
+  Quando o conteúdo for exibido
+  Então os quatro cartões devem aparecer na mesma linha
+  E o conteúdo deve permanecer limitado a uma largura legível
 ```
 
-### US-14: Verificação Automatizada dos Cards de Indicadores
+### US-12 — Comunicar ausência de resultados
 
-**Como** responsável pela qualidade do painel, **quero** verificar automaticamente os estados dos cards, **para** evitar que alertas incorretos sejam apresentados aos gestores.
+**Como** gestor, **quero** entender quando um filtro não possui registros, **para** voltar rapidamente a uma consulta válida.
 
 ```gherkin
-Cenário: Card mantém as informações essenciais
-  Dado que existe um indicador com valor, meta, status e tendência conhecidos
-  Quando a verificação automatizada do card é executada
-  Então o nome, o valor atual e a meta devem ser encontrados
-  E a descrição acessível deve comunicar o estado do indicador
+Cenário: Janela filtrada sem registros
+  Dado que a combinação atual de filtros não possui registros
+  Quando o painel atualizar
+  Então deve exibir um estado vazio informando a ausência de resultados
+  E deve oferecer a ação "Limpar filtros"
 
-Cenário: Card representa todos os estados de alerta
-  Dado que existem indicadores nos estados verde, amarelo e vermelho
-  Quando cada card é verificado automaticamente
-  Então cada estado deve apresentar o ícone e a identificação visual correspondentes
-  E o estado vermelho deve comunicar que o indicador está abaixo da meta
+Cenário: Dados locais inválidos
+  Dado que os arquivos locais não atendem ao formato definido
+  Quando o projeto for verificado em desenvolvimento
+  Então a verificação deve falhar como erro de desenvolvimento
+  E o produto não deve simular uma ação "Tentar novamente"
 ```
 
-## 5. Regras de Negócio
+### US-13 — Navegar entre as rotas
 
-| RB-01 | Status semáforo: Verde ≥ 100% da meta; Amarelo 80-99%; Vermelho < 80% |
-|-------|------------------------------------------------------------------------|
-| RB-02 | Ranking usa pontuação ponderada (média dos 4 indicadores, normalizada 0-100) |
-| RB-03 | Período "Último mês" = último registro disponível; "Último trimestre" = média dos 3 meses mais recentes |
-| RB-04 | Dados mockados cobrem 12 meses contínuos (jul/2025 a jun/2026) |
-| RB-05 | Cada UBS possui entre 1.500 e 4.500 cadastrados |
-| RB-06 | Valores mockados variam realisticamente (desvio padrão ≤ 15% da média) |
+**Como** usuário, **quero** identificar onde estou e acessar as áreas principais, **para** encontrar informações com facilidade.
 
-## 6. Fora de Escopo (v1.0)
+```gherkin
+Cenário: Exibir navegação principal
+  Dado que uma rota do painel está aberta
+  Quando o cabeçalho for exibido
+  Então deve apresentar links para Dashboard, Indicadores e Sobre
+  E o destino atual deve ser indicado por texto, sem depender somente de cor
 
-- Autenticação / controle de acesso
-- Exportação de PDF/Excel
-- Integração com API real do DATASUS
-- Cadastro/edição de UBS
-- Notificações push
-- Offline mode / Service Worker
+Cenário: Exibir breadcrumb da UBS
+  Dado que o usuário acessou "/ubs/3"
+  Quando a UBS Jardim Paulista for exibida
+  Então o breadcrumb deve informar "Dashboard > UBS > UBS Jardim Paulista"
+```
 
-## 7. Critérios de Aceitação Consolidados
+## 6. Regras de negócio
 
-| Critério | Valor |
-|----------|-------|
-| Indicadores visíveis no dashboard | 4 |
-| UBS mockadas | 15 |
-| Meses de histórico | 12 |
-| Tempo de carregamento (3G) | < 3s |
-| Contraste mínimo (texto) | 4.5:1 |
-| Navegação via teclado | 100% dos elementos interativos |
-| Rotas funcionais | 4 (/, /ubs/[id], /indicadores, /sobre) |
+| Regra | Definição |
+|---|---|
+| RB-01 | Verde: valor/meta ≥ 100%; amarelo: ≥ 80% e < 100%; vermelho: < 80% |
+| RB-02 | A pontuação da UBS usa os quatro indicadores, cada um com peso igual de 25% |
+| RB-03 | A parcela de cada indicador é `valor/meta × 100`, limitada ao intervalo 0–100 |
+| RB-04 | A pontuação final é a média das quatro parcelas e é arredondada para uma casa decimal |
+| RB-05 | Janelas relativas contêm 1, 3, 6 ou 12 meses e são ancoradas no mês mais recente existente nos registros recebidos |
+| RB-06 | Cartões de uma janela com mais de um mês usam a média do período; consolidado municipal usa média ponderada pela população cadastrada |
+| RB-07 | Dados cobrem continuamente julho de 2025 a junho de 2026: 15 UBS × 4 indicadores × 12 meses = 720 registros |
+| RB-08 | Cada UBS possui entre 1.500 e 4.500 cadastrados |
+| RB-09 | Para cada série UBS/indicador, o desvio padrão dos 12 valores é no máximo 15% da média da própria série |
+| RB-10 | Tendência compara a média dos últimos três meses com os três anteriores: acima de +5% é alta, abaixo de -5% é queda, demais casos são estáveis |
+| RB-11 | Dados locais inválidos são erro de desenvolvimento; filtros válidos sem registros produzem estado vazio com ação “Limpar filtros” |
+
+## 7. Critérios consolidados de sucesso
+
+- Quatro indicadores e 15 UBS disponíveis.
+- Histórico contínuo de 12 meses.
+- Quatro rotas funcionais: `/`, `/ubs/[id]`, `/indicadores`, `/sobre`.
+- Conteúdo principal visível em menos de 3 segundos sob simulação 3G.
+- Operação por teclado em todos os controles.
+- Contraste WCAG 2.1 AA.
+- Dados importados localmente, sem chamada HTTP para obtê-los.

@@ -1,578 +1,540 @@
 # Tasks — Painel SUS
 
-> Ordenadas por dependência. Cada tarefa é atômica (< 30 min).  
-> **Schema:** ID, Files, Acceptance Criteria, Dependencies
+> Ordem de execução definida por dependências. Cada tarefa foi dimensionada para menos de 30 minutos, limita-se a três arquivos e possui de três a cinco critérios verificáveis.
 
-> **OWNER DECISION (2026-08-06):** Layout `.pen` revisado por @designer e @reviewer.
-> - ✅ 3 bloqueios anteriores (TrendChart, RankingTable, semáforo) RESOLVIDOS
-> - ✅ TrendChart → **BarChart** (decisão de produto: barras são mais legíveis para dados discretos mensais)
-> - ✅ IndicatorCard → **fundo tinted** (decisão de produto: cores semáforo no fundo do card para reconhecimento visual imediato)
-> - ✅ Font → **Geist Sans** no código (o .pen usa Inter como placeholder do wireframe)
-> - ℹ️ Issues moderados: badge "estável" pg3, dados amostrais, footer texto pessoal — todos anotados nas acceptance criteria das tasks
->
-> **OWNER DECISION (2026-08-08):** Blocker `dash-01-test-runner` resolvido pela aprovação da stack Vitest + Testing Library + jsdom + coverage V8.
-> - ✅ Dependências de teste isoladas em `SETUP-05` e configuração do runner em `SETUP-06`
-> - ✅ Cobertura comportamental do `IndicatorCard` isolada em `DASH-01A`
-> - ✅ Dependências e comandos definidos no `docs/SPEC.md` antes da criação das tarefas
----
-
-## Épico 1 — Setup & Infraestrutura
+## Épico 1 — Base do projeto
 
 - [x] **ID**: `SETUP-01`
-      **Files**: `package.json`, `src/app/globals.css`
-      **Acceptance**:
-  - [x] `npx shadcn@latest init` executado com sucesso (components.json criado)
-  - [x] `npx shadcn@latest add card badge select separator skeleton tooltip` instala 6 componentes em `src/components/ui/`
-  - [x] `npm install recharts` adicionado ao package.json
-  - [x] `npm run build` passa sem erros após instalações
-        **Dependencies**: `[]`
+  - **Files**: `package.json`, `components.json`, `src/components/ui/`
+  - **Dependencies**: `[]`
+  - **Acceptance**:
+    - [x] `components.json` configura Shadcn com RSC, TypeScript, Tailwind CSS e aliases de `src/`
+    - [x] Card, Badge, Select, Separator, Skeleton e Tooltip existem em `src/components/ui/`
+    - [x] `package.json` contém `recharts@^3.10.1` e as dependências requeridas pelos componentes Shadcn
+    - [x] `npm run build` termina sem erros
 
 - [x] **ID**: `SETUP-02`
-      **Files**: `src/lib/types.ts`
-      **Acceptance**:
-  - [x] Interfaces `UBS`, `Indicator`, `HistoryRecord`, `IndicatorStatus`, `PeriodFilter`, `Filters`, `IndicatorDisplay`, `RankingRow`, `RadarDataPoint` estão definidas
-  - [x] `IndicatorStatus` é union type `"verde" | "amarelo" | "vermelho"`
-  - [x] `PeriodFilter` é union type com 4 valores exatos
-  - [x] `npx tsc --noEmit` passa sem erros
-        **Dependencies**: `[]`
+  - **Files**: `src/lib/types.ts`
+  - **Dependencies**: `[]`
+  - **Acceptance**:
+    - [x] O arquivo exporta `UBS`, `Indicator`, `HistoryRecord`, `Filters` e `PeriodFilter`
+    - [x] O arquivo exporta `IndicatorStatus`, `IndicatorDisplay`, `RankingRow` e `RadarDataPoint`
+    - [x] `IndicatorStatus` contém exatamente `verde`, `amarelo` e `vermelho`
+    - [x] `PeriodFilter` contém exatamente as quatro janelas relativas definidas na SPEC
+    - [x] `npx tsc --noEmit` termina sem erros
 
 - [ ] **ID**: `SETUP-03`
-      **Files**: `src/lib/constants.ts`
-      **Acceptance**:
-  - [ ] `META_THRESHOLDS` definido com valores 100 e 80
-  - [ ] `PERIOD_LABELS` mapeia os 4 PeriodFilter para labels em PT-BR
-  - [ ] `PERIOD_MONTHS` mapeia os 4 PeriodFilter para quantidade de meses (1, 3, 6, 12)
-  - [ ] `COLORS` mapeia verde/amarelo/vermelho para classes Tailwind (bg, border, text, icon)
-  - [ ] `npx tsc --noEmit` passa sem erros
-        **Dependencies**: `SETUP-02`
+  - **Files**: `src/lib/types.ts`
+  - **Dependencies**: `SETUP-02`
+  - **Acceptance**:
+    - [ ] `Indicator.id` usa a união dos quatro IDs definidos na SPEC em vez de `string`
+    - [ ] O arquivo exporta os tipos `TrendPoint`, `Trend` e `IndicatorComparisonRow` definidos na SPEC
+    - [ ] Os tipos existentes permanecem compatíveis com todos os schemas da seção 5 da SPEC
+    - [ ] `npx tsc --noEmit` termina sem erros
 
-- [ ] **ID**: `SETUP-04`
-      **Files**: `src/lib/utils.ts`
-      **Acceptance**:
-  - [ ] Função `cn()` exportada (clsx + twMerge ou equivalente do Shadcn)
-  - [ ] `npx tsc --noEmit` passa sem erros
-        **Dependencies**: `SETUP-01`
+- [x] **ID**: `SETUP-04`
+  - **Files**: `src/lib/utils.ts`, `package.json`
+  - **Dependencies**: `SETUP-01`
+  - **Acceptance**:
+    - [x] `src/lib/utils.ts` exporta a função `cn(...inputs: ClassValue[])`
+    - [x] `cn()` combina `clsx` e `tailwind-merge`
+    - [x] `package.json` contém `clsx` e `tailwind-merge`
+    - [x] `npx tsc --noEmit` termina sem erros
 
 - [ ] **ID**: `SETUP-05`
   - **Files**: `package.json`, `package-lock.json`
   - **Dependencies**: `[]`
   - **Acceptance**:
-    - [ ] `vitest@^3`, `@testing-library/react@^16`, `@testing-library/jest-dom@^6`, `jsdom@^26` e `@vitest/coverage-v8@^3` constam em `devDependencies`
-    - [ ] Scripts `test`, `test:watch` e `test:coverage` correspondem aos comandos definidos no `docs/SPEC.md`
-    - [ ] `package-lock.json` registra as versões instaladas sem conflito de peer dependencies
+    - [ ] As cinco dependências de teste e versões autorizadas na SPEC constam em `devDependencies`
+    - [ ] Os scripts `test`, `test:watch` e `test:coverage` correspondem exatamente à SPEC
+    - [ ] `package-lock.json` registra as dependências instaladas sem conflito de peer dependencies
     - [ ] `npm install` termina sem erros
 
 - [ ] **ID**: `SETUP-06`
   - **Files**: `vitest.config.ts`, `src/test/setup.ts`
   - **Dependencies**: `SETUP-05`
   - **Acceptance**:
-    - [ ] `vitest.config.ts` usa ambiente `jsdom`
-    - [ ] `vitest.config.ts` habilita globals e carrega `src/test/setup.ts`
-    - [ ] `src/test/setup.ts` importa `@testing-library/jest-dom/vitest`
+    - [ ] `vitest.config.ts` configura ambiente `jsdom` e globals
+    - [ ] `vitest.config.ts` carrega `src/test/setup.ts`
+    - [ ] O setup importa `@testing-library/jest-dom/vitest`
     - [ ] `npm test -- --passWithNoTests` e `npx tsc --noEmit` terminam sem erros
 
----
+- [ ] **ID**: `SETUP-07`
+  - **Files**: `src/lib/constants.ts`
+  - **Dependencies**: `SETUP-03`
+  - **Acceptance**:
+    - [ ] `META_THRESHOLDS` contém os limites 100 e 80
+    - [ ] `PERIOD_LABELS` mapeia as quatro janelas para labels PT-BR da SPEC
+    - [ ] `PERIOD_MONTHS` mapeia as janelas para 1, 3, 6 e 12
+    - [ ] `STATUS_CLASSES` contém background, border, text e icon para os três estados
+    - [ ] `npx tsc --noEmit` termina sem erros
 
-## Épico 2 — Camada de Dados (Mock)
+## Épico 2 — Dados locais
 
 - [ ] **ID**: `DATA-01`
-      **Files**: `src/data/ubs.ts`
-      **Acceptance**:
-  - [ ] Array `ubsList` exportado com 15 UBS
-  - [ ] Cada UBS possui: id (1-15), nome, codigo (6 dígitos string), equipe, cadastrados (1500-4500), endereco
-  - [ ] Nomes são realistas (bairros paulistas: "Jardim Paulista", "Vila Nova", "Parque Industrial" etc.)
-  - [ ] Cadastrados variam realisticamente (nenhuma = 0 ou > 5000)
-        **Dependencies**: `SETUP-02`
+  - **Files**: `src/data/ubs.ts`
+  - **Dependencies**: `SETUP-03`
+  - **Acceptance**:
+    - [ ] `ubsList` exporta exatamente 15 objetos tipados como `UBS[]`
+    - [ ] IDs são únicos e cobrem os inteiros de 1 a 15
+    - [ ] Cada código CNES é uma string única de seis dígitos
+    - [ ] Cada UBS possui nome, equipe, endereço e entre 1.500 e 4.500 cadastrados
 
 - [ ] **ID**: `DATA-02`
-      **Files**: `src/data/indicators.ts`
-      **Acceptance**:
-  - [ ] Array `indicatorsList` exportado com 4 indicadores
-  - [ ] IDs: "cobertura-vacinal", "pre-natal", "hipertensao", "diabetes"
-  - [ ] Cada indicador tem: id, nome, descricao (≥ 50 chars), meta (number), unidade, fonte
-  - [ ] Metas: 95, 60, 50, 50 (conforme PRD)
-        **Dependencies**: `SETUP-02`
+  - **Files**: `src/data/indicators.ts`
+  - **Dependencies**: `SETUP-03`
+  - **Acceptance**:
+    - [ ] `indicatorsList` exporta exatamente quatro objetos tipados como `Indicator[]`
+    - [ ] Os IDs são `cobertura-vacinal`, `pre-natal`, `hipertensao` e `diabetes`
+    - [ ] As metas são respectivamente 95, 60, 50 e 50
+    - [ ] Cada objeto possui descrição com pelo menos 50 caracteres, unidade e fonte
 
 - [ ] **ID**: `DATA-03`
-      **Files**: `src/data/history.ts`
-      **Acceptance**:
-  - [ ] Array `historyData` exportado com 720 registros (15 UBS × 4 indicadores × 12 meses)
-  - [ ] Meses cobrem jul/2025 a jun/2026 (formato "YYYY-MM")
-  - [ ] Valores variam realisticamente (desvio padrão ≤ 15% da meta do indicador)
-  - [ ] Tendência geral levemente positiva (jun/2026 > jul/2025 em ~70% dos casos)
-  - [ ] Nenhum valor é negativo ou > 130% da meta
-        **Dependencies**: `DATA-01`, `DATA-02`
+  - **Files**: `src/data/history.ts`
+  - **Dependencies**: `DATA-01`, `DATA-02`
+  - **Acceptance**:
+    - [ ] `historyData` exporta exatamente 720 registros tipados como `HistoryRecord[]`
+    - [ ] Cada combinação de UBS e indicador contém uma vez cada mês de `2025-07` a `2026-06`
+    - [ ] Todos os valores estão entre zero e 130% da meta correspondente
+    - [ ] O desvio padrão de cada série é no máximo 15% da média da própria série
+    - [ ] Junho de 2026 supera julho de 2025 em pelo menos 42 das 60 séries
 
----
+- [ ] **ID**: `DATA-04`
+  - **Files**: `src/data/data-integrity.test.ts`
+  - **Dependencies**: `SETUP-06`, `DATA-03`
+  - **Acceptance**:
+    - [ ] Testes verificam cardinalidade, IDs, referências e 12 meses contínuos
+    - [ ] Testes verificam limites de valores e cadastrados definidos na SPEC
+    - [ ] Testes calculam e verificam o limite de desvio padrão por série
+    - [ ] Testes verificam a tendência positiva em pelo menos 70% das séries
+    - [ ] `npm test -- src/data/data-integrity.test.ts` termina sem falhas
 
-## Épico 3 — Funções de Negócio
+## Épico 3 — Regras de negócio
 
 - [ ] **ID**: `BIZ-01`
-      **Files**: `src/lib/filters.ts`
-      **Acceptance**:
-  - [ ] `getIndicatorStatus(valor, meta)` retorna "verde"/"amarelo"/"vermelho"
-  - [ ] Verde: valor >= meta; Amarelo: valor >= meta * 0.8; Vermelho: caso contrário
-  - [ ] Testes manuais: 95/95 → verde; 80/100 → amarelo; 70/100 → vermelho
-        **Dependencies**: `SETUP-03`
+  - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
+  - **Dependencies**: `SETUP-06`, `SETUP-07`
+  - **Acceptance**:
+    - [ ] `getIndicatorStatus` implementa os limites vermelho, amarelo e verde da RB-01
+    - [ ] Entradas não finitas ou meta menor ou igual a zero lançam erro
+    - [ ] Testes cobrem valores abaixo, exatamente em e acima dos limites de 80% e 100%
+    - [ ] O teste direcionado e `npx tsc --noEmit` terminam sem erros
 
 - [ ] **ID**: `BIZ-02`
-      **Files**: `src/lib/filters.ts`
-      **Acceptance**:
-  - [ ] `filterByPeriod(records, period, referenceDate)` retorna subset de registros
-  - [ ] "ultimo-mes" retorna 1 mês; "ultimo-trimestre" retorna 3 meses; etc.
-  - [ ] Trata corretamente wrap-around de ano (jan/2026 + 3 meses = out/2025 a jan/2026)
-        **Dependencies**: `SETUP-02`
+  - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
+  - **Dependencies**: `BIZ-01`
+  - **Acceptance**:
+    - [ ] `filterByPeriod` ancora a janela no maior mês presente nos registros recebidos
+    - [ ] As quatro janelas retornam respectivamente 1, 3, 6 e 12 meses calendário inclusivos
+    - [ ] A função não usa `new Date()` e retorna meses em ordem crescente
+    - [ ] Testes cobrem virada de ano e array vazio
+    - [ ] O teste direcionado e `npx tsc --noEmit` terminam sem erros
 
 - [ ] **ID**: `BIZ-03`
-      **Files**: `src/lib/filters.ts`
-      **Acceptance**:
-  - [ ] `aggregateByIndicator(records, indicatorId, ubsList)` retorna percentual único
-  - [ ] Usa média ponderada: Σ(valor × cadastrados) / Σ(cadastrados)
-  - [ ] Retorna 0 se não houver registros
-        **Dependencies**: `BIZ-02`
+  - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
+  - **Dependencies**: `BIZ-02`
+  - **Acceptance**:
+    - [ ] `aggregateByIndicator` calcula a média temporal de cada UBS antes da consolidação
+    - [ ] A consolidação pondera somente UBS com registros por quantidade de cadastrados
+    - [ ] O resultado é arredondado para uma casa decimal e ausência de registros retorna zero
+    - [ ] Testes usam UBS com populações diferentes e verificam o resultado numérico exato
+    - [ ] O teste direcionado e `npx tsc --noEmit` terminam sem erros
 
 - [ ] **ID**: `BIZ-04`
-      **Files**: `src/lib/filters.ts`
-      **Acceptance**:
-  - [ ] `calculateRanking(ubs, history, indicators, period)` retorna RankingRow
-  - [ ] Pontuação = média dos 4 indicadores normalizada 0-100
-  - [ ] Status baseado na pontuação geral (não no melhor indicador)
-        **Dependencies**: `BIZ-01`, `BIZ-02`, `BIZ-03`
+  - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
+  - **Dependencies**: `BIZ-03`
+  - **Acceptance**:
+    - [ ] `calculateUBSScore` aplica quatro parcelas com peso de 25% e limite 0–100
+    - [ ] A pontuação final é arredondada para uma casa decimal
+    - [ ] `calculateRanking` exclui UBS sem os quatro indicadores e retorna `RankingRow[]`
+    - [ ] O ranking ordena por pontuação e desempata por nome `pt-BR` antes de atribuir posições
+    - [ ] Testes cobrem teto, arredondamento, exclusão, ordem e empate
 
 - [ ] **ID**: `BIZ-05`
-      **Files**: `src/lib/filters.ts`
-      **Acceptance**:
-  - [ ] `getTrend(records, indicatorId, ubsId, months)` retorna "alta"/"estavel"/"queda"
-  - [ ] Compara média dos últimos N meses com N meses anteriores
-  - [ ] > +5% = alta; < -5% = queda; senão = estável
-        **Dependencies**: `BIZ-02`
+  - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
+  - **Dependencies**: `BIZ-03`
+  - **Acceptance**:
+    - [ ] `getTrend` compara N meses recentes aos N imediatamente anteriores, com padrão N igual a 3
+    - [ ] Variação maior que 5% retorna alta, menor que -5% retorna queda e demais casos retornam estável
+    - [ ] Consolidação com `ubsId=null` é ponderada por cadastrados
+    - [ ] Menos de `2N` meses válidos retorna estável
+    - [ ] Testes cobrem alta, queda, estabilidade, consolidado e histórico insuficiente
 
 - [ ] **ID**: `BIZ-06`
-      **Files**: `src/hooks/use-filters.ts`
-      **Acceptance**:
-  - [ ] Hook `useFilters()` retorna `{ filters, setUBS, setPeriod, resetFilters }`
-  - [ ] Estado inicial: ubsId=null, period="ultimo-mes"
-  - [ ] `resetFilters` volta ao estado inicial
-  - [ ] `npx tsc --noEmit` passa sem erros
-        **Dependencies**: `SETUP-02`
+  - **Files**: `src/hooks/use-filters.ts`, `src/hooks/use-filters.test.tsx`
+  - **Dependencies**: `SETUP-06`, `SETUP-03`
+  - **Acceptance**:
+    - [ ] `useFilters` inicia com `ubsId=null` e `period="ultimo-mes"`
+    - [ ] `setUBS` e `setPeriod` alteram somente seus campos correspondentes
+    - [ ] `resetFilters` restaura integralmente o estado inicial
+    - [ ] Testes exercitam estado inicial, alterações e reset
+    - [ ] O teste direcionado e `npx tsc --noEmit` terminam sem erros
 
----
-
-## Épico 4 — Componentes de Layout
+## Épico 4 — Layout compartilhado
 
 - [ ] **ID**: `LAYOUT-01`
-      **Files**: `src/app/layout.tsx`
-      **Acceptance**:
-  - [ ] Metadata atualizada: title "Painel SUS - Dashboard de Indicadores", description contextual
-  - [ ] `<html lang="pt-BR">` (não "en")
-  - [ ] Body com `className="min-h-screen flex flex-col"`
-  - [ ] Skip link "Pular para conteúdo principal" visível apenas com focus
-        **Dependencies**: `SETUP-01`
+  - **Files**: `src/app/layout.tsx`
+  - **Dependencies**: `SETUP-01`
+  - **Acceptance**:
+    - [ ] Metadata padrão usa título e descrição contextuais do Painel SUS
+    - [ ] O elemento `html` usa `lang="pt-BR"`
+    - [ ] O body usa Geist Sans, Geist Mono e layout flexível com altura mínima de tela
+    - [ ] Existe skip link “Pular para conteúdo principal” apontando para `#main-content`
+    - [ ] `npx tsc --noEmit` termina sem erros
 
 - [ ] **ID**: `LAYOUT-02`
-      **Files**: `src/components/layout/header.tsx`
-      **Acceptance**:
-  - [ ] Logo/nome "Painel SUS" à esquerda com ícone (SVG inline ou emoji 🏥)
-  - [ ] Links de navegação: Dashboard (/), Indicadores (/indicadores), Sobre (/sobre)
-  - [ ] Link ativo tem `aria-current="page"` e estilo diferenciado
-  - [ ] Usa `<nav aria-label="Navegação principal">`
-  - [ ] Responsivo: sempre visível (sem hamburger em v1.0)
-        **Dependencies**: `LAYOUT-01`
+  - **Files**: `src/components/layout/header.tsx`
+  - **Dependencies**: `LAYOUT-01`
+  - **Acceptance**:
+    - [ ] O header exibe “Painel SUS” e links para `/`, `/indicadores` e `/sobre`
+    - [ ] A navegação possui `aria-label="Navegação principal"`
+    - [ ] `usePathname` define `aria-current="page"` no link ativo
+    - [ ] O link ativo combina underline, peso e cor sem depender somente de cor
+    - [ ] Todos os links possuem alvo mínimo de 44×44 px
 
 - [ ] **ID**: `LAYOUT-03`
-      **Files**: `src/components/layout/footer.tsx`
-      **Acceptance**:
-  - [ ] Disclaimer: "Dados simulados para fins de demonstração."
-  - [ ] Fonte: "Fontes: CNES, e-SUS AB, DATASUS."
-  - [ ] Versão: "Protótipo v1.0 — Saúde Itapira"
-  - [ ] Background: `bg-zinc-50`, border-top: `border-zinc-200`, padding: `py-6 px-6`
-  - [ ] Texto: `text-sm text-zinc-500 text-center`
-  - [ ] **Sem** texto promocional pessoal (raigomes.dev ou similar)
-  - [ ] Usa `<footer role="contentinfo">`
-        **Dependencies**: `LAYOUT-01`
+  - **Files**: `src/components/layout/footer.tsx`
+  - **Dependencies**: `LAYOUT-01`
+  - **Acceptance**:
+    - [ ] O footer informa que os dados são simulados para demonstração
+    - [ ] O footer lista CNES, e-SUS AB e DATASUS como fontes
+    - [ ] O footer mostra “Protótipo v1.0 — Saúde Itapira” e nenhum texto promocional pessoal
+    - [ ] O elemento usa `role="contentinfo"` e os estilos de rodapé definidos na SPEC
 
 - [ ] **ID**: `LAYOUT-04`
-      **Files**: `src/app/layout.tsx`
-      **Acceptance**:
-  - [ ] Layout inclui `<Header />` antes do conteúdo
-  - [ ] Layout inclui `<Footer />` após o conteúdo
-  - [ ] Main content com `id="main-content"` e `role="main"`
-  - [ ] `npm run build` passa sem erros
-        **Dependencies**: `LAYOUT-02`, `LAYOUT-03`
+  - **Files**: `src/app/layout.tsx`, `src/components/layout/header.tsx`, `src/components/layout/footer.tsx`
+  - **Dependencies**: `LAYOUT-02`, `LAYOUT-03`
+  - **Acceptance**:
+    - [ ] `Header` aparece antes do conteúdo em todas as rotas
+    - [ ] O conteúdo usa `<main id="main-content">` e cresce para preencher a página
+    - [ ] `Footer` aparece depois do conteúdo em todas as rotas
+    - [ ] `npm run build` termina sem erros
 
----
-
-## Épico 5 — Filtros
+## Épico 5 — Filtros e dashboard
 
 - [ ] **ID**: `FILTER-01`
-      **Files**: `src/components/filters/ubs-filter.tsx`
-      **Acceptance**:
-  - [ ] Usa componente `Select` do Shadcn/UI
-  - [ ] Primeira opção: "Todas as UBS" (value="all")
-  - [ ] Demais opções: 15 UBS com nome como label
-  - [ ] Label visual: "Unidade de Saúde"
-  - [ ] `aria-label="Filtrar por Unidade de Saúde"` presente
-        **Dependencies**: `SETUP-01`, `DATA-01`
+  - **Files**: `src/components/filters/ubs-filter.tsx`
+  - **Dependencies**: `DATA-01`
+  - **Acceptance**:
+    - [ ] O Select controlado recebe exatamente as props `UBSFilterProps` da SPEC
+    - [ ] A primeira opção representa `null` e exibe “Todas as UBS”
+    - [ ] As 15 opções restantes exibem os nomes de `ubs`
+    - [ ] Existe label visível associada “Unidade de Saúde”
+    - [ ] Alterar a seleção chama `onChange` com `number` ou `null`
 
 - [ ] **ID**: `FILTER-02`
-      **Files**: `src/components/filters/period-filter.tsx`
-      **Acceptance**:
-  - [ ] Usa componente `Select` do Shadcn/UI
-  - [ ] 4 opções: Último mês, Último trimestre, Último semestre, Último ano
-  - [ ] Valor padrão: "Último mês"
-  - [ ] Label visual: "Período"
-  - [ ] `aria-label="Filtrar por período"` presente
-        **Dependencies**: `SETUP-01`
-
----
-
-## Épico 6 — Componentes do Dashboard
+  - **Files**: `src/components/filters/period-filter.tsx`
+  - **Dependencies**: `SETUP-07`
+  - **Acceptance**:
+    - [ ] O Select controlado recebe exatamente as props `PeriodFilterProps` da SPEC
+    - [ ] As quatro opções e labels vêm de `PERIOD_LABELS`
+    - [ ] Existe label visível associada “Período”
+    - [ ] Alterar a seleção chama `onChange` com um `PeriodFilter`
 
 - [ ] **ID**: `DASH-01`
-      **Files**: `src/components/dashboard/indicator-card.tsx`
-      **Acceptance**:
-  - [ ] Recebe props `IndicatorDisplay` (definido em types.ts)
-  - [ ] Renderiza card com **fundo tinted** (verde/amarelo/vermelho) + borda esquerda 4px via COLORS
-  - [ ] Exibe: nome do indicador, valor atual com unidade (Geist Mono, tabular-nums), meta
-  - [ ] Badge com tendência (↑ alta, → estável, ↓ queda) — cores consistentes: alta=verde, estável=zinc, queda=vermelho
-  - [ ] Ícone semáforo: check (verde), alerta (amarelo), erro (vermelho)
-  - [ ] `role="article"` e `aria-label` descritivo
-  - [ ] Hover: elevação `shadow-sm → shadow-md` com `transition-shadow duration-200`
-        **Dependencies**: `SETUP-01`, `SETUP-03`, `BIZ-01`
+  - **Files**: `src/components/dashboard/indicator-card.tsx`
+  - **Dependencies**: `BIZ-01`, `SETUP-07`
+  - **Acceptance**:
+    - [ ] O card recebe `IndicatorCardProps` e exibe nome, valor, unidade, meta e tendência
+    - [ ] Fundo suave e borda esquerda usam o estado fornecido e `STATUS_CLASSES`
+    - [ ] Ícone e texto identificam verde, amarelo ou vermelho sem depender somente de cor
+    - [ ] Estado vermelho exibe “Abaixo da meta”
+    - [ ] O artigo possui nome acessível descritivo e números tabulares
 
-- [ ] **ID**: `DASH-01A`
+- [ ] **ID**: `DASH-02`
   - **Files**: `src/components/dashboard/indicator-card.test.tsx`
   - **Dependencies**: `SETUP-06`, `DASH-01`
   - **Acceptance**:
-    - [ ] Teste happy path encontra nome, valor atual, unidade, meta e tendência do indicador
-    - [ ] Teste acessível encontra o card por `role="article"` e nome acessível descritivo
-    - [ ] Casos verde, amarelo e vermelho verificam os respectivos ícones e identificações visuais
-    - [ ] Caso vermelho verifica a mensagem "Abaixo da meta"
+    - [ ] Teste encontra nome, valor, unidade, meta e tendência
+    - [ ] Teste encontra o cartão por `role="article"` e nome acessível
+    - [ ] Casos verde, amarelo e vermelho verificam suas identificações textuais e ícones
+    - [ ] Caso vermelho verifica “Abaixo da meta”
     - [ ] `npm test -- src/components/dashboard/indicator-card.test.tsx` termina sem falhas
 
-- [ ] **ID**: `DASH-02`
-      **Files**: `src/components/dashboard/indicator-grid.tsx`
-      **Acceptance**:
-  - [ ] Renderiza 4 `IndicatorCard` em grid responsivo
-  - [ ] Grid: 1 coluna (mobile), 2 colunas (sm/md), 4 colunas (lg+)
-  - [ ] Cada card recebe dados do seu indicador (via props ou data)
-  - [ ] Espaçamento consistente entre cards (gap-4 ou gap-6)
-        **Dependencies**: `DASH-01`
-
 - [ ] **ID**: `DASH-03`
-      **Files**: `src/components/dashboard/trend-chart.tsx`
-      **Acceptance**:
-  - [ ] Usa Recharts `BarChart` com 12 `<Bar>` (meses) + `<ReferenceLine>` de meta (tracejada zinc-400)
-  - [ ] Barras: fill `#004B87` (primary), radius `[4, 4, 0, 0]` (topos arredondados)
-  - [ ] Tooltip interativo: exibe mês, valor, meta (CustomTooltip com card branco)
-  - [ ] Eixo Y: 0-120%, `tickFormatter={v => v + '%'}`
-  - [ ] Eixo X: labels de mês em PT-BR (jul/25, ago/25...)
-  - [ ] `role="img"` e `aria-label` com resumo textual do gráfico
-  - [ ] ResponsiveContainer: alturas conforme DESIGN_SYSTEM §4.3
-        **Dependencies**: `SETUP-01`
+  - **Files**: `src/components/dashboard/indicator-grid.tsx`
+  - **Dependencies**: `DASH-01`
+  - **Acceptance**:
+    - [ ] O componente recebe `IndicatorGridProps` e renderiza um card por item
+    - [ ] Quatro itens resultam em quatro `IndicatorCard`
+    - [ ] O grid usa uma coluna no mobile, duas a partir de 640px e quatro a partir de 1024px
+    - [ ] O espaçamento entre cartões permanece consistente em todos os breakpoints
 
 - [ ] **ID**: `DASH-04`
-      **Files**: `src/components/dashboard/ranking-table.tsx`
-      **Acceptance**:
-  - [ ] Tabela HTML semântica: `<table>`, `<caption>`, `<thead>`, `<tbody>`
-  - [ ] Colunas: # (posição), UBS, Equipe, Pontuação, Status
-  - [ ] Header row: `bg-zinc-100` `font-semibold` `text-zinc-700`
-  - [ ] Body rows: alternating `bg-white` / `bg-zinc-50`, `h-12`, `border-b border-zinc-100`
-  - [ ] Cada linha é clicável (navega para /ubs/[id])
-  - [ ] UBS ordenadas por pontuação decrescente
-  - [ ] `scope="col"` em todos os `<th>`
-  - [ ] Status exibe badge colorido (verde/amarelo/vermelho)
-  - [ ] Fonte numérica: Geist Mono, tabular-nums
-        **Dependencies**: `SETUP-01`, `SETUP-03`, `BIZ-04`
+  - **Files**: `src/components/dashboard/trend-chart.tsx`
+  - **Dependencies**: `SETUP-03`
+  - **Acceptance**:
+    - [ ] O Client Component usa Recharts `LineChart` com uma `Line` sobre todos os pontos recebidos
+    - [ ] `ReferenceLine` representa a meta e os eixos identificam mês e percentual
+    - [ ] Tooltip informa mês, valor e meta do ponto ativo
+    - [ ] Contêiner responsivo preserva a largura e altura mínima definidas na SPEC
+    - [ ] Região e resumo textual tornam os dados essenciais acessíveis
 
----
+- [ ] **ID**: `DASH-05`
+  - **Files**: `src/components/dashboard/ranking-table.tsx`
+  - **Dependencies**: `BIZ-04`, `SETUP-07`
+  - **Acceptance**:
+    - [ ] A tabela possui `caption`, `thead`, `tbody` e headers com `scope="col"`
+    - [ ] As colunas são posição, UBS, equipe, pontuação e estado
+    - [ ] As linhas preservam a ordem recebida e exibem pontuação com uma casa decimal
+    - [ ] Cada nome de UBS é um link para `/ubs/[id]`, sem callback de navegação
+    - [ ] Estado inclui badge e texto, e a tabela tem contêiner com overflow horizontal
 
-## Épico 7 — Página Dashboard Principal
+- [ ] **ID**: `DASH-06`
+  - **Files**: `src/components/dashboard/ranking-table.test.tsx`
+  - **Dependencies**: `SETUP-06`, `DASH-05`
+  - **Acceptance**:
+    - [ ] Teste encontra a tabela por nome acessível e todos os cinco headers
+    - [ ] Teste confirma a ordem das linhas fornecidas e uma casa decimal nas pontuações
+    - [ ] Teste confirma href `/ubs/[id]` nos nomes das unidades
+    - [ ] Teste confirma a identificação textual dos três estados
+    - [ ] O teste direcionado termina sem falhas
+
+- [ ] **ID**: `DASH-07`
+  - **Files**: `src/components/dashboard/empty-state.tsx`
+  - **Dependencies**: `SETUP-01`
+  - **Acceptance**:
+    - [ ] O estado vazio informa que não há registros para os filtros atuais
+    - [ ] Existe botão “Limpar filtros” com alvo mínimo de 44×44 px
+    - [ ] Ativar o botão chama exatamente uma vez a função `onClear`
+    - [ ] Não existe ação ou texto “Tentar novamente”
+
+- [ ] **ID**: `DASH-08`
+  - **Files**: `src/components/dashboard/dashboard-client.tsx`
+  - **Dependencies**: `BIZ-04`, `BIZ-05`, `BIZ-06`, `FILTER-01`, `FILTER-02`, `DASH-03`, `DASH-04`, `DASH-05`, `DASH-07`
+  - **Acceptance**:
+    - [ ] O componente recebe `DashboardClientProps` e aplica primeiro UBS e janela relativa
+    - [ ] Cartões, gráfico e ranking derivam da mesma combinação ativa de filtros
+    - [ ] A ausência de registros renderiza `EmptyState` e o reset restaura os filtros padrão
+    - [ ] A composição visual segue filtros, cartões, gráfico de linha e ranking nessa ordem
+    - [ ] `npx tsc --noEmit` termina sem erros
+
+- [ ] **ID**: `DASH-09`
+  - **Files**: `src/components/dashboard/dashboard-client.test.tsx`
+  - **Dependencies**: `SETUP-06`, `DASH-08`
+  - **Acceptance**:
+    - [ ] Teste confirma os filtros padrão “Todas as UBS” e “Último mês”
+    - [ ] Teste confirma atualização dos dados ao escolher UBS e período
+    - [ ] Teste força combinação sem registros e encontra o estado vazio
+    - [ ] Teste aciona “Limpar filtros” e confirma restauração dos padrões
+    - [ ] O teste direcionado termina sem falhas
 
 - [ ] **ID**: `PAGE-01`
-      **Files**: `src/app/page.tsx`
-      **Acceptance**:
-  - [ ] Importa e renderiza Header (via layout) e filtros + conteúdo
-  - [ ] Filtros: UBSFilter + PeriodFilter + botão "Limpar"
-  - [ ] Estado dos filtros gerenciado por `useFilters()` hook
-  - [ ] Layout: filtros no topo, cards, gráfico, ranking na sequência
-  - [ ] `npx tsc --noEmit` passa sem erros
-        **Dependencies**: `BIZ-06`, `FILTER-01`, `FILTER-02`, `DASH-02`, `DASH-03`, `DASH-04`
+  - **Files**: `src/app/page.tsx`
+  - **Dependencies**: `DATA-03`, `DASH-08`, `LAYOUT-04`
+  - **Acceptance**:
+    - [ ] A página permanece Server Component e importa os três conjuntos de dados locais
+    - [ ] A página renderiza `DashboardClient` com props serializáveis completas
+    - [ ] Título e introdução identificam o dashboard e o período baseado nos dados
+    - [ ] Não existe fetch HTTP nem conteúdo padrão do Create Next App
+    - [ ] `npm run build` gera a rota `/` sem erros
+
+## Épico 6 — Detalhe da UBS
+
+- [ ] **ID**: `UBS-01`
+  - **Files**: `src/components/ubs/ubs-info-card.tsx`
+  - **Dependencies**: `DATA-01`
+  - **Acceptance**:
+    - [ ] O card recebe `UBSInfoCardProps`
+    - [ ] Exibe nome, código CNES, equipe, cadastrados e endereço
+    - [ ] Rótulos e valores são compreensíveis sem depender da posição visual
+    - [ ] O número de cadastrados usa formatação `pt-BR`
+
+- [ ] **ID**: `UBS-02`
+  - **Files**: `src/components/ubs/radar-chart.tsx`
+  - **Dependencies**: `SETUP-03`
+  - **Acceptance**:
+    - [ ] O Client Component usa Recharts `RadarChart` com quatro eixos
+    - [ ] Dois radares distinguem valor e meta e possuem legenda visível
+    - [ ] O componente recebe `RadarChartProps` sem importar dados globais
+    - [ ] Região e resumo textual informam nome da UBS e os quatro valores
+
+- [ ] **ID**: `UBS-03`
+  - **Files**: `src/components/ubs/history-table.tsx`
+  - **Dependencies**: `BIZ-01`, `DATA-02`
+  - **Acceptance**:
+    - [ ] A tabela recebe `HistoryTableProps` e organiza 12 meses em ordem crescente
+    - [ ] Possui cinco colunas: mês e os quatro indicadores
+    - [ ] Usa `caption` e headers com `scope="col"`
+    - [ ] Cada célula informa valor e estado por texto, ícone ou nome acessível
+    - [ ] Contêiner permite overflow horizontal sem cortar colunas
 
 - [ ] **ID**: `PAGE-02`
-      **Files**: `src/app/page.tsx`
-      **Acceptance**:
-  - [ ] Quando "Todas as UBS" selecionado: cards mostram valores agregados (média ponderada)
-  - [ ] Quando UBS específica selecionada: cards mostram dados daquela UBS
-  - [ ] Mudança de período recalcula todos os valores exibidos
-  - [ ] Gráfico de linha atualiza dados ao mudar período/UBS
-  - [ ] Ranking atualiza ao mudar período
-        **Dependencies**: `PAGE-01`, `BIZ-01`, `BIZ-02`, `BIZ-03`, `BIZ-04`, `BIZ-05`
-
----
-
-## Épico 8 — Página Detalhe da UBS
+  - **Files**: `src/app/ubs/[id]/page.tsx`
+  - **Dependencies**: `DATA-03`, `UBS-01`, `LAYOUT-04`
+  - **Acceptance**:
+    - [ ] A rota Server Component converte `params.id` em inteiro positivo e busca `ubsList`
+    - [ ] ID inexistente exibe “UBS não encontrada” e link para `/`
+    - [ ] UBS existente exibe breadcrumb e `UBSInfoCard`
+    - [ ] `generateMetadata` retorna título com o nome ou “UBS não encontrada”
+    - [ ] `npm run build` gera a rota dinâmica sem erros
 
 - [ ] **ID**: `PAGE-03`
-      **Files**: `src/app/ubs/[id]/page.tsx`, `src/components/ubs/ubs-info-card.tsx`
-      **Acceptance**:
-  - [ ] Rota dinâmica extrai `id` dos params
-  - [ ] `ubs-info-card.tsx` exibe: nome, código CNES, equipe, cadastrados, endereço
-  - [ ] Se UBS não encontrada (id inválido): mostra "UBS não encontrada" + link volta ao dashboard
-  - [ ] `generateMetadata()` retorna título dinâmico com nome da UBS
-        **Dependencies**: `DATA-01`, `LAYOUT-01`
+  - **Files**: `src/app/ubs/[id]/page.tsx`
+  - **Dependencies**: `PAGE-02`, `BIZ-03`, `UBS-02`, `UBS-03`
+  - **Acceptance**:
+    - [ ] A página deriva os quatro pontos radar do último mês disponível da UBS
+    - [ ] O radar aparece abaixo do card informativo com valor e meta
+    - [ ] A tabela recebe exatamente os 12 meses da UBS
+    - [ ] A página não usa estado Client nem fetch HTTP
+    - [ ] `/ubs/1` e `/ubs/999` compilam sem erro de tipo
+
+## Épico 7 — Indicadores e página Sobre
+
+- [ ] **ID**: `IND-01`
+  - **Files**: `src/components/indicadores/indicator-detail.tsx`
+  - **Dependencies**: `BIZ-03`, `DASH-04`, `DASH-05`
+  - **Acceptance**:
+    - [ ] O detalhe recebe `IndicatorDetailProps` e exibe descrição, meta e fonte
+    - [ ] O gráfico de linha apresenta os 12 meses consolidados e referência da meta
+    - [ ] A tabela compara as 15 UBS para o indicador no último mês disponível
+    - [ ] Valor, meta e estado são identificados sem depender somente de cor
+    - [ ] O componente não cria navegação para `/indicadores/[id]`
+
+- [ ] **ID**: `IND-02`
+  - **Files**: `src/components/indicadores/indicator-list.tsx`
+  - **Dependencies**: `IND-01`
+  - **Acceptance**:
+    - [ ] A lista recebe `IndicatorListProps` e renderiza os quatro indicadores
+    - [ ] Cada botão possui `aria-expanded`, `aria-controls` e alvo mínimo de 44×44 px
+    - [ ] Inicialmente nenhum detalhe está aberto e no máximo um permanece aberto
+    - [ ] Expandir e recolher ocorre localmente sem alterar a URL
+    - [ ] O painel expandido renderiza `IndicatorDetail` com dados correspondentes
+
+- [ ] **ID**: `IND-03`
+  - **Files**: `src/components/indicadores/indicator-list.test.tsx`
+  - **Dependencies**: `SETUP-06`, `IND-02`
+  - **Acceptance**:
+    - [ ] Teste encontra os quatro botões por nome acessível
+    - [ ] Teste confirma estado inicial recolhido e atributos ARIA
+    - [ ] Teste expande um indicador e encontra histórico, meta e comparação
+    - [ ] Teste abre outro indicador e confirma que o anterior foi recolhido
+    - [ ] O teste direcionado termina sem falhas
 
 - [ ] **ID**: `PAGE-04`
-      **Files**: `src/components/ubs/radar-chart.tsx`, `src/app/ubs/[id]/page.tsx`
-      **Acceptance**:
-  - [ ] `radar-chart.tsx` usa Recharts `RadarChart` com 2 Radar (valor + meta)
-  - [ ] Cada eixo = um dos 4 indicadores
-  - [ ] Legenda visível distinguindo valor de meta
-  - [ ] `aria-label` com resumo: "Indicadores da UBS [nome]: Vacinal X%, Pré-natal Y%..."
-  - [ ] Página UBS renderiza o radarChart abaixo do info card
-        **Dependencies**: `PAGE-03`, `BIZ-02`, `BIZ-03`
+  - **Files**: `src/app/indicadores/page.tsx`
+  - **Dependencies**: `DATA-03`, `IND-02`, `LAYOUT-04`
+  - **Acceptance**:
+    - [ ] A página Server Component exporta metadata “Indicadores - Painel SUS”
+    - [ ] Título e introdução explicam que os detalhes são expansíveis
+    - [ ] `IndicatorList` recebe indicadores, histórico e UBS por props
+    - [ ] Nenhuma rota dinâmica ou fetch HTTP é criado
+    - [ ] `npm run build` gera `/indicadores` sem erros
 
 - [ ] **ID**: `PAGE-05`
-      **Files**: `src/components/ubs/history-table.tsx`, `src/app/ubs/[id]/page.tsx`
-      **Acceptance**:
-  - [ ] `history-table.tsx` renderiza tabela com 12 linhas (meses) × 5 colunas (mês + 4 indicadores)
-  - [ ] Tabela semântica: `<table>`, `<caption>`, `scope` em th/td
-  - [ ] Células com cores condicionais (verde/amarelo/vermelho conforme status)
-  - [ ] Página UBS renderiza history-table abaixo do radar
-        **Dependencies**: `PAGE-03`, `BIZ-01`
+  - **Files**: `src/app/sobre/page.tsx`
+  - **Dependencies**: `LAYOUT-04`
+  - **Acceptance**:
+    - [ ] A página exporta metadata “Sobre - Painel SUS”
+    - [ ] Explica o Previne Brasil e o objetivo do protótipo em linguagem clara
+    - [ ] Lista CNES, e-SUS AB e DATASUS como fontes simuladas
+    - [ ] Destaca que os dados são simulados para demonstração
+    - [ ] `npm run build` gera `/sobre` sem erros
 
----
-
-## Épico 9 — Página Indicadores
-
-- [ ] **ID**: `PAGE-06`
-      **Files**: `src/app/indicadores/page.tsx`, `src/components/indicadores/indicator-list.tsx`
-      **Acceptance**:
-  - [ ] Lista os 4 indicadores com: nome, descrição, meta, unidade
-  - [ ] Cada item é clicável (expandir detalhe ou link)
-  - [ ] Layout: cards ou lista estilizada
-  - [ ] `generateMetadata()` retorna "Indicadores - Painel SUS"
-        **Dependencies**: `DATA-02`, `LAYOUT-01`
-
-- [ ] **ID**: `PAGE-07`
-      **Files**: `src/components/indicadores/indicator-detail.tsx`, `src/app/indicadores/page.tsx`
-      **Acceptance**:
-  - [ ] `indicator-detail.tsx` exibe: descrição completa, meta, fonte
-  - [ ] Gráfico de série histórica (12 meses, consolidado todas UBS)
-  - [ ] Tabela comparativa: UBS × valor do indicador
-  - [ ] Meta destacada visualmente (linha tracejada no gráfico, cor diferenciada na tabela)
-  - [ ] Detalhe é expansível (accordion) ou seção abaixo da lista
-        **Dependencies**: `PAGE-06`, `DASH-03`, `BIZ-03`
-
----
-
-## Épico 10 — Página Sobre
-
-- [ ] **ID**: `PAGE-08`
-      **Files**: `src/app/sobre/page.tsx`
-      **Acceptance**:
-  - [ ] Título: "Sobre o Painel SUS"
-  - [ ] Seção "O que é o Previne Brasil" com explicação contextual
-  - [ ] Seção "Fontes de Dados" listando: CNES, e-SUS AB, DATASUS
-  - [ ] Disclaimer em destaque: "Este é um protótipo com dados simulados"
-  - [ ] `generateMetadata()` retorna "Sobre - Painel SUS"
-  - [ ] Layout responsivo e acessível
-        **Dependencies**: `LAYOUT-01`
-
----
-
-## Épico 11 — Acessibilidade & Polish
+## Épico 8 — Acessibilidade, segurança e gates do Coder
 
 - [ ] **ID**: `A11Y-01`
-      **Files**: `src/app/globals.css`
-      **Acceptance**:
-  - [ ] CSS variables para cores semáforo definidas (se não já via Tailwind)
-  - [ ] Focus ring visível: `*:focus-visible { outline: 2px solid ... }`
-  - [ ] Skip link estilizado: visível apenas com focus
-  - [ ] Print styles (opcional): esconde nav, mostra apenas conteúdo
-        **Dependencies**: `SETUP-01`
+  - **Files**: `src/app/globals.css`
+  - **Dependencies**: `LAYOUT-04`
+  - **Acceptance**:
+    - [ ] `:focus-visible` possui outline de pelo menos 2px com contraste perceptível
+    - [ ] O skip link fica oculto fora do foco e visível quando focado
+    - [ ] Preferência `prefers-reduced-motion` reduz transições não essenciais
+    - [ ] Estilos globais não removem foco nem reduzem contraste do tema claro
 
 - [ ] **ID**: `A11Y-02`
-      **Files**: Todos os componentes interativos
-      **Acceptance**:
-  - [ ] Todos os `<a>` e `<button>` têm tamanho mínimo de toque 44x44px
-  - [ ] Nenhum `div` clickável sem `role="button"` e `tabIndex={0}`
-  - [ ] Todos os ícones decorativos têm `aria-hidden="true"`
-  - [ ] Todos os ícones informativos têm `aria-label`
-        **Dependencies**: `DASH-01`, `DASH-04`, `LAYOUT-02`
+  - **Files**: `src/components/filters/ubs-filter.tsx`, `src/components/filters/period-filter.tsx`, `src/components/dashboard/empty-state.tsx`
+  - **Dependencies**: `A11Y-01`, `FILTER-01`, `FILTER-02`, `DASH-07`
+  - **Acceptance**:
+    - [ ] Labels visíveis estão programaticamente associados aos dois Selects
+    - [ ] Selects e botão de limpar possuem nome acessível inequívoco
+    - [ ] Todos os controles possuem alvo mínimo de 44×44 px
+    - [ ] Navegação por Tab alcança os três controles em ordem lógica
 
 - [ ] **ID**: `A11Y-03`
-      **Files**: `src/app/page.tsx`, `src/app/ubs/[id]/page.tsx`, `src/app/indicadores/page.tsx`
-      **Acceptance**:
-  - [ ] Tab navigation funciona sequencialmente em todas as rotas
-  - [ ] Focus trap não existe (usuário pode Tab livremente)
-  - [ ] Skip link leva ao `#main-content`
-  - [ ] Teste manual: Tab de 1 a N elementos interativos, todos recebem foco visível
-        **Dependencies**: `A11Y-01`, `A11Y-02`, `PAGE-01`, `PAGE-03`, `PAGE-06`
+  - **Files**: `src/components/dashboard/indicator-card.tsx`, `src/components/dashboard/ranking-table.tsx`, `src/components/ubs/history-table.tsx`
+  - **Dependencies**: `A11Y-01`, `DASH-01`, `DASH-05`, `UBS-03`
+  - **Acceptance**:
+    - [ ] Os três estados possuem identificação textual ou nome acessível além da cor
+    - [ ] Ícones decorativos usam `aria-hidden="true"`
+    - [ ] Links e elementos focáveis mostram foco visível e têm alvo mínimo de 44×44 px
+    - [ ] Tabelas mantêm caption e associação correta de headers
 
----
-
-## Épico 12 — Build & Verificação do Coder
+- [ ] **ID**: `SEC-01`
+  - **Files**: `next.config.ts`
+  - **Dependencies**: `PAGE-01`, `PAGE-03`, `PAGE-04`, `PAGE-05`
+  - **Acceptance**:
+    - [ ] `headers()` aplica Content-Security-Policy a todas as rotas
+    - [ ] Também aplica `X-Content-Type-Options`, `Referrer-Policy` e `Permissions-Policy`
+    - [ ] A CSP permite somente origens necessárias ao aplicativo local e ao Next.js
+    - [ ] `npm run build` termina sem erros após a configuração
 
 - [ ] **ID**: `VERIFY-01`
-      **Files**: N/A (verificação)
-      **Acceptance**:
-  - [ ] `npm run build` — zero erros
-  - [ ] `npm run lint` — zero warnings
-  - [ ] `npx tsc --noEmit` — zero erros de tipo
-  - [ ] `npm test` — todos os testes passam
-  - [ ] `npm run test:coverage` — relatório V8 é gerado sem erro
-        **Dependencies**: Todas as tasks anteriores
+  - **Files**: `package.json`, `tsconfig.json`, `vitest.config.ts`
+  - **Dependencies**: `DATA-04`, `DASH-02`, `DASH-06`, `DASH-09`, `IND-03`, `A11Y-02`, `A11Y-03`, `SEC-01`
+  - **Acceptance**:
+    - [ ] `npx tsc --noEmit` termina com código zero
+    - [ ] `npm run lint` termina com código zero e sem warnings
+    - [ ] `npm test` termina com todos os testes aprovados
+    - [ ] `npm run test:coverage` gera relatório V8 sem erro
+    - [ ] `npm run build` termina com código zero
 
 - [ ] **ID**: `VERIFY-02`
-      **Files**: N/A (verificação)
-      **Acceptance**:
-  - [ ] Dashboard (/) carrega com 4 cards, gráfico e ranking
-  - [ ] Filtro UBS atualiza todos os elementos
-  - [ ] Filtro período atualiza todos os elementos
-  - [ ] /ubs/1 mostra detalhe com radar e tabela
-  - [ ] /ubs/999 mostra erro com link de volta
-  - [ ] /indicadores mostra lista + detalhe expansível
-  - [ ] /sobre mostra informações e disclaimer
-        **Dependencies**: `VERIFY-01`
+  - **Files**: `src/app/page.tsx`, `src/app/ubs/[id]/page.tsx`, `src/app/indicadores/page.tsx`
+  - **Dependencies**: `VERIFY-01`
+  - **Acceptance**:
+    - [ ] `/` exibe quatro cartões, gráfico de linha e ranking das 15 UBS
+    - [ ] Alterar UBS e janela atualiza cartões, gráfico e ranking; limpar restaura padrões
+    - [ ] `/ubs/1` exibe perfil, radar e 12 meses, enquanto `/ubs/999` exibe retorno seguro
+    - [ ] `/indicadores` expande detalhes sem mudar a rota
+    - [ ] `/sobre` exibe explicação, fontes e disclaimer
 
 - [ ] **ID**: `VERIFY-03`
-      **Files**: N/A (verificação)
-      **Acceptance**:
-  - [ ] Responsivo: 375px (mobile) — cards empilhados, tudo legível
-  - [ ] Responsivo: 768px (tablet) — 2 colunas, gráficos grandes
-  - [ ] Responsivo: 1280px (desktop) — 4 colunas, layout completo
-  - [ ] Acessibilidade: tab navigation funciona em todas as 4 rotas
-  - [ ] Acessibilidade: contraste ≥ 4.5:1 verificado manualmente
-        **Dependencies**: `VERIFY-02`, `A11Y-03`
+  - **Files**: `src/app/globals.css`, `src/app/layout.tsx`, `src/components/dashboard/dashboard-client.tsx`
+  - **Dependencies**: `VERIFY-02`
+  - **Acceptance**:
+    - [ ] Em 375×667 os cartões ficam em uma coluna e não há corte horizontal da página
+    - [ ] Em 768×1024 os cartões usam no máximo duas colunas e gráficos ocupam a largura disponível
+    - [ ] Em 1280×800 e 1920×1080 os quatro cartões ficam na mesma linha com largura legível
+    - [ ] Tab percorre controles e links das quatro rotas com foco visível e sem foco preso
+    - [ ] Conteúdo principal aparece em menos de 3s sob simulação 3G
 
----
-
-## Épico 13 — Gate Independente do Reviewer
-
-> Execução exclusiva do `@reviewer` após a entrega do Coder. O Reviewer registra evidências, não altera `src/` e não aprova resultados com falhas.
+## Épico 9 — Gate independente do Reviewer
 
 - [ ] **ID**: `REVIEW-01`
   - **Files**: `docs/audits/review-01-static-audit.json`, `docs/failures/review-01-failure.json`, `docs/TASKS.md`
   - **Dependencies**: `VERIFY-03`
   - **Acceptance**:
-    - [ ] Reviewer executa independentemente `npx tsc --noEmit`, `npm run lint` e `npm run build`
-    - [ ] Reviewer executa independentemente `npm test` e `npm run test:coverage`
-    - [ ] Todos os cinco comandos, códigos de saída e resumo dos resultados constam no arquivo de auditoria
-    - [ ] Qualquer comando com falha mantém `REVIEW-01` aberto e gera `docs/failures/review-01-failure.json`
-    - [ ] `REVIEW-01` é marcado como concluído somente quando todos os comandos passam
+    - [ ] Reviewer registra comandos e códigos de saída de typecheck, lint, testes, cobertura e build
+    - [ ] Todos os cinco comandos passam para concluir a tarefa
+    - [ ] Falha gera ou atualiza `docs/failures/review-01-failure.json`
+    - [ ] Sucesso fica registrado em `docs/audits/review-01-static-audit.json`
 
 - [ ] **ID**: `REVIEW-02`
   - **Files**: `docs/audits/review-02-visual-audit.json`, `docs/failures/review-02-failure.json`, `docs/TASKS.md`
   - **Dependencies**: `REVIEW-01`
   - **Acceptance**:
-    - [ ] Reviewer compara as rotas `/`, `/ubs/1`, `/indicadores` e `/sobre` com `docs/layout/*.pen` e `docs/DESIGN_SYSTEM.md`
-    - [ ] Auditoria registra conformidade de tipografia, cores, espaçamento, componentes e estados semáforo
-    - [ ] Auditoria registra os resultados nos viewports 375px, 768px e 1280px
-    - [ ] Qualquer desvio visual mantém `REVIEW-02` aberto e gera `docs/failures/review-02-failure.json`
+    - [ ] Reviewer compara `/`, `/ubs/1`, `/indicadores` e `/sobre` com o `.pen` e o Design System
+    - [ ] Auditoria cobre tipografia, cores, espaçamento, estados e conteúdo completo
+    - [ ] Auditoria cobre 375px, 768px, 1280px e 1920px
+    - [ ] Qualquer desvio mantém a tarefa aberta e gera o arquivo de falha
 
 - [ ] **ID**: `REVIEW-03`
-  - **Files**: `docs/audits/review-03-lighthouse-audit.json`, `docs/failures/review-03-failure.json`, `docs/TASKS.md`
+  - **Files**: `docs/audits/review-03-web-audit.json`, `docs/failures/review-03-failure.json`, `docs/TASKS.md`
   - **Dependencies**: `REVIEW-02`
   - **Acceptance**:
-    - [ ] Reviewer confirma que `http://localhost:3000` responde antes da auditoria
-    - [ ] WebAuditMCP `audit_lighthouse` é executado na rota `/` com device desktop
-    - [ ] Performance é maior que 95 e Accessibility é maior que 98
-    - [ ] Resultado completo é salvo no arquivo de auditoria
-    - [ ] Score abaixo do gate mantém `REVIEW-03` aberto e gera `docs/failures/review-03-failure.json`
+    - [ ] Reviewer confirma `http://localhost:3000` antes das auditorias
+    - [ ] Lighthouse desktop registra Performance maior que 95 e Accessibility maior que 98
+    - [ ] Axe não registra violação bloqueante ou crítica e Security Headers supera 80 com CSP segura
+    - [ ] Resultados completos são salvos no arquivo de auditoria
+    - [ ] Qualquer gate não atendido mantém a tarefa aberta e gera o arquivo de falha
 
 - [ ] **ID**: `REVIEW-04`
-  - **Files**: `docs/audits/review-04-axe-audit.json`, `docs/failures/review-04-failure.json`, `docs/TASKS.md`
+  - **Files**: `docs/audits/review-04-release-audit.json`, `docs/failures/review-04-failure.json`, `docs/TASKS.md`
   - **Dependencies**: `REVIEW-03`
   - **Acceptance**:
-    - [ ] WebAuditMCP `scan_axe` é executado na rota `/` com device desktop
-    - [ ] Auditoria não registra violações WCAG 2.2 AA bloqueantes ou críticas
-    - [ ] Resultado completo é salvo no arquivo de auditoria
-    - [ ] Qualquer violação mantém `REVIEW-04` aberto e gera `docs/failures/review-04-failure.json`
-
-- [ ] **ID**: `REVIEW-05`
-  - **Files**: `docs/audits/review-05-security-audit.json`, `docs/failures/review-05-failure.json`, `docs/TASKS.md`
-  - **Dependencies**: `REVIEW-04`
-  - **Acceptance**:
-    - [ ] WebAuditMCP `security_headers` é executado na rota `/`
-    - [ ] Security Headers score é maior que 80
-    - [ ] Header CSP está presente e é classificado como seguro
-    - [ ] Resultado completo é salvo no arquivo de auditoria
-    - [ ] Gate não atendido mantém `REVIEW-05` aberto e gera `docs/failures/review-05-failure.json`
-
-- [ ] **ID**: `REVIEW-06`
-  - **Files**: `docs/audits/review-06-responsive-audit.json`, `docs/failures/review-06-failure.json`, `docs/TASKS.md`
-  - **Dependencies**: `REVIEW-05`
-  - **Acceptance**:
-    - [ ] WebAuditMCP `responsive_audit` é executado com viewports `375x667`, `768x1024` e `1920x1080`
-    - [ ] Auditoria cobre overflow, legibilidade, navegação e integridade dos gráficos em cada viewport
-    - [ ] Resultado completo é salvo no arquivo de auditoria
-    - [ ] Qualquer falha responsiva mantém `REVIEW-06` aberto e gera `docs/failures/review-06-failure.json`
-
-- [ ] **ID**: `REVIEW-07`
-  - **Files**: `docs/audits/review-07-release-audit.json`, `docs/failures/review-07-failure.json`, `docs/TASKS.md`
-  - **Dependencies**: `REVIEW-06`
-  - **Acceptance**:
-    - [ ] WebAuditMCP `report_merge` consolida os resultados Lighthouse, axe, security headers e responsive
-    - [ ] Relatório aplica budgets Accessibility ≥ 95, Performance ≥ 90 e Security ≥ 85
-    - [ ] Relatório consolidado segue o schema de `docs/SPEC.md` e referencia as auditorias anteriores
-    - [ ] Qualquer budget não atendido mantém `REVIEW-07` aberto e gera `docs/failures/review-07-failure.json`
-    - [ ] Gate de release é aprovado somente quando o relatório consolidado registra `passed: true`
-
----
-
-## Resumo de Dependências
-
-```
-SETUP-01 ─┬─→ SETUP-04
-          ├─→ LAYOUT-01 ─┬─→ LAYOUT-02 ─┐
-SETUP-05 ───→ SETUP-06 ───→ DASH-01A
-                              ↑
-DASH-01 ──────────────────────┘
-          │               ├─→ LAYOUT-03 ─┼─→ LAYOUT-04
-          │               │              │
-SETUP-02 ─┼─→ SETUP-03 ──┼─→ DATA-01 ───┼─→ DATA-03 ─→ BIZ-01
-          │               │  DATA-02 ────┘    BIZ-02
-          │               │                     ├─→ BIZ-03
-          │               │                     ├─→ BIZ-04
-          │               │                     └─→ BIZ-05
-          │               │
-          │               └─→ BIZ-06 ─→ PAGE-01 ─→ PAGE-02
-          │
-          └─→ FILTER-01 ─┐
-             FILTER-02 ───┤
-             DASH-01 ─────┤
-             DASH-02 ─────┤
-             DASH-03 ─────┼─→ PAGE-01
-             DASH-04 ─────┘
-                           │
-                           └─→ PAGE-03 ─→ PAGE-04
-                                          PAGE-05
-                           │
-                           └─→ PAGE-06 ─→ PAGE-07
-                           │
-                           └─→ PAGE-08
-
-VERIFY-01 → VERIFY-02 → VERIFY-03
-                              ↓
-REVIEW-01 → REVIEW-02 → REVIEW-03 → REVIEW-04 → REVIEW-05 → REVIEW-06 → REVIEW-07
-```
-
-## Estimativa de Esforço
-
-| Épico | Tasks | Tempo estimado |
-|-------|-------|---------------|
-| 1. Setup | 6 | ~40 min |
-| 2. Dados Mock | 3 | ~25 min |
-| 3. Funções Negócio | 6 | ~30 min |
-| 4. Layout | 4 | ~25 min |
-| 5. Filtros | 2 | ~15 min |
-| 6. Componentes Dash | 5 | ~45 min |
-| 7. Página Dashboard | 2 | ~25 min |
-| 8. Página UBS | 3 | ~25 min |
-| 9. Página Indicadores | 2 | ~20 min |
-| 10. Página Sobre | 1 | ~10 min |
-| 11. Acessibilidade | 3 | ~20 min |
-| 12. Verificação do Coder | 3 | ~15 min |
-| 13. Gate do Reviewer | 7 | ~1h 45min |
-| **Total** | **47** | **~8h** |
+    - [ ] Auditoria responsiva cobre 375×667, 768×1024 e 1920×1080
+    - [ ] Relatório consolida auditorias estática, visual, Lighthouse, axe e segurança
+    - [ ] Budgets finais são Accessibility ≥95, Performance ≥90 e Security ≥85
+    - [ ] Release só registra `passed: true` quando todos os budgets e gates passam
+    - [ ] Falha mantém a tarefa aberta e gera o arquivo de falha

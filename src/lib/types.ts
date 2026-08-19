@@ -2,28 +2,28 @@
 export interface UBS {
   id: number;
   nome: string;
-  codigo: string;          // Código CNES fictício (6 dígitos)
-  equipe: string;          // Nome da equipe e-SUS (ex: "eSF 001")
-  cadastrados: number;     // População cadastrada (1500-4500)
-  endereco: string;        // Bairro/logradouro
+  codigo: string; // Código CNES fictício (6 dígitos)
+  equipe: string; // Nome da equipe e-SUS (ex: "eSF 001")
+  cadastrados: number; // População cadastrada (1500-4500)
+  endereco: string;
 }
 
 /** Indicador do Previne Brasil */
 export interface Indicator {
-  id: string;              // ex: "cobertura-vacinal"
-  nome: string;            // ex: "Cobertura Vacinal"
-  descricao: string;       // Descrição completa do indicador
-  meta: number;            // Meta em percentual (ex: 95)
-  unidade: string;         // ex: "% de crianças <1ano"
-  fonte: string;           // ex: "CNES / e-SUS AB"
+  id: "cobertura-vacinal" | "pre-natal" | "hipertensao" | "diabetes";
+  nome: string; // ex: "Cobertura Vacinal"
+  descricao: string; // Descrição completa do indicador
+  meta: number; // Meta em percentual (ex: 95)
+  unidade: string; // ex: "% de crianças <1ano"
+  fonte: string; // ex: "CNES / e-SUS AB"
 }
 
 /** Registro mensal de um indicador para uma UBS */
 export interface HistoryRecord {
   ubsId: number;
-  indicatorId: string;
-  mes: string;             // "YYYY-MM" (ex: "2025-07")
-  valor: number;           // Valor em percentual
+  indicatorId: "cobertura-vacinal" | "pre-natal" | "hipertensao" | "diabetes";
+  mes: string; // "YYYY-MM" (ex: "2025-07")
+  valor: number; // Valor em percentual
 }
 
 /** Status semáforo de um indicador */
@@ -34,7 +34,7 @@ export type PeriodFilter = "ultimo-mes" | "ultimo-trimestre" | "ultimo-semestre"
 
 /** Filtros ativos */
 export interface Filters {
-  ubsId: number | null;    // null = "Todas as UBS"
+  ubsId: number | null; // null = "Todas as UBS"
   period: PeriodFilter;
 }
 
@@ -44,14 +44,14 @@ export interface IndicatorDisplay {
   valorAtual: number;
   status: IndicatorStatus;
   tendencia: "alta" | "estavel" | "queda";
-  percentualMeta: number;  // valor / meta × 100
+  percentualMeta: number; // valor / meta × 100
 }
 
 /** Linha da tabela de ranking */
 export interface RankingRow {
   posicao: number;
   ubs: UBS;
-  pontuacao: number;       // 0-100, média ponderada
+  pontuacao: number; // 0-100, média ponderada
   status: IndicatorStatus;
 }
 
@@ -60,4 +60,21 @@ export interface RadarDataPoint {
   indicador: string;
   valor: number;
   meta: number;
+}
+
+/*** Tipos adicionais da SPEC seção 5 */
+
+export type Trend = "alta" | "estavel" | "queda";
+
+export interface TrendPoint {
+  mes: string;
+  valor: number;
+  meta: number;
+}
+
+export interface IndicatorComparisonRow {
+  ubs: UBS;
+  valor: number;
+  meta: number;
+  status: IndicatorStatus;
 }

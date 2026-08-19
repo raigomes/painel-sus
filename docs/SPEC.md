@@ -1,498 +1,368 @@
 # SPEC — Painel SUS: Especificação Técnica
 
-> **Projeto:** Protótipo de Painel SUS  
-> **Versão:** 1.0  
-> **Autor:** Owner (Agent)  
-> **Data:** 2026-08-05
+> **Versão:** 1.1
+> **Data:** 2026-08-19
+> **Arquitetura:** Next.js App Router, TypeScript strict
 
----
+## 1. Stack e dependências
 
-## 1. Stack Tecnológica
+### 1.1 Dependências existentes
 
-| Camada | Tecnologia | Versão | Justificativa |
-|--------|-----------|--------|---------------|
-| Framework | Next.js (App Router) | 16.x | SSR/SSG, rotas dinâmicas, metadata API |
-| UI Library | React | 19.x | Server Components, Suspense |
-| Estilo | Tailwind CSS | 4.x | Utility-first, tree-shaking nativo |
-| Componentes | Shadcn/UI | latest | Acessibilidade built-in, copy-paste |
-| Gráficos | Recharts | 2.x | React-native, SVG, acessível |
-| Linguagem | TypeScript | 5.x (strict) | Type safety, DX |
-| Test runner | Vitest | 3.x | Execução rápida e integração nativa com TypeScript/Vite |
-| Testes de componentes | Testing Library React | 16.x | Verificação por comportamento e acessibilidade |
-| DOM de testes | jsdom | 26.x | Ambiente de navegador para componentes React |
-| Cobertura | Vitest Coverage V8 | 3.x | Relatórios de cobertura compatíveis com o runner |
+| Pacote | Versão do `package.json` | Uso |
+|---|---:|---|
+| `next` | `16.2.12` | App Router, Server Components, metadata e rotas estáticas/dinâmicas |
+| `react`, `react-dom` | `19.2.4` | Interface e componentes |
+| `tailwindcss` | `^4` | Estilos responsivos |
+| `shadcn` | `^4.16.2` | Componentes UI copiados para o projeto |
+| `recharts` | `^3.10.1` | LineChart e RadarChart |
+| `lucide-react` | `^1.29.0` | Ícones com nomes acessíveis ou decorativos |
+| `clsx`, `tailwind-merge` | `^2.1.1`, `^3.6.0` | Composição de classes por `cn()` |
+| `typescript` | `^5` | Tipagem strict |
 
-**Dependências a instalar:**
+Componentes Shadcn já existentes: `card`, `badge`, `select`, `separator`, `skeleton` e `tooltip`. Não adicionar outro pacote de produção sem atualização prévia desta SPEC.
+
+### 1.2 Dependências de teste autorizadas, ainda pendentes
+
 ```bash
-npx shadcn@latest init
-npx shadcn@latest add card badge select separator skeleton tooltip
-npm install recharts
 npm install --save-dev vitest@^3 @testing-library/react@^16 @testing-library/jest-dom@^6 jsdom@^26 @vitest/coverage-v8@^3
 ```
 
-**Scripts de teste em `package.json`:**
+Scripts requeridos:
+
 ```json
 {
-  "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
-  }
+  "test": "vitest run",
+  "test:watch": "vitest",
+  "test:coverage": "vitest run --coverage"
 }
 ```
 
-## 2. Estrutura de Diretórios
+`vitest.config.ts` usa `jsdom`, globals e `src/test/setup.ts`; o setup importa `@testing-library/jest-dom/vitest`.
 
-```
+## 2. Rotas do App Router
+
+| Rota | Arquivo | Renderização | Comportamento |
+|---|---|---|---|
+| `/` | `src/app/page.tsx` | Server shell + Client dashboard | Dashboard, filtros, quatro cartões, gráfico de linha e ranking |
+| `/ubs/[id]` | `src/app/ubs/[id]/page.tsx` | Server Component | Busca local por ID; detalhe ou estado “UBS não encontrada” |
+| `/indicadores` | `src/app/indicadores/page.tsx` | Server shell + Client accordion | Lista e detalhe expansível na mesma rota |
+| `/sobre` | `src/app/sobre/page.tsx` | Server Component | Explicação, fontes e disclaimer |
+
+Não existe rota `/indicadores/[id]`. Dados são imports estáticos; nenhuma rota de API ou fetch HTTP é necessária.
+
+`src/app/layout.tsx` fornece fontes, metadata padrão, skip link, `Header`, `<main id="main-content">` e `Footer`. `generateMetadata` é usado em `/ubs/[id]`; as demais páginas exportam metadata estática quando necessário.
+
+## 3. Estrutura de arquivos prevista
+
+```text
 src/
 ├── app/
-│   ├── layout.tsx              # Layout raiz (header, nav, footer)
-│   ├── page.tsx                # Dashboard principal "/"
-│   ├── globals.css             # Tailwind imports + CSS variables
-│   ├── ubs/
-│   │   └── [id]/
-│   │       └── page.tsx        # Detalhe da UBS
-│   ├── indicadores/
-│   │   └── page.tsx            # Lista de indicadores
-│   └── sobre/
-│       └── page.tsx            # Página sobre / fontes
-│
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── indicadores/page.tsx
+│   ├── sobre/page.tsx
+│   └── ubs/[id]/page.tsx
 ├── components/
-│   ├── layout/
-│   │   ├── header.tsx          # Navegação principal
-│   │   └── footer.tsx          # Rodapé com disclaimer
-│   ├── dashboard/
-│   │   ├── indicator-card.tsx  # Card com semáforo
-│   │   ├── indicator-grid.tsx  # Grid dos 4 cards
-│   │   ├── trend-chart.tsx     # Gráfico de linha (série 12 meses)
-│   │   └── ranking-table.tsx   # Tabela ranking UBS
-│   ├── ubs/
-│   │   ├── ubs-info-card.tsx   # Card informativo da UBS
-│   │   ├── radar-chart.tsx     # Gráfico radar comparativo
-│   │   └── history-table.tsx   # Tabela histórico mensal
-│   ├── indicadores/
-│   │   ├── indicator-list.tsx  # Lista de indicadores
-│   │   └── indicator-detail.tsx # Detalhe com série + comparativo
-│   ├── filters/
-│   │   ├── ubs-filter.tsx      # Seletor de UBS
-│   │   └── period-filter.tsx   # Seletor de período
-│   └── ui/                     # Shadcn/UI components (auto-gerado)
-│       ├── card.tsx
-│       ├── badge.tsx
-│       ├── select.tsx
-│       ├── separator.tsx
-│       ├── skeleton.tsx
-│       └── tooltip.tsx
-│
-├── lib/
-│   ├── utils.ts                # cn() helper do Shadcn
-│   ├── types.ts                # Interfaces TypeScript centralizadas
-│   ├── constants.ts            # Metas, períodos, configurações
-│   └── filters.ts              # Funções de filtragem e cálculo
-│
-├── data/
-│   ├── ubs.ts                  # Mock: 15 UBS
-│   ├── indicators.ts           # Mock: 4 indicadores + metas
-│   └── history.ts              # Mock: 12 meses × 15 UBS × 4 indicadores
-│
-├── hooks/
-│   └── use-filters.ts          # Hook de estado dos filtros (UBS + período)
-└── test/
-    └── setup.ts                # Matchers globais do Testing Library
-
-vitest.config.ts                # Configuração do runner (jsdom + setup)
+│   ├── dashboard/{dashboard-client,indicator-card,indicator-grid,trend-chart,ranking-table,empty-state}.tsx
+│   ├── filters/{ubs-filter,period-filter}.tsx
+│   ├── indicadores/{indicator-list,indicator-detail}.tsx
+│   ├── layout/{header,footer}.tsx
+│   ├── ubs/{ubs-info-card,radar-chart,history-table}.tsx
+│   └── ui/{badge,card,select,separator,skeleton,tooltip}.tsx
+├── data/{ubs,indicators,history}.ts
+├── hooks/use-filters.ts
+├── lib/{utils,types,constants,filters}.ts
+└── test/setup.ts
+vitest.config.ts
 ```
 
-## 3. Modelo de Dados
+## 4. Matriz Server/Client Components
 
-### 3.1 Tipos TypeScript (`src/lib/types.ts`)
+Arquivos sem `"use client"` permanecem Server Components. Somente arquivos que precisam de estado, eventos, pathname ou Recharts são Client Components.
+
+| Arquivo/componente | Tipo | Motivo |
+|---|---|---|
+| `app/layout.tsx` | Server | Metadata e shell estático |
+| `app/page.tsx` | Server | Importa dados locais e entrega props serializáveis ao dashboard |
+| `dashboard/dashboard-client.tsx` | Client | Estado dos filtros e dados derivados interativos |
+| `filters/ubs-filter.tsx` | Client | `Select` controlado |
+| `filters/period-filter.tsx` | Client | `Select` controlado |
+| `dashboard/indicator-card.tsx` | Server-compatible | Somente apresentação; sem evento obrigatório |
+| `dashboard/indicator-grid.tsx` | Server-compatible | Somente composição de props |
+| `dashboard/trend-chart.tsx` | Client | Recharts e tooltip interativo |
+| `dashboard/ranking-table.tsx` | Server-compatible | Usa `<Link href>`; não recebe callback |
+| `dashboard/empty-state.tsx` | Client-compatible | Recebe callback de limpar filtros dentro do dashboard |
+| `layout/header.tsx` | Client | `usePathname` para `aria-current` e estado ativo |
+| `layout/footer.tsx` | Server | Conteúdo estático |
+| `app/ubs/[id]/page.tsx` | Server | Params, metadata e seleção de dados locais |
+| `ubs/ubs-info-card.tsx` | Server | Apresentação |
+| `ubs/radar-chart.tsx` | Client | Recharts |
+| `ubs/history-table.tsx` | Server | Tabela HTML derivada de props |
+| `app/indicadores/page.tsx` | Server | Carrega dados e entrega props |
+| `indicadores/indicator-list.tsx` | Client | Estado do item expandido |
+| `indicadores/indicator-detail.tsx` | Client | Recharts dentro do detalhe expansível |
+| `app/sobre/page.tsx` | Server | Conteúdo estático |
+| `hooks/use-filters.ts` | Client hook | `useState` |
+
+“Server-compatible” significa componente sem diretiva Client, que pode ser renderizado dentro de uma árvore Client quando recebe somente props serializáveis e não recebe funções.
+
+## 5. Schemas TypeScript
+
+Todos ficam em `src/lib/types.ts`, salvo props locais triviais.
 
 ```typescript
-/** Unidade Básica de Saúde */
 export interface UBS {
   id: number;
   nome: string;
-  codigo: string;          // Código CNES fictício (6 dígitos)
-  equipe: string;          // Nome da equipe e-SUS (ex: "eSF 001")
-  cadastrados: number;     // População cadastrada (1500-4500)
-  endereco: string;        // Bairro/logradouro
+  codigo: string;
+  equipe: string;
+  cadastrados: number;
+  endereco: string;
 }
 
-/** Indicador do Previne Brasil */
 export interface Indicator {
-  id: string;              // ex: "cobertura-vacinal"
-  nome: string;            // ex: "Cobertura Vacinal"
-  descricao: string;       // Descrição completa do indicador
-  meta: number;            // Meta em percentual (ex: 95)
-  unidade: string;         // ex: "% de crianças <1ano"
-  fonte: string;           // ex: "CNES / e-SUS AB"
+  id: "cobertura-vacinal" | "pre-natal" | "hipertensao" | "diabetes";
+  nome: string;
+  descricao: string;
+  meta: number;
+  unidade: string;
+  fonte: string;
 }
 
-/** Registro mensal de um indicador para uma UBS */
 export interface HistoryRecord {
   ubsId: number;
-  indicatorId: string;
-  mes: string;             // "YYYY-MM" (ex: "2025-07")
-  valor: number;           // Valor em percentual
+  indicatorId: Indicator["id"];
+  mes: string; // YYYY-MM
+  valor: number;
 }
 
-/** Status semáforo de um indicador */
 export type IndicatorStatus = "verde" | "amarelo" | "vermelho";
-
-/** Período de filtro selecionado */
+export type Trend = "alta" | "estavel" | "queda";
 export type PeriodFilter = "ultimo-mes" | "ultimo-trimestre" | "ultimo-semestre" | "ultimo-ano";
 
-/** Filtros ativos */
 export interface Filters {
-  ubsId: number | null;    // null = "Todas as UBS"
+  ubsId: number | null;
   period: PeriodFilter;
 }
 
-/** Dados processados para exibição no card */
 export interface IndicatorDisplay {
   indicator: Indicator;
   valorAtual: number;
   status: IndicatorStatus;
-  tendencia: "alta" | "estavel" | "queda";
-  percentualMeta: number;  // valor / meta × 100
+  tendencia: Trend;
+  percentualMeta: number;
 }
 
-/** Linha da tabela de ranking */
+export interface TrendPoint {
+  mes: string;
+  valor: number;
+  meta: number;
+}
+
 export interface RankingRow {
   posicao: number;
   ubs: UBS;
-  pontuacao: number;       // 0-100, média ponderada
+  pontuacao: number;
   status: IndicatorStatus;
 }
 
-/** Dados para gráfico radar (UBS específica) */
 export interface RadarDataPoint {
   indicador: string;
   valor: number;
   meta: number;
 }
+
+export interface IndicatorComparisonRow {
+  ubs: UBS;
+  valor: number;
+  meta: number;
+  status: IndicatorStatus;
+}
 ```
 
-### 3.2 Constantes (`src/lib/constants.ts`)
+Schemas de props:
 
 ```typescript
-export const META_THRESHOLDS = {
-  verde: 100,    // ≥ 100% da meta
-  amarelo: 80,   // ≥ 80% e < 100% da meta
-  // < 80% = vermelho
-} as const;
+interface DashboardClientProps {
+  ubs: UBS[];
+  indicators: Indicator[];
+  history: HistoryRecord[];
+}
+interface UBSFilterProps { ubs: UBS[]; value: number | null; onChange(value: number | null): void; }
+interface PeriodFilterProps { value: PeriodFilter; onChange(value: PeriodFilter): void; }
+interface IndicatorCardProps { display: IndicatorDisplay; }
+interface IndicatorGridProps { items: IndicatorDisplay[]; }
+interface TrendChartProps { data: TrendPoint[]; indicatorName: string; }
+interface RankingTableProps { rows: RankingRow[]; }
+interface EmptyStateProps { onClear(): void; }
+interface UBSInfoCardProps { ubs: UBS; }
+interface RadarChartProps { data: RadarDataPoint[]; ubsName: string; }
+interface HistoryTableProps { records: HistoryRecord[]; indicators: Indicator[]; }
+interface IndicatorListProps { indicators: Indicator[]; history: HistoryRecord[]; ubs: UBS[]; }
+interface IndicatorDetailProps { indicator: Indicator; history: HistoryRecord[]; ubs: UBS[]; }
+```
 
-export const PERIOD_LABELS: Record<PeriodFilter, string> = {
-  "ultimo-mes": "Último mês",
-  "ultimo-trimestre": "Último trimestre",
-  "ultimo-semestre": "Último semestre",
-  "ultimo-ano": "Último ano",
-};
+## 6. Constantes
 
+`src/lib/constants.ts` exporta:
+
+```typescript
+export const META_THRESHOLDS = { verde: 100, amarelo: 80 } as const;
+export const PERIOD_LABELS: Record<PeriodFilter, string> = { /* quatro labels do PRD */ };
 export const PERIOD_MONTHS: Record<PeriodFilter, number> = {
   "ultimo-mes": 1,
   "ultimo-trimestre": 3,
   "ultimo-semestre": 6,
   "ultimo-ano": 12,
 };
-
-export const COLORS = {
-  verde: { bg: "bg-emerald-50", border: "border-emerald-500", text: "text-emerald-700", icon: "text-emerald-600" },
-  amarelo: { bg: "bg-amber-50", border: "border-amber-500", text: "text-amber-700", icon: "text-amber-600" },
-  vermelho: { bg: "bg-red-50", border: "border-red-500", text: "text-red-700", icon: "text-red-600" },
-} as const;
+export const STATUS_CLASSES: Record<IndicatorStatus, {
+  background: string; border: string; text: string; icon: string;
+}> = { /* classes Tailwind completas */ };
 ```
 
-## 4. Funções de Negócio (`src/lib/filters.ts`)
+## 7. Dados locais e validação
 
-### 4.1 Determinar Status Semáforo
+- `src/data/ubs.ts`: `ubsList` com exatamente 15 UBS, IDs 1–15, CNES fictício de seis dígitos e 1.500–4.500 cadastrados.
+- `src/data/indicators.ts`: `indicatorsList` com os quatro IDs e metas do PRD.
+- `src/data/history.ts`: `historyData` com exatamente 720 registros, de `2025-07` a `2026-06`.
+- Para cada combinação UBS/indicador existem 12 meses únicos e contínuos.
+- Valores são não negativos e não excedem 130% da meta.
+- Em cada série UBS/indicador, desvio padrão dos 12 valores ≤ 15% da média da própria série.
+- Em pelo menos 70% das 60 séries, junho de 2026 é maior que julho de 2025.
+
+A integridade é verificada por testes automatizados. Formato, cardinalidade ou referências inválidas falham no desenvolvimento/teste; a UI não oferece “Tentar novamente”. Uma combinação de filtros sem registros é um estado válido da UI e oferece “Limpar filtros”.
+
+## 8. Regras determinísticas (`src/lib/filters.ts`)
+
+### 8.1 Status
 
 ```typescript
-export function getIndicatorStatus(valor: number, meta: number): IndicatorStatus {
-  const percentualMeta = (valor / meta) * 100;
-  if (percentualMeta >= META_THRESHOLDS.verde) return "verde";
-  if (percentualMeta >= META_THRESHOLDS.amarelo) return "amarelo";
-  return "vermelho";
-}
+getIndicatorStatus(valor: number, meta: number): IndicatorStatus
 ```
 
-### 4.2 Filtrar Histórico por Período
+- Lança erro se `meta <= 0` ou entradas não forem finitas.
+- Calcula `(valor / meta) * 100`.
+- `>=100`: verde; `>=80 e <100`: amarelo; `<80`: vermelho.
+
+### 8.2 Janela relativa
 
 ```typescript
-export function filterByPeriod(
-  records: HistoryRecord[],
-  period: PeriodFilter,
-  referenceDate: Date = new Date()
-): HistoryRecord[] {
-  // Retorna os N meses mais recentes a partir de referenceDate
-  const months = PERIOD_MONTHS[period];
-  // Lógica de filtragem por data
-}
+filterByPeriod(records: HistoryRecord[], period: PeriodFilter): HistoryRecord[]
 ```
 
-### 4.3 Calcular Valor Agregado (Todas as UBS)
+- Não usa `new Date()`.
+- Encontra lexicograficamente o maior `mes` no array recebido.
+- Gera os 1, 3, 6 ou 12 meses calendário inclusivos terminando nesse mês.
+- Mantém somente registros desses meses e os ordena por mês crescente.
+- Array vazio retorna array vazio.
+
+### 8.3 Agregação
 
 ```typescript
-export function aggregateByIndicator(
-  records: HistoryRecord[],
-  indicatorId: string,
-  ubsList: UBS[]
-): number {
-  // Média ponderada: Σ(valor × cadastrados) / Σ(cadastrados)
-  // Retorna percentual consolidado
-}
+aggregateByIndicator(records: HistoryRecord[], indicatorId: Indicator["id"], ubs: UBS[]): number
 ```
 
-### 4.4 Calcular Pontuação Ranking
+- Calcula primeiro a média dos registros selecionados de cada UBS.
+- Consolida essas médias por `Σ(médiaUBS × cadastrados) / Σ(cadastrados)`.
+- Considera somente UBS com registros; sem registros retorna `0`.
+- Resultado arredondado para uma casa decimal.
+
+### 8.4 Pontuação e ranking
 
 ```typescript
-export function calculateRanking(
-  ubs: UBS,
-  history: HistoryRecord[],
-  indicators: Indicator[],
-  period: PeriodFilter
-): RankingRow {
-  // Média dos 4 indicadores, normalizada 0-100
-  // Ordena por pontuação decrescente
-}
+calculateUBSScore(ubsId: number, records: HistoryRecord[], indicators: Indicator[]): number
+calculateRanking(ubs: UBS[], records: HistoryRecord[], indicators: Indicator[]): RankingRow[]
 ```
 
-### 4.5 Detectar Tendência
+Para cada UBS e cada um dos quatro indicadores:
+
+1. calcula a média dos registros já filtrados;
+2. calcula `parcela = clamp((média / meta) * 100, 0, 100)`;
+3. atribui peso de 25% a cada parcela.
+
+A soma ponderada é arredondada para uma casa decimal. Ausência de qualquer um dos quatro indicadores exclui a UBS do ranking. `calculateRanking` ordena por pontuação decrescente e, em empate, por `ubs.nome` com locale `pt-BR`; depois atribui posições 1..N. Status do ranking aplica RB-01 à pontuação com meta 100.
+
+### 8.5 Tendência
 
 ```typescript
-export function getTrend(
-  records: HistoryRecord[],
-  indicatorId: string,
-  ubsId: number | null,
-  months: number = 3
-): "alta" | "estavel" | "queda" {
-  // Compara média dos últimos N meses com N meses anteriores
-  // > +5% = alta; < -5% = queda; senão = estável
-}
+getTrend(records: HistoryRecord[], indicatorId: Indicator["id"], ubsId: number | null, months?: number): Trend
 ```
 
-## 5. Especificação de Componentes
+- Usa padrão `months = 3`.
+- Compara a média dos N meses mais recentes com a média dos N imediatamente anteriores.
+- Para `ubsId=null`, usa consolidação ponderada por UBS antes da comparação.
+- Variação relativa `>5%`: alta; `<-5%`: queda; entre ambos, estável.
+- Menos de `2N` meses válidos retorna estável.
 
-### 5.1 `IndicatorCard`
+## 9. Componentes e comportamento
 
-**Props:**
-```typescript
-interface IndicatorCardProps {
-  indicator: IndicatorDisplay;
-  onClick?: () => void;
-}
+### Dashboard
+
+- `DashboardClient` inicia com `{ ubsId: null, period: "ultimo-mes" }` via `useFilters`.
+- A filtragem de período ocorre antes de cartões, gráfico e ranking.
+- `IndicatorCard`: card semântico, fundo suave e borda esquerda de 4px; nome, valor, unidade, meta, tendência, estado por ícone e texto. Estado vermelho mostra “Abaixo da meta”.
+- `TrendChart`: Recharts `LineChart`, uma `Line` com pontos mensais, `ReferenceLine` da meta, eixos, tooltip com mês/valor/meta e descrição acessível. Exibe apenas os meses da janela ativa no dashboard; no detalhe de indicador exibe 12 meses.
+- `RankingTable`: tabela semântica com `caption`, posição, UBS, equipe, pontuação e estado. Nome da UBS é `<Link href={`/ubs/${id}`}>`; não recebe callback e não força Client Component.
+- `EmptyState`: texto de ausência e botão “Limpar filtros”.
+
+### UBS
+
+- Rota valida ID inteiro positivo e busca em `ubsList`.
+- `RadarChart`: um radar de valor e outro de meta para quatro indicadores.
+- `HistoryTable`: 12 linhas mensais e cinco colunas; estado também comunicado textualmente.
+
+### Indicadores
+
+- `IndicatorList` usa botões com `aria-expanded` e `aria-controls`.
+- Apenas um detalhe precisa permanecer aberto por vez; inicialmente nenhum.
+- `IndicatorDetail` mostra descrição, meta, fonte, `TrendChart` consolidado de 12 meses e tabela com 15 UBS.
+- A expansão não altera a rota.
+
+### Layout
+
+- Header: links Dashboard, Indicadores e Sobre; item ativo usa `aria-current="page"`, peso/underline e cor.
+- Footer: disclaimer, fontes e “Protótipo v1.0 — Saúde Itapira”; sem texto promocional pessoal.
+- Skip link aponta para `#main-content`.
+
+## 10. Acessibilidade e responsividade
+
+- `html lang="pt-BR"`.
+- Foco visível global e alvos interativos mínimos de 44×44 px.
+- Labels visíveis associados aos filtros.
+- Estado nunca comunicado somente por cor.
+- Tabelas usam `caption`, `scope="col"` e links operáveis por teclado.
+- Gráficos têm região nomeada e resumo textual; dados essenciais também aparecem em texto/tabela.
+- 375px: uma coluna; 768px: até duas; ≥1024px: quatro cartões.
+- Tabelas usam contêiner com overflow horizontal, sem cortar conteúdo.
+
+## 11. Testes e verificação
+
+Testes ficam junto aos módulos (`*.test.ts`/`*.test.tsx`), exceto setup. Cobertura mínima obrigatória:
+
+- dados: cardinalidade, meses, referências, limites, desvio e tendência geral;
+- filtros: status, âncoras temporais, agregação, score, ordenação, empate e tendência;
+- `IndicatorCard`: conteúdo, nome acessível e três estados;
+- dashboard: estado vazio e ação de limpar;
+- ranking: semântica, ordem e links;
+- indicador: expansão sem mudança de rota.
+
+Comandos de gate do Coder:
+
+```bash
+npx tsc --noEmit
+npm run lint
+npm test
+npm run test:coverage
+npm run build
 ```
 
-**Comportamento:**
-- Renderiza card com borda colorida (semáforo)
-- Exibe: nome, valor atual (%), meta, ícone de status
-- Badge com tendência (↑ alta, → estável, ↓ queda)
-- Acessível: `role="article"`, `aria-label` descritivo
-- Hover: leve elevação (shadow)
+Verificações manuais: rotas `/`, `/ubs/1`, `/ubs/999`, `/indicadores`, `/sobre`; teclado; viewports 375×667, 768×1024, 1280×800 e 1920×1080. O dashboard contém dois tipos de gráfico Recharts: `LineChart` (reutilizado no dashboard e indicadores) e `RadarChart` (UBS).
 
-### 5.2 `TrendChart`
+## 12. Performance e segurança
 
-**Props:**
-```typescript
-interface TrendChartProps {
-  data: { mes: string; valor: number }[];
-  meta: number;
-  indicatorName: string;
-}
-```
-
-**Comportamento:**
-- Gráfico de **barras** Recharts com 12 barras (meses) + ReferenceLine de meta (tracejada)
-- Tooltip interativo com mês, valor, meta
-- Eixo Y: 0-120% (com margem)
-- Eixo X: labels de mês (abr, mai, jun...)
-- Acessível: `role="img"`, `aria-label` descritivo, `aria-describedby`
-
-### 5.3 `RankingTable`
-
-**Props:**
-```typescript
-interface RankingTableProps {
-  rows: RankingRow[];
-  onUBSClick: (ubsId: number) => void;
-}
-```
-
-**Comportamento:**
-- Tabela HTML semântica (`<table>`, `<thead>`, `<tbody>`)
-- Colunas: #, UBS, Equipe, Pontuação, Status
-- Clicável: navega para `/ubs/[id]`
-- Ordenável por coluna (futuro)
-- Acessível: `<caption>`, `scope` nas th
-
-### 5.4 `UBSFilter` / `PeriodFilter`
-
-**Props (ambos):**
-```typescript
-interface FilterProps {
-  value: string;
-  onChange: (value: string) => void;
-  options: { value: string; label: string }[];
-}
-```
-
-**Comportamento:**
-- Usa componente `Select` do Shadcn/UI
-- Label visível + `aria-label`
-- Reset para valor padrão com botão "Limpar"
-
-### 5.5 `RadarChart`
-
-**Props:**
-```typescript
-interface RadarChartProps {
-  data: RadarDataPoint[];
-  ubsName: string;
-}
-```
-
-**Comportamento:**
-- Gráfico radar Recharts com 2 polígonos: valor (preenchido) e meta (tracejado)
-- Cada eixo = um indicador
-- Legenda visível
-- Acessível: `aria-label` com resumo dos valores
-
-### 5.6 `Header`
-
-**Comportamento:**
-- Logo/nome "Painel SUS" à esquerda
-- Links de navegação: Dashboard, Indicadores, Sobre
-- Link ativo com `aria-current="page"`
-- Responsivo: hamburger em mobile (opcional v1.0, nav sempre visível)
-- Skip link: "Pular para conteúdo principal"
-
-### 5.7 `Footer`
-
-**Comportamento:**
-- Disclaimer: "Dados simulados para fins de demonstração"
-- Fonte: "Fontes: CNES, e-SUS AB, DATASUS"
-- Versão do protótipo
-
-### 5.8 Testes de Componentes
-
-**Configuração:**
-- `vitest.config.ts` usa ambiente `jsdom`, carrega `src/test/setup.ts` e habilita globals
-- `src/test/setup.ts` importa `@testing-library/jest-dom/vitest`
-- Arquivos de teste usam o padrão `src/**/*.test.ts` ou `src/**/*.test.tsx`
-- `npm test` executa uma única vez e retorna código diferente de zero em falhas
-- `npm run test:coverage` usa o provider V8
-
-**Cobertura obrigatória de `IndicatorCard`:**
-- `src/components/dashboard/indicator-card.test.tsx` fica junto ao componente
-- Verifica nome, valor atual, unidade, meta, tendência, `role="article"` e nome acessível
-- Exercita os estados `verde`, `amarelo` e `vermelho`, incluindo os respectivos ícones
-- Verifica a mensagem "Abaixo da meta" no estado vermelho
-- Usa dados mínimos tipados como `IndicatorDisplay`, sem snapshots como única asserção
-
-## 6. Layout e Responsividade
-
-### Breakpoints (Tailwind default)
-
-| Breakpoint | Largura | Comportamento |
-|-----------|---------|---------------|
-| Default | < 640px | 1 coluna, cards empilhados, nav compacta |
-| `sm:` | ≥ 640px | 2 colunas de cards |
-| `md:` | ≥ 768px | 2 colunas, gráficos maiores |
-| `lg:` | ≥ 1024px | 4 colunas de cards, sidebar opcional |
-| `xl:` | ≥ 1280px | Layout completo, tabelas detalhadas |
-
-### Grid do Dashboard
-
-```
-┌─────────────────────────────────────────────┐
-│ [UBS Filter]  [Period Filter]    [Limpar]   │
-├─────────┬─────────┬─────────┬───────────────┤
-│ Card 1  │ Card 2  │ Card 3  │    Card 4     │
-│ Vacinal │ PréNat  │ Hiper   │   Diabetes    │
-│░░░░░░░░░│░░░░░░░░░│░░░░░░░░░│░░░░░░░░░░░░░░│ tinted bg
-├─────────┴─────────┴─────────┴───────────────┤
-│         Gráfico de Barras (12 meses)        │
-│         + Meta reference line (dashed)      │
-├─────────────────────────────────────────────┤
-│         Tabela Ranking UBS                  │
-└─────────────────────────────────────────────┘
-```
-
-## 7. Acessibilidade (WCAG 2.1 AA)
-
-| Requisito | Implementação |
-|-----------|--------------|
-| Contraste texto | Tailwind classes com valores ≥ 4.5:1 (text-zinc-900 on white) |
-| Contraste ícones | Cores semáforo ≥ 3:1 contra fundo claro |
-| Navegação teclado | Todos os interativos são `<button>` ou `<a>`, foco visível com `ring-2` |
-| Skip link | `<a href="#main-content" class="sr-only focus:not-sr-only">` |
-| Labels formulários | `<label htmlFor>` em todos os Selects |
-| ARIA roles | `role="main"`, `role="navigation"`, `role="contentinfo"` |
-| Alt text | Todos os ícones decorativos `aria-hidden="true"`, informativos com `aria-label` |
-| Tabelas | `<caption>`, `scope="col"`, `scope="row"` |
-| Gráficos | `role="img"` + `aria-label` com resumo numérico |
-
-## 8. Estrutura de Dados Mockados
-
-### 8.1 UBS (`src/data/ubs.ts`)
-
-15 UBS com nomenclatura realista de bairros paulistas:
-- Cada UBS: id (1-15), nome (ex: "UBS Jardim Paulista"), código CNES (6 dígitos), equipe e-SUS (ex: "eSF 001"), cadastrados (1500-4500), endereço
-
-### 8.2 Indicadores (`src/data/indicators.ts`)
-
-4 indicadores com metas oficiais do Previne Brasil.
-
-### 8.3 Histórico (`src/data/history.ts`)
-
-- 12 meses: jul/2025 a jun/2026
-- 15 UBS × 4 indicadores × 12 meses = **720 registros**
-- Valores com variação realista: desvio padrão ≤ 15% da média
-- Tendência geral: leve melhoria ao longo dos meses (simulando esforço da secretaria)
-
-## 9. Performance
-
-| Métrica | Target | Como Achiever |
-|---------|--------|---------------|
-| First Contentful Paint | < 1.5s | Dados estáticos, SSR |
-| Largest Contentful Paint | < 2.5s | Skeleton loading nos gráficos |
-| Total Blocking Time | < 200ms | Sem lazy-loading excessivo (poucos componentes) |
-| Bundle size (gzipped) | < 200KB | Tree-shaking Recharts |
-| Tempo carregamento 3G | < 3s | Dados mockados inline, sem fetch |
-
-## 10. Critérios de Verificação
-
-### 10.1 Verificação de entrega pelo Coder
-
-Após implementação, o Coder deve verificar:
-
-1. **`npm run build`** — Build sem erros
-2. **`npm run lint`** — Zero warnings
-3. **`npx tsc --noEmit`** — Zero erros de tipo
-4. **`npm test`** — Todos os testes automatizados passam
-5. **`npm run test:coverage`** — Relatório V8 é gerado sem erro
-6. **Acessibilidade:** Tab navigation funciona em todas as rotas
-7. **Responsivo:** Testar em 375px, 768px, 1280px
-8. **Gráficos:** Todos os 4 Recharts renderizam sem erro
-9. **Filtros:** Mudar UBS e período atualiza todos os elementos
-10. **Rotas:** /, /ubs/1, /indicadores, /sobre funcionam
-
-### 10.2 Gate independente do Reviewer
-
-Após `VERIFY-03`, o Reviewer executa uma fase própria e não altera arquivos em `src/`:
-
-1. **Gate estático e automatizado:** executar novamente `npx tsc --noEmit`, `npm run lint`, `npm test`, `npm run test:coverage` e `npm run build`. Qualquer falha mantém a tarefa rejeitada.
-2. **Conformidade visual:** comparar as quatro rotas com `docs/layout/*.pen` e `docs/DESIGN_SYSTEM.md`, incluindo estados semáforo e responsividade.
-3. **Quick Audit WebAuditMCP:** executar Lighthouse desktop, axe desktop e análise de headers em `http://localhost:3000`.
-4. **Gates rápidos:** Lighthouse Performance > 95, Accessibility > 98 e Security Headers > 80, com CSP presente e seguro.
-5. **Auditoria de release:** executar auditoria responsiva nos viewports `375x667`, `768x1024` e `1920x1080`, seguida de relatório consolidado com budgets Accessibility ≥ 95, Performance ≥ 90 e Security ≥ 85.
-6. **Evidências:** salvar cada resultado em `docs/audits/[task-id]-audit.json`. Qualquer violação gera também `docs/failures/[task-id]-failure.json`.
-7. **Decisão:** apenas tarefas sem falhas são marcadas como aprovadas em `docs/TASKS.md`; falhas permanecem abertas com referência ao JSON correspondente.
-
-**Tipos de auditoria do projeto:**
-- `static`: comandos executados, código de saída e resumo de typecheck, lint, build, testes e cobertura
-- `visual`: rota, viewport, referência visual comparada e desvios encontrados
-- `lighthouse`, `axe`, `security_headers` e `responsive`: resultados produzidos pelo WebAuditMCP
-- `release`: consolidação dos relatórios e decisão final do gate
-
-Todos os relatórios preservam os campos comuns `timestamp`, `audit_type`, `issues` e `passed`. Relatórios WebAuditMCP também preservam `url`, `device` e `scores`; relatórios `static`, `visual` e `release` acrescentam somente os dados necessários definidos nos critérios da respectiva tarefa.
+- Dados locais sem fetch HTTP.
+- Server Components por padrão e Client Components restritos à matriz.
+- Objetivo: conteúdo principal em menos de 3s sob 3G simulado, Lighthouse Performance >95 e Accessibility >98 no gate rápido.
+- Headers de segurança, incluindo CSP, são configurados somente por tarefa explícita e auditados pelo Reviewer.
+- Medição de bundle não usa limite não reproduzível; o Reviewer registra artefatos e métricas do build/Lighthouse.

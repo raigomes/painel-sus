@@ -1,8 +1,8 @@
 # Blockers — DASH-01: Missing Test Infrastructure
 
-**Status:** RESOLVED — 2026-08-08
+**Status:** RESOLVED / DOCUMENTALLY ARCHIVED — 2026-08-19
 
-**Resolution:** @owner approved the repository test stack and documented it before adding implementation tasks. `SETUP-05` installs the approved dependencies, `SETUP-06` configures Vitest and the DOM matchers, and `DASH-01A` adds the `IndicatorCard` component tests.
+**Resolution:** @owner approved the repository test stack and documented it before adding implementation tasks. The approval is preserved in `docs/SPEC.md` v1.1. `SETUP-05` installs the approved dependencies, `SETUP-06` configures Vitest and the DOM matchers, and `DASH-02` adds the `IndicatorCard` component tests. The blocker decision is resolved; installation and configuration remain pending implementation tasks and are not marked complete.
 
 **Blocker:** The Output Contract requires `.test.tsx` files for components > 50 lines. `IndicatorCard` is ~60 lines and currently has no test coverage.
 
