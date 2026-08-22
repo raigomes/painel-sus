@@ -1,7 +1,7 @@
 # SPEC — Painel SUS: Especificação Técnica
 
-> **Versão:** 1.1
-> **Data:** 2026-08-19
+> **Versão:** 1.2
+> **Data:** 2026-08-22
 > **Arquitetura:** Next.js App Router, TypeScript strict
 
 ## 1. Stack e dependências
@@ -10,7 +10,7 @@
 
 | Pacote | Versão do `package.json` | Uso |
 |---|---:|---|
-| `next` | `16.2.12` | App Router, Server Components, metadata e rotas estáticas/dinâmicas |
+| `next` | `16.2.12` → `16.3.2` | App Router, Server Components, metadata e correção das vulnerabilidades transitivas registradas |
 | `react`, `react-dom` | `19.2.4` | Interface e componentes |
 | `tailwindcss` | `^4` | Estilos responsivos |
 | `shadcn` | `^4.16.2` | Componentes UI copiados para o projeto |
@@ -20,6 +20,8 @@
 | `typescript` | `^5` | Tipagem strict |
 
 Componentes Shadcn já existentes: `card`, `badge`, `select`, `separator`, `skeleton` e `tooltip`. Não adicionar outro pacote de produção sem atualização prévia desta SPEC.
+
+A atualização de `next` para `16.3.2` está autorizada porque `npm audit --json` em 2026-08-22 confirmou seis vulnerabilidades altas, incluindo a cadeia direta de `next@16.2.12`, `postcss` e `sharp`, com correção indicada nessa versão. A resolução de `SETUP-05` exige também `npm install` sem aviso `ERESOLVE`; avisos não podem ser suprimidos com `--force` ou `--legacy-peer-deps`. Vulnerabilidades remanescentes de ferramentas de desenvolvimento devem ser corrigidas com atualização sem quebra ou registradas pelo Reviewer com cadeia, exposição e decisão explícitas; nenhum gate pode declarar zero vulnerabilidades sem evidência de `npm audit`.
 
 ### 1.2 Dependências de teste autorizadas, ainda pendentes
 
@@ -65,7 +67,7 @@ src/
 │   └── ubs/[id]/page.tsx
 ├── components/
 │   ├── dashboard/{dashboard-client,indicator-card,indicator-grid,trend-chart,ranking-table,empty-state}.tsx
-│   ├── filters/{ubs-filter,period-filter}.tsx
+│   ├── filters/{ubs-filter,period-filter,indicator-filter}.tsx
 │   ├── indicadores/{indicator-list,indicator-detail}.tsx
 │   ├── layout/{header,footer}.tsx
 │   ├── ubs/{ubs-info-card,radar-chart,history-table}.tsx
@@ -88,6 +90,7 @@ Arquivos sem `"use client"` permanecem Server Components. Somente arquivos que p
 | `dashboard/dashboard-client.tsx` | Client | Estado dos filtros e dados derivados interativos |
 | `filters/ubs-filter.tsx` | Client | `Select` controlado |
 | `filters/period-filter.tsx` | Client | `Select` controlado |
+| `filters/indicator-filter.tsx` | Client | `Select` controlado da série histórica |
 | `dashboard/indicator-card.tsx` | Server-compatible | Somente apresentação; sem evento obrigatório |
 | `dashboard/indicator-grid.tsx` | Server-compatible | Somente composição de props |
 | `dashboard/trend-chart.tsx` | Client | Recharts e tooltip interativo |
@@ -191,6 +194,7 @@ interface DashboardClientProps {
 }
 interface UBSFilterProps { ubs: UBS[]; value: number | null; onChange(value: number | null): void; }
 interface PeriodFilterProps { value: PeriodFilter; onChange(value: PeriodFilter): void; }
+interface IndicatorFilterProps { indicators: Indicator[]; value: Indicator["id"]; onChange(value: Indicator["id"]): void; }
 interface IndicatorCardProps { display: IndicatorDisplay; }
 interface IndicatorGridProps { items: IndicatorDisplay[]; }
 interface TrendChartProps { data: TrendPoint[]; indicatorName: string; }
@@ -299,10 +303,13 @@ getTrend(records: HistoryRecord[], indicatorId: Indicator["id"], ubsId: number |
 
 ### Dashboard
 
-- `DashboardClient` inicia com `{ ubsId: null, period: "ultimo-mes" }` via `useFilters`.
-- A filtragem de período ocorre antes de cartões, gráfico e ranking.
+- `DashboardClient` inicia filtros com `{ ubsId: null, period: "ultimo-mes" }` via `useFilters` e mantém `selectedIndicatorId` separado, iniciado em `"cobertura-vacinal"`.
+- A janela relativa é aplicada antes de cartões, gráfico e ranking.
+- O filtro de UBS é aplicado somente ao derivar cartões e gráfico; o ranking sempre recebe todas as UBS e todos os registros da janela relativa.
+- `IndicatorFilter` possui label visível “Indicador do gráfico”, lista os quatro indicadores e altera somente `selectedIndicatorId`.
+- `TrendChart` recebe exclusivamente os pontos do indicador selecionado; a troca do indicador não altera cartões, filtros de UBS/período nem ranking.
 - `IndicatorCard`: card semântico, fundo suave e borda esquerda de 4px; nome, valor, unidade, meta, tendência, estado por ícone e texto. Estado vermelho mostra “Abaixo da meta”.
-- `TrendChart`: Recharts `LineChart`, uma `Line` com pontos mensais, `ReferenceLine` da meta, eixos, tooltip com mês/valor/meta e descrição acessível. Exibe apenas os meses da janela ativa no dashboard; no detalhe de indicador exibe 12 meses.
+- `TrendChart`: Recharts `LineChart`, uma `Line` com pontos mensais, `ReferenceLine` da meta, eixos, tooltip com mês/valor/meta e descrição acessível. Exibe somente o indicador escolhido e apenas os meses da janela ativa no dashboard; no detalhe de indicador exibe os 12 meses desse indicador.
 - `RankingTable`: tabela semântica com `caption`, posição, UBS, equipe, pontuação e estado. Nome da UBS é `<Link href={`/ubs/${id}`}>`; não recebe callback e não força Client Component.
 - `EmptyState`: texto de ausência e botão “Limpar filtros”.
 
@@ -329,7 +336,7 @@ getTrend(records: HistoryRecord[], indicatorId: Indicator["id"], ubsId: number |
 
 - `html lang="pt-BR"`.
 - Foco visível global e alvos interativos mínimos de 44×44 px.
-- Labels visíveis associados aos filtros.
+- Labels visíveis associados aos filtros de UBS, período e indicador do gráfico.
 - Estado nunca comunicado somente por cor.
 - Tabelas usam `caption`, `scope="col"` e links operáveis por teclado.
 - Gráficos têm região nomeada e resumo textual; dados essenciais também aparecem em texto/tabela.
@@ -343,7 +350,7 @@ Testes ficam junto aos módulos (`*.test.ts`/`*.test.tsx`), exceto setup. Cobert
 - dados: cardinalidade, meses, referências, limites, desvio e tendência geral;
 - filtros: status, âncoras temporais, agregação, score, ordenação, empate e tendência;
 - `IndicatorCard`: conteúdo, nome acessível e três estados;
-- dashboard: estado vazio e ação de limpar;
+- dashboard: estado inicial Cobertura Vacinal, troca da série sem efeito colateral, ranking municipal sob filtro de UBS, estado vazio e ação de limpar;
 - ranking: semântica, ordem e links;
 - indicador: expansão sem mudança de rota.
 
@@ -359,10 +366,14 @@ npm run build
 
 Verificações manuais: rotas `/`, `/ubs/1`, `/ubs/999`, `/indicadores`, `/sobre`; teclado; viewports 375×667, 768×1024, 1280×800 e 1920×1080. O dashboard contém dois tipos de gráfico Recharts: `LineChart` (reutilizado no dashboard e indicadores) e `RadarChart` (UBS).
 
-## 12. Performance e segurança
+## 12. Performance, segurança e alinhamento visual
 
 - Dados locais sem fetch HTTP.
 - Server Components por padrão e Client Components restritos à matriz.
 - Objetivo: conteúdo principal em menos de 3s sob 3G simulado, Lighthouse Performance >95 e Accessibility >98 no gate rápido.
 - Headers de segurança, incluindo CSP, são configurados somente por tarefa explícita e auditados pelo Reviewer.
+- `npm install` deve terminar sem `ERESOLVE`; `npm audit --json` deve ser anexado ao gate de dependências e qualquer risco remanescente deve estar documentado.
 - Medição de bundle não usa limite não reproduzível; o Reviewer registra artefatos e métricas do build/Lighthouse.
+- PRD v1.2 e SPEC v1.2 são fontes vinculantes para comportamento: o histórico usa `LineChart`, não `BarChart`; o dashboard inclui seletor de indicador; e o ranking permanece municipal sob filtro de UBS.
+- Antes da implementação visual, o Designer deve alinhar `docs/DESIGN_SYSTEM.md` e `docs/layout/painel-sus.pen` a essas três decisões e validar o `.pen` com os guardrails do projeto.
+- O alinhamento visual deve ainda prevenir as falhas históricas: três estados semáforo, tendências alta/estável/queda, gráfico e ranking completos, 12 meses no histórico, 15 UBS nas comparações, link ativo com underline e footer sem recorte com fontes e versão.

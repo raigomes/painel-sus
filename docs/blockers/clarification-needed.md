@@ -1,19 +1,17 @@
 # Esclarecimentos necessários — validação do planejamento
 
-**Status:** RESOLVIDO — 2026-08-19
+**Status:** RESOLVIDO — 2026-08-22
 
-A validação havia sido interrompida porque as decisões abaixo alteravam comportamento de negócio ou critérios de aceite e não podiam ser inferidas pelo Owner.
+A revisão de continuidade encontrou duas decisões de negócio que alteravam os resultados exibidos no dashboard. O responsável confirmou as opções **1A e 2A** em 2026-08-22.
 
-## Perguntas originalmente bloqueantes
+## Decisões vinculantes atuais
 
-1. Qual visualização histórica seria a fonte de verdade: linha ou barras?
-2. Quais seriam os pesos dos quatro indicadores no ranking?
-3. Como seriam normalização, teto e arredondamento da pontuação?
-4. O detalhe de indicador seria expansível ou teria rota dinâmica?
-5. O filtro usaria janelas relativas ou períodos calendário específicos?
-6. Como o produto trataria ausência e invalidade dos dados locais?
+1. **Gráfico do dashboard:** haverá um seletor próprio de indicador, iniciado em Cobertura Vacinal, e o gráfico exibirá uma única série por vez.
+2. **Ranking com UBS selecionada:** o ranking continuará comparando as 15 UBS; o filtro de UBS afetará cartões e gráfico, enquanto a janela relativa continuará afetando cartões, gráfico e ranking.
 
-## Decisões vinculantes registradas
+## Decisões anteriores preservadas
+
+As decisões abaixo continuam vinculantes e não precisam de nova resposta:
 
 1. A visualização histórica principal é um **gráfico de linha**.
 2. O ranking usa os quatro indicadores com **peso igual de 25% cada**.
@@ -22,12 +20,12 @@ A validação havia sido interrompida porque as decisões abaixo alteravam compo
 5. Existem somente as janelas relativas Último mês, Último trimestre, Último semestre e Último ano, ancoradas no mês mais recente presente nos dados recebidos.
 6. Não existe erro artificial nem ação “Tentar novamente”; filtros sem registros produzem estado vazio com “Limpar filtros”, e dados locais inválidos são erro de desenvolvimento.
 
-## Propagação
+## Correções propagadas
 
-As seis decisões foram propagadas, nesta ordem, para:
+1. `docs/PRD.md` v1.2 registra as duas decisões em cenários Gherkin e nas regras RB-12 e RB-13.
+2. `docs/SPEC.md` v1.2 define o estado do seletor, o fluxo de dados, `IndicatorFilterProps`, o ranking municipal e o alinhamento visual obrigatório.
+3. `docs/TASKS.md` foi regenerado somente após PRD e SPEC, com IDs sequenciais `TASK-001` a `TASK-048`.
+4. A antiga `SETUP-05` foi reaberta como `TASK-005`, incluindo atualização autorizada do Next.js, instalação sem `ERESOLVE` e evidência de `npm audit --json`.
+5. O alinhamento de `docs/DESIGN_SYSTEM.md` e do `.pen` com LineChart, seletor e ranking municipal foi registrado como precondição visual e gate do Reviewer.
 
-1. `docs/PRD.md` versão 1.1;
-2. `docs/SPEC.md` versão 1.1;
-3. `docs/TASKS.md` reestruturado.
-
-O blocker está encerrado e permanece neste arquivo para preservar rastreabilidade.
+O blocker está encerrado e permanece neste arquivo para rastreabilidade.

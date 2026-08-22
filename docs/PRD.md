@@ -2,8 +2,8 @@
 
 > **Projeto:** Protótipo de Painel SUS  
 > **Cliente:** Secretaria Municipal de Saúde (fictícia: Saúde Itapira)  
-> **Versão:** 1.1
-> **Data:** 2026-08-19
+> **Versão:** 1.2
+> **Data:** 2026-08-22
 
 ## 1. Visão do produto
 
@@ -23,8 +23,8 @@ Painel público para gestores municipais acompanharem quatro indicadores do Prev
 
 - Dashboard consolidado e filtrável por UBS e janela relativa.
 - Quatro indicadores: Cobertura Vacinal, Pré-natal, Hipertensão e Diabetes.
-- Série histórica em gráfico de linha.
-- Ranking das 15 UBS.
+- Série histórica em gráfico de linha, com seletor de indicador iniciado em Cobertura Vacinal.
+- Ranking comparativo das 15 UBS, preservado mesmo quando uma UBS é selecionada nos demais painéis.
 - Detalhe de cada UBS.
 - Detalhes expansíveis dos indicadores na rota `/indicadores`.
 - Página sobre dados, fontes e caráter simulado.
@@ -73,12 +73,14 @@ Cenário: Selecionar uma UBS
   Dado que o gestor está vendo os dados de todas as UBS
   Quando selecionar "UBS Vila Nova"
   Então os cartões e o gráfico devem usar somente dados da UBS Vila Nova
+  E o ranking deve continuar comparando as 15 UBS na janela selecionada
   E a unidade selecionada deve permanecer identificada no filtro
 
 Cenário: Retornar ao consolidado
   Dado que uma UBS está selecionada
   Quando o gestor selecionar "Todas as UBS"
   Então os cartões e o gráfico devem voltar aos dados consolidados
+  E o ranking deve continuar comparando as 15 UBS
 ```
 
 ### US-03 — Filtrar por janela relativa
@@ -124,15 +126,23 @@ Cenário: Resultado vermelho
 
 ### US-05 — Consultar a série histórica
 
-**Como** gestor, **quero** ver a evolução mensal em um gráfico de linha, **para** identificar tendências.
+**Como** gestor, **quero** escolher um indicador e ver sua evolução mensal em um gráfico de linha, **para** identificar tendências sem misturar medidas diferentes.
 
 ```gherkin
-Cenário: Exibir a evolução do indicador
-  Dado que o gestor está no dashboard
+Cenário: Exibir a evolução inicial
+  Dado que o gestor acessou o dashboard
   Quando observar a seção de evolução
-  Então um gráfico de linha deve exibir os meses da janela selecionada
-  E uma linha de referência deve representar a meta
+  Então Cobertura Vacinal deve estar selecionada inicialmente
+  E um gráfico de linha deve exibir seus meses na janela selecionada
+  E uma linha de referência deve representar sua meta
   E os eixos devem identificar mês e percentual
+
+Cenário: Escolher outro indicador no gráfico
+  Dado que Cobertura Vacinal está selecionada na seção de evolução
+  Quando o gestor selecionar Hipertensão
+  Então o gráfico deve exibir somente a série de Hipertensão
+  E a meta e o resumo textual devem corresponder à Hipertensão
+  E os cartões e o ranking não devem ser alterados pela seleção do gráfico
 
 Cenário: Consultar um ponto
   Dado que o gráfico possui dados mensais
@@ -150,6 +160,7 @@ Cenário: Exibir ranking completo
   Quando o ranking for exibido
   Então as 15 UBS devem aparecer da maior para a menor pontuação
   E cada linha deve informar posição, UBS, equipe, pontuação e estado
+  E o ranking deve permanecer municipal mesmo quando o filtro de UBS estiver ativo
 
 Cenário: Abrir uma UBS
   Dado que o ranking está visível
@@ -300,6 +311,8 @@ Cenário: Exibir breadcrumb da UBS
 | RB-09 | Para cada série UBS/indicador, o desvio padrão dos 12 valores é no máximo 15% da média da própria série |
 | RB-10 | Tendência compara a média dos últimos três meses com os três anteriores: acima de +5% é alta, abaixo de -5% é queda, demais casos são estáveis |
 | RB-11 | Dados locais inválidos são erro de desenvolvimento; filtros válidos sem registros produzem estado vazio com ação “Limpar filtros” |
+| RB-12 | O gráfico do dashboard possui seletor próprio, inicia em Cobertura Vacinal e exibe uma única série por vez |
+| RB-13 | O filtro de UBS afeta cartões e gráfico, mas não o ranking municipal; a janela relativa afeta os três |
 
 ## 7. Critérios consolidados de sucesso
 

@@ -1,0 +1,52 @@
+{
+  "id": "setup-05-peer-dependency-failure",
+  "timestamp": "2026-08-21T04:25:00Z",
+  "agent_id": "reviewer",
+  "task_id": "SETUP-05",
+  "error_category": "dependency_peer_conflict",
+  "severity": "blocking",
+  "file_path": "package-lock.json",
+  "line_number": 23,
+  "error_message": "npm install terminou com código 0, mas emitiu avisos ERESOLVE overriding peer dependency envolvendo @napi-rs/wasm-runtime@1.2.0, @emnapi/core, @emnapi/runtime e a cadeia transitiva unrs-resolver@1.12.2. O mesmo comando reportou 6 vulnerabilidades de alta severidade.",
+  "symptoms": [
+    "npm warn ERESOLVE overriding peer dependency",
+    "npm warn Could not resolve dependency: peer @emnapi/core sem compatibilidade com a versão encontrada",
+    "npm warn Could not resolve dependency: peer @emnapi/runtime sem compatibilidade com a versão encontrada",
+    "npm install informou 6 high severity vulnerabilities"
+  ],
+  "commands_and_evidence": [
+    {
+      "command": "npm install",
+      "result": "exit code 0, com avisos ERESOLVE e relatório de 6 vulnerabilidades high"
+    },
+    {
+      "command": "npx tsc --noEmit",
+      "result": "passou sem saída de erro"
+    },
+    {
+      "command": "npm run lint",
+      "result": "passou sem erros ou warnings"
+    },
+    {
+      "command": "npm run build",
+      "result": "passou com build Next.js concluído"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passou sem saída de erro"
+    }
+  ],
+  "impact": "O critério de SETUP-05 que exige package-lock.json sem conflito de peer dependencies não está comprovado. A instalação é reproduzível com avisos de resolução forçada e o relatório de vulnerabilidades requer avaliação antes da aprovação da tarefa.",
+  "root_cause": "Provável incompatibilidade em dependências transitivas da cadeia unrs-resolver, que inclui @napi-rs/wasm-runtime e declara peers de @emnapi/core e @emnapi/runtime não compatíveis com os pacotes encontrados. A causa exata e qualquer correção ainda não foram validadas.",
+  "correction_applied": "Nenhuma — o Reviewer não corrige dependências.",
+  "prevention_rule": "Antes de aprovar alterações de dependências, executar npm install sem avisos ERESOLVE, verificar o grafo de peers e investigar o resultado de npm audit; registrar a evidência da resolução usada.",
+  "resolution_criterion": "Reexecutar npm install após uma alteração comprovada no conjunto de dependências e obter conclusão sem avisos ERESOLVE; confirmar também a situação das 6 vulnerabilidades high com evidência de npm audit. Não aprovar com conflitos apenas suprimidos ou ignorados.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "relatedFiles": [
+    "package.json",
+    "package-lock.json",
+    "docs/SPEC.md",
+    "docs/TASKS.md"
+  ]
+}
