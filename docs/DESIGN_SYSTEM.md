@@ -1,8 +1,8 @@
 ---
-version: "1.0"
+version: "1.2"
 project: "Painel SUS"
 author: "@designer"
-date: "2026-08-05"
+date: "2026-08-22"
 tokens:
   colors:
     # Brand
@@ -123,7 +123,7 @@ tokens:
 
 # Design System — Painel SUS
 
-Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do Previne Brasil. Baseado no PRD v1.0 e SPEC v1.0.
+Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do Previne Brasil. Fonte visual alinhada integralmente ao PRD v1.2 e à SPEC v1.2.
 
 ---
 
@@ -321,9 +321,16 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 
 ---
 
-### 4.3 TrendChart (Recharts BarChart)
+### 4.3 TrendChart (Recharts LineChart)
 
-> **Owner Decision (2026-08-06):** Changed from LineChart to BarChart. Bar charts provide better visual comparison for discrete monthly health indicators. The .pen wireframe confirms this choice (12 vertical bars with meta reference line).
+> **Decisão vinculante v1.2 (2026-08-22):** o histórico usa `LineChart`, nunca `BarChart`. O dashboard exibe exatamente uma série por vez, escolhida em seletor próprio iniciado em **Cobertura Vacinal**. Trocar esse seletor altera apenas série, meta e resumo do gráfico; não altera cartões, filtros globais nem ranking.
+
+**Cabeçalho e seletor:**
+- Título: “Evolução histórica”.
+- Label visível: “Indicador do gráfico”.
+- Select com alvo mínimo 44×44 px e quatro opções; valor inicial “Cobertura Vacinal”.
+- Resumo textual adjacente identifica indicador, janela ativa, valor atual e meta.
+- O filtro de UBS afeta esta série; o período define 1, 3, 6 ou 12 pontos.
 
 **Dimensions:**
 | Breakpoint | Height |
@@ -335,14 +342,10 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 | xl (≥1280px) | 300px |
 
 **Series Configuration:**
-| Series | Type | Fill | Radius | Stroke | Stroke Width | Stroke Dasharray |
-|--------|------|------|--------|--------|--------------|------------------|
-| Valor | `<Bar>` | `primary` (`#004B87`) | `[4, 4, 0, 0]` (top rounded) | None | — | — |
-| Meta | `<ReferenceLine>` | — | — | `zinc-400` | 1px | `5 5` (dashed) |
-
-**Axes:**
-- **X Axis**: Month labels (MMM/YY), `tickLine={false}`, `axisLine={false}`, `tick={{ fill: zinc-500, fontSize: 12 }}`
-- **Y Axis**: 0–120% range, `tickLine={false}`, `axisLine={false}`, `tick={{ fill: zinc-500, fontSize: 12 }}`, `tickFormatter={v => v + '%'}`
+| Série | Tipo | Stroke | Stroke Width | Pontos | Stroke Dasharray |
+|--------|------|--------|--------------|--------|------------------|
+| Valor | `<Line type="monotone">` | `primary` (`#004B87`) | 3px | círculos 4px; foco 6px | sólido |
+| Meta | `<ReferenceLine>` | `zinc-400` | 1px | — | `5 5` (tracejado) |
 
 **Axes:**
 - **X Axis**: Month labels (MMM/YY), `tickLine={false}`, `axisLine={false}`, `tick={{ fill: zinc-500, fontSize: 12 }}`
@@ -383,14 +386,14 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 **Responsive Container:**
 ```tsx
 <ResponsiveContainer width="100%" height={chartHeight}>
-  <BarChart data={data}>
+  <LineChart data={data}>
     <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" vertical={false} />
     <XAxis dataKey="mes" tickLine={false} axisLine={false} tick={{ fill: '#71717a', fontSize: 12 }} />
     <YAxis tickLine={false} axisLine={false} tick={{ fill: '#71717a', fontSize: 12 }} tickFormatter={v => `${v}%`} domain={[0, 120]} />
     <Tooltip content={<CustomTooltip />} />
     <ReferenceLine y={meta} stroke="#a1a1aa" strokeDasharray="5 5" strokeWidth={1} />
-    <Bar dataKey="valor" fill="#004B87" radius={[4, 4, 0, 0]} />
-  </BarChart>
+    <Line type="monotone" dataKey="valor" stroke="#004B87" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+  </LineChart>
 </ResponsiveContainer>
 ```
 
@@ -398,9 +401,17 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 
 ### 4.4 RankingTable
 
+**Comportamento vinculante:**
+- É sempre municipal e lista as **15 UBS** da maior para a menor pontuação na janela ativa.
+- Selecionar uma UBS filtra cartões e LineChart, mas **não** reduz nem contextualiza o ranking para essa UBS.
+- Alterar a janela relativa recalcula cartões, LineChart e ranking.
+- A seleção do “Indicador do gráfico” não altera o ranking, cuja pontuação continua composta pelos quatro indicadores com peso de 25% cada.
+- Exibir nota persistente sob o título: “Comparação municipal — 15 UBS na janela selecionada”.
+- Cada linha contém posição, link da UBS, equipe, pontuação com uma casa decimal e estado por texto + ícone + cor.
+
 **Structure:**
 ```html
-<table role="grid" aria-label="Ranking das UBS por desempenho">
+<table aria-label="Ranking municipal das 15 UBS por desempenho">
   <caption class="sr-only">Ranking das 15 UBS por pontuação composta</caption>
   <thead>
     <tr>
@@ -442,7 +453,7 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 - `padding`: `px-4 py-3`
 - `border-bottom`: `1px solid zinc-100`
 - `hover background`: `zinc-50` (`hover:bg-zinc-50`)
-- `cursor`: `pointer` (clickable rows)
+- Somente o nome da UBS é link para `/ubs/[id]`; a linha não simula botão
 - `transition`: `background 150ms ease`
 
 **Cells:**
@@ -458,13 +469,11 @@ Sistema de design para o protótipo do Painel SUS, dashboard de indicadores do P
 - `background: zinc-50`
 
 **Accessibility:**
-- `<caption>` with descriptive text
-- `scope="col"` on all `<th>`
-- `scope="row"` on first `<td>` of each row
-- `tabindex="0"` on clickable rows
-- `role="row"` on `<tr>`
-- `role="grid"` on `<table>`
-- Enter/Space triggers navigation to `/ubs/[id]`
+- `<caption>` com descrição municipal e cardinalidade de 15 UBS
+- `scope="col"` em todos os `<th>`
+- Links de UBS recebem foco visível e navegam para `/ubs/[id]`
+- Estado sempre escrito (“Verde”, “Amarelo” ou “Vermelho”), além do ícone e da cor
+- Contêiner com `overflow-x-auto` preserva as cinco colunas em 375 px
 
 **Responsive:**
 | Breakpoint | Behavior |
@@ -888,15 +897,15 @@ const badgeVariants = {
   vermelho: 'bg-sus-vermelho-bg text-sus-vermelho-text',
 }
 
-// TrendChart - BarChart with meta reference line
-<BarChart data={data}>
+// TrendChart - uma única série LineChart + referência da meta
+<LineChart data={data}>
   <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" vertical={false} />
   <XAxis dataKey="mes" tickLine={false} axisLine={false} tick={{ fill: '#71717a', fontSize: 12 }} />
   <YAxis tickLine={false} axisLine={false} tick={{ fill: '#71717a', fontSize: 12 }} tickFormatter={v => `${v}%`} domain={[0, 120]} />
   <Tooltip content={<CustomTooltip />} />
   <ReferenceLine y={meta} stroke="#a1a1aa" strokeDasharray="5 5" strokeWidth={1} />
-  <Bar dataKey="valor" fill="#004B87" radius={[4, 4, 0, 0]} />
-</BarChart>
+  <Line type="monotone" dataKey="valor" stroke="#004B87" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+</LineChart>
 ```
 
 ---
@@ -906,6 +915,7 @@ const badgeVariants = {
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-08-05 | @designer | Initial design system from PRD/SPEC |
+| 1.2 | 2026-08-22 | @designer | Alinhamento ao PRD/SPEC v1.2: seletor próprio, LineChart de série única, ranking municipal persistente, 12 meses/15 UBS, responsividade e acessibilidade |
 
 ---
 
