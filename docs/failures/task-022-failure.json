@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-09-07T02:55:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-022",
+  "error_category": "reclassified_non_applicable_gate",
+  "severity": "informational",
+  "file_path": "docs/audits/task-022-audit.json",
+  "line_number": 1,
+  "error_message": "Registro histórico reclassificado: WebAuditMCP, Lighthouse, axe, security headers e renderização integrada não são critérios de acceptance da TASK-022.",
+  "code_snippet": "N/A — não caracteriza defeito da implementação da TASK-022",
+  "root_cause": "A revisão anterior aplicou gates de integração/release a uma tarefa atômica de componentes.",
+  "correction_applied": "Reclassificação para informacional; auditoria dinâmica marcada como NOT_APPLICABLE_DEFERRED.",
+  "prevention_rule": "Aplicar somente os critérios da tarefa ativa; reservar WebAuditMCP e verificações integradas para as tarefas que os declaram.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "reclassified": true,
+  "blocking": false,
+  "task_result": "PASS"
+}

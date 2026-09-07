@@ -249,24 +249,24 @@
 
 ## Filtros e dashboard
 
-- [ ] **ID**: `TASK-022`
+- [x] **ID**: `TASK-022`
   - **Files**: `src/components/filters/ubs-filter.tsx`, `src/components/filters/period-filter.tsx`
   - **Dependencies**: `TASK-007`, `TASK-008`
   - **Acceptance**:
-    - [ ] Os Selects são controlados e usam as props da SPEC
-    - [ ] UBS oferece “Todas as UBS” e as 15 unidades
-    - [ ] Período oferece as quatro janelas de `PERIOD_LABELS`
-    - [ ] Labels visíveis estão associados aos controles
-    - [ ] Alterações retornam valores tipados corretos
+    - [x] Os Selects são controlados e usam as props da SPEC
+    - [x] UBS oferece “Todas as UBS” e as 15 unidades
+    - [x] Período oferece as quatro janelas de `PERIOD_LABELS`
+    - [x] Labels visíveis estão associados aos controles
+    - [x] Alterações retornam valores tipados corretos
 
-- [ ] **ID**: `TASK-023`
+- [x] **ID**: `TASK-023`
   - **Files**: `src/components/filters/indicator-filter.tsx`
   - **Dependencies**: `TASK-009`
   - **Acceptance**:
-    - [ ] O Select controlado usa `IndicatorFilterProps`
-    - [ ] As quatro opções vêm da prop `indicators`
-    - [ ] A label visível é “Indicador do gráfico”
-    - [ ] Alterar a seleção retorna um `Indicator["id"]`
+    - [x] O Select controlado usa `IndicatorFilterProps`
+    - [x] As quatro opções vêm da prop `indicators`
+    - [x] A label visível é “Indicador do gráfico”
+    - [x] Alterar a seleção retorna um `Indicator["id"]`
 
 - [ ] **ID**: `TASK-024`
   - **Files**: `src/components/dashboard/indicator-card.tsx`, `src/components/dashboard/indicator-card.test.tsx`

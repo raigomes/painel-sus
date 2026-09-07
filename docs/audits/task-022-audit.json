@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-09-07T02:55:00Z",
+  "task_id": "TASK-022",
+  "audit_type": "static_acceptance",
+  "url": null,
+  "device": "not_applicable_for_atomic_component_task",
+  "webaudit_status": "NOT_APPLICABLE_DEFERRED",
+  "deferred_to": ["TASK-029", "TASK-030", "TASK-044", "TASK-045", "TASK-046", "TASK-047", "TASK-048"],
+  "scope": [
+    "src/components/filters/ubs-filter.tsx",
+    "src/components/filters/period-filter.tsx"
+  ],
+  "commands": {
+    "npx tsc --noEmit": { "exit_code": 0 },
+    "npm run lint": { "exit_code": 0, "warnings": 0 },
+    "npm test": { "exit_code": 0, "tests": 45 },
+    "npm run test:coverage": { "exit_code": 0 },
+    "npm run build": { "exit_code": 0 },
+    "git diff --check": { "exit_code": 0 }
+  },
+  "scores": {},
+  "issues": [],
+  "deferred_checks": [
+    "WebAuditMCP/Lighthouse/axe/security_headers: não são critérios de acceptance desta tarefa atômica.",
+    "Renderização integrada em rota: pertence às tarefas de integração posteriores."
+  ],
+  "static_review": {
+    "controlled_selects": true,
+    "props_match_spec": true,
+    "ubs_all_null_and_15_options": true,
+    "ubs_safe_conversion_no_nan": true,
+    "period_labels_order_1_3_6_12": true,
+    "typed_callbacks": true,
+    "unique_ids": true,
+    "touch_targets_and_responsive_classes": true,
+    "no_ui_signature_change": true,
+    "no_early_integration": true,
+    "exactly_two_scope_files": true
+  },
+  "acceptance_result": {
+    "controlled_selects_and_exact_props": "PASS",
+    "ubs_all_null_and_15_units": "PASS",
+    "period_four_period_labels": "PASS",
+    "visible_labels_associated": "PASS",
+    "typed_change_values": "PASS",
+    "safe_numeric_conversion_without_nan": "PASS",
+    "unique_ids": "PASS",
+    "touch_targets_and_responsive_layout": "PASS",
+    "no_ui_signature_change_or_early_integration": "PASS",
+    "scope_exactly_two_files": "PASS"
+  },
+  "passed": true,
+  "authorization": "approved_for_task_marking"
+}
