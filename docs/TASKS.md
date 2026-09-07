@@ -5,6 +5,8 @@
 > Precondição do fluxo da Squad: antes das tarefas visuais, o Designer deve alinhar `docs/DESIGN_SYSTEM.md` e `docs/layout/painel-sus.pen` ao LineChart, ao seletor de indicador e ao ranking municipal definidos na SPEC v1.2.
 >
 > Estado verificado em 2026-09-06: `docs/DESIGN_SYSTEM.md` v1.2 e `docs/layout/painel-sus.pen` existem; as tarefas `TASK-001`, `TASK-002`, `TASK-003`, `TASK-004` e `TASK-006` estão concluídas. `src/app/layout.tsx` e `src/app/page.tsx` ainda contêm o template inicial do Next.js, e os módulos de dados, regras de negócio, componentes do produto e rotas adicionais ainda não existem.
+>
+> Revalidação independente do Reviewer em 2026-09-07: a correção pontual de `eslint.config.mjs` foi aprovada (**PASS**). `npm run lint`, TypeScript, coverage, build e `git diff --check` passaram; `coverage/**` é específico para artefato gerado e não mascara `src/`, testes ou configurações. O produto ainda está no template inicial, sem confundir esta aprovação de base com produto completo nem com os gates `TASK-045`–`TASK-048`. `TASK-001`–`TASK-007` podem ser considerados base validada pelos critérios registrados, sem marcar tarefas por conta própria; `TASK-008` pode ser delegada pelo Owner. Evidências em `docs/audits/reviewer-revalidation-audit.json`.
 
 ## Plano de execução do Coder
 
@@ -110,14 +112,14 @@
 
 ## Dados locais
 
-- [ ] **ID**: `TASK-008`
+- [x] **ID**: `TASK-008`
   - **Files**: `src/data/ubs.ts`
   - **Dependencies**: `TASK-004`
   - **Acceptance**:
-    - [ ] `ubsList` exporta exatamente 15 objetos `UBS`
-    - [ ] IDs únicos cobrem 1 a 15 e códigos CNES únicos possuem seis dígitos
-    - [ ] Cada unidade possui nome, equipe e endereço
-    - [ ] Cada unidade possui entre 1.500 e 4.500 cadastrados
+    - [x] `ubsList` exporta exatamente 15 objetos `UBS`
+    - [x] IDs únicos cobrem 1 a 15 e códigos CNES únicos possuem seis dígitos
+    - [x] Cada unidade possui nome, equipe e endereço
+    - [x] Cada unidade possui entre 1.500 e 4.500 cadastrados
 
 - [ ] **ID**: `TASK-009`
   - **Files**: `src/data/indicators.ts`

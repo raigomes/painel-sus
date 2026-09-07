@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-09-07T00:00:00Z",
+  "audit_type": "static_data_review",
+  "task_id": "TASK-008",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "commands": {
+    "npx tsc --noEmit": {"exit_code": 0},
+    "npm run lint": {"exit_code": 0, "warnings": 0},
+    "git diff --check": {"exit_code": 0},
+    "reproducible_data_validation": {"exit_code": 0}
+  },
+  "criteria": {
+    "exactly_15_ubs_objects": {"passed": true, "evidence": "ubsList.length === 15"},
+    "unique_ids_cover_1_to_15": {"passed": true, "evidence": "IDs are [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]"},
+    "unique_six_digit_cnes_strings": {"passed": true, "evidence": "15 unique strings matching /^\\d{6}$/: 610001 through 610015"},
+    "name_team_address_present_realistic": {"passed": true, "evidence": "All 15 records have non-empty nome, equipe and endereco with plausible Saúde Itapira addresses"},
+    "registered_between_1500_and_4500": {"passed": true, "evidence": "All cadastrados are integer values in inclusive range; minimum 1760, maximum 4320"},
+    "ubs_type_conformance": {"passed": true, "evidence": "src/data/ubs.ts exports UBS[] using src/lib/types.ts"}
+  },
+  "scope": {
+    "task_file": "src/data/ubs.ts",
+    "attributable_files": ["src/data/ubs.ts"],
+    "preexisting_or_other_changes": ["docs/TASKS.md", "eslint.config.mjs", "docs/audits/reviewer-revalidation-audit.json", "docs/failures/reviewer-revalidation-failure.json"],
+    "scope_assessment": "The only change attributable to TASK-008 is the untracked src/data/ubs.ts. No TASK-008 files outside its declared scope were changed. Other working-tree changes predate or are unrelated to TASK-008."
+  },
+  "web_audit_mcp": {
+    "status": "not_applicable_to_task",
+    "note": "WebAuditMCP dynamic tools are not exposed in this session; TASK-008 is a local data-only task and has no runtime/UI acceptance criterion."
+  },
+  "issues": [],
+  "passed": true
+}

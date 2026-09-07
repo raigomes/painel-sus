@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-09-07T00:00:00Z",
+  "audit_type": "static_and_dynamic_revalidation",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scores": {
+    "performance": null,
+    "accessibility": null,
+    "best_practices": null,
+    "seo": null,
+    "security": null
+  },
+  "commands": {
+    "npm run test:coverage -- --passWithNoTests": {"exit_code": 0},
+    "npm run lint": {"exit_code": 0, "warnings": 0},
+    "npx tsc --noEmit": {"exit_code": 0},
+    "npm run build": {"exit_code": 0},
+    "git diff --check": {"exit_code": 0},
+    "npm audit --json": {"exit_code": 0, "high": 0, "critical": 0}
+  },
+  "issues": [
+    {
+      "category": "scope",
+      "message": "WebAuditMCP tools audit_lighthouse, scan_axe, security_headers, responsive_audit and report_merge were not exposed in this session; dynamic scores and security-header verification remain unavailable."
+    },
+    {
+      "category": "product_state",
+      "message": "The served application is still the Create Next App template; required Painel SUS routes and features are absent."
+    }
+  ],
+  "ignore_validation": {
+    "path": "coverage/**",
+    "is_generated_artifact": true,
+    "tracked_files_under_coverage": [],
+    "does_not_ignore_src_tests_or_configs": true,
+    "assessment": "Specific and appropriate ESLint global ignore; it does not mask src/**, tests, or configuration files outside coverage."
+  },
+  "passed": false
+}
