@@ -58,39 +58,42 @@ export function IndicatorCard({ display }: IndicatorCardProps) {
   return (
     <article
       aria-label={`${indicator.nome}: ${formatMeasure(valorAtual)}%, meta ${formatMeasure(indicator.meta)}%, tendência ${trendLabel}`}
-      className={`min-h-[140px] rounded-lg border-l-4 p-4 shadow-sm transition-shadow duration-200 hover:shadow-md sm:p-5 md:p-6 ${STATUS_CLASSES[status].background} ${STATUS_CLASSES[status].border}`}
+      className={`h-[245px] overflow-hidden rounded-lg border-l-4 p-6 shadow-sm transition-shadow duration-200 hover:shadow-md ${STATUS_CLASSES[status].background} ${STATUS_CLASSES[status].border}`}
       role="article"
     >
-      <div className="flex items-center gap-3">
-        <StatusIcon
-          aria-hidden="true"
-          className={`size-5 shrink-0 ${STATUS_CLASSES[status].icon}`}
-        />
-        <h2 className="text-sm font-medium text-zinc-900">{indicator.nome}</h2>
-      </div>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-3">
+          <StatusIcon
+            aria-hidden="true"
+            className={`size-5 shrink-0 ${STATUS_CLASSES[status].icon}`}
+          />
+          <h2 className="text-sm font-medium text-zinc-900">{indicator.nome}</h2>
+        </div>
 
-      <div className="mt-3 flex items-baseline gap-2">
         <span className="font-mono text-3xl font-bold tabular-nums text-zinc-900">
           {formatMeasure(valorAtual)}%
         </span>
-        <span className="text-sm text-zinc-600">{indicator.unidade}</span>
-      </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-zinc-600">
-        <span>
-          Meta: <span className="tabular-nums">{formatMeasure(indicator.meta)}%</span>
-        </span>
-        <span
-          aria-label={`Tendência ${trendLabel}`}
-          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${TREND_CLASSES[tendencia]}`}
-        >
-          <TrendIcon aria-hidden="true" className="size-3" />
-          <span>{trendLabel}</span>
-        </span>
-      </div>
+        <div className="flex flex-wrap items-center gap-2 text-sm text-zinc-500">
+          <span>
+            Meta: <span className="tabular-nums">{formatMeasure(indicator.meta)}%</span>
+          </span>
+          <span
+            aria-label={`Tendência ${trendLabel}`}
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${TREND_CLASSES[tendencia]}`}
+          >
+            <TrendIcon aria-hidden="true" className="size-3" />
+            <span>{trendLabel}</span>
+          </span>
+        </div>
 
-      <div className={`mt-2 flex items-center gap-1 text-sm font-medium ${STATUS_CLASSES[status].text}`}>
-        <span>{statusLabel}</span>
+        {/* Status text: accessible to screen readers but visually hidden to prevent card misalignment */}
+        <div className={`sr-only flex items-center gap-1 text-sm font-medium ${STATUS_CLASSES[status].text}`}>
+          <span>{statusLabel}</span>
+        </div>
+
+        {/* Unit: accessible for screen readers, not shown in card anatomy per pg1 */}
+        <span className="sr-only">{indicator.unidade}</span>
       </div>
     </article>
   );

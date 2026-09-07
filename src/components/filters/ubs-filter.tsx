@@ -33,7 +33,7 @@ export function UBSFilter({ ubs, value, onChange }: UBSFilterProps) {
 
   return (
     <div className="flex w-full min-w-0 flex-col gap-2 sm:w-auto lg:w-[200px]">
-      <label htmlFor={labelId} className="text-sm font-medium text-zinc-700">
+      <label htmlFor={labelId} className="sr-only">
         UBS
       </label>
       <Select value={selectValue} onValueChange={handleChange}>

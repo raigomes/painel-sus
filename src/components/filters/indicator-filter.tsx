@@ -27,12 +27,12 @@ export function IndicatorFilter({ indicators, value, onChange }: IndicatorFilter
   }
 
   return (
-    <div className="flex w-full min-w-0 flex-col gap-2 sm:w-auto lg:w-[220px]">
-      <label htmlFor={labelId} className="text-sm font-medium text-zinc-700">
-        Indicador do gráfico
-      </label>
-      <Select value={value} onValueChange={handleChange}>
-        <SelectTrigger id={labelId} className="min-h-11 w-full lg:w-[220px]">
+<div className="flex w-full min-w-0 flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+       <label htmlFor={labelId} className="shrink-0 text-sm font-medium text-zinc-700">
+         Indicador do gráfico
+       </label>
+       <Select value={value} onValueChange={handleChange}>
+         <SelectTrigger id={labelId} className="h-11 min-h-11 w-full sm:w-[260px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

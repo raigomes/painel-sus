@@ -27,8 +27,8 @@ export function RankingTable({ rows }: RankingTableProps) {
         aria-label="Ranking municipal das 15 UBS por desempenho"
         className="min-w-[600px] w-full border-collapse text-sm"
       >
-        <caption className="caption-top px-4 py-3 text-left text-sm text-zinc-600">
-          Comparação municipal — 15 UBS na janela selecionada
+        <caption className="sr-only">
+          Ranking das 15 UBS por pontuação composta. O filtro de UBS não altera este ranking.
         </caption>
         <thead>
           <tr className="bg-zinc-100 text-left text-zinc-700">

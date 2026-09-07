@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-09-07T08:00:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-053",
+  "error_category": "visual_regression_mismatch",
+  "severity": "blocking",
+  "file_path": "src/components/dashboard/trend-chart.tsx",
+  "line_number": 73,
+  "error_message": "O heading 'Evolução histórica' usa text-xl (20px), mas pg1/JdXb9 e o critério exigem 18px/600 (text-lg). Além disso, IndicatorFilter mantém label e select em coluna (flex-col), não como label + select na linha desktop prevista pelo frame JdXb9.",
+  "code_snippet": "<h2 id=\"trend-chart-title\" className=\"text-xl font-semibold text-zinc-800\">\n  Evolução histórica\n</h2>",
+  "root_cause": "Implementação não reproduz integralmente a tipografia e a composição horizontal especificadas no frame JdXb9.",
+  "correction_applied": "",
+  "prevention_rule": "Validar dimensões e classes computadas contra o frame de referência antes do gate final; conferir heading 18px/600 e linha desktop label-select-resumo.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "additional_findings": [
+    {
+      "error_category": "security_header_missing",
+      "severity": "blocking",
+      "file_path": "next.config.ts",
+      "line_number": 3,
+      "error_message": "Resposta HTTP em http://localhost:3000 não contém Content-Security-Policy nem os headers de segurança exigidos; next.config.ts não define headers().",
+      "evidence": "curl -sS -I http://localhost:3000 retornou apenas Vary, Link, Cache-Control, X-Powered-By e Content-Type entre os headers relevantes; CSP ausente.",
+      "correction_applied": ""
+    },
+    {
+      "error_category": "web_audit_unavailable",
+      "severity": "blocking",
+      "file_path": "",
+      "line_number": null,
+      "error_message": "WebAuditMCP não está disponível como ferramenta nesta sessão; não foi possível executar audit_lighthouse, scan_axe, security_headers, responsive_audit e report_merge obrigatórios.",
+      "correction_applied": ""
+    }
+  ]
+}

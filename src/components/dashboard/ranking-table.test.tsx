@@ -23,8 +23,12 @@ const rows: RankingRow[] = [
 describe("RankingTable", () => {
   it("renderiza caption, cinco headers com scope e linhas na ordem recebida", () => {
     render(<RankingTable rows={rows} />);
-    expect(screen.getByText("Comparação municipal — 15 UBS na janela selecionada")).toBeInTheDocument();
     const table = screen.getByRole("table");
+    const caption = within(table).getByText(
+      "Ranking das 15 UBS por pontuação composta. O filtro de UBS não altera este ranking.",
+    );
+    expect(caption).toBeInTheDocument();
+    expect(caption).toHaveClass("sr-only");
     expect(within(table).getAllByRole("columnheader")).toHaveLength(5);
     within(table).getAllByRole("columnheader").forEach((header) => expect(header).toHaveAttribute("scope", "col"));
     expect(within(table).getAllByRole("row").slice(1).map((row) => within(row).getAllByRole("cell")[1].textContent)).toEqual([

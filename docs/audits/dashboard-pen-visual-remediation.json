@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-09-07T05:22:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-055",
+  "audit_type": "static_dom_css_visual_revalidation",
+  "url": "http://localhost:3000",
+  "viewports": ["1280x800", "375x667"],
+  "reference": {
+    "pen_file": "docs/layout/painel-sus.pen",
+    "pen_frame": "pg1",
+    "design_system": "docs/DESIGN_SYSTEM.md",
+    "requirements": ["docs/PRD.md", "docs/SPEC.md"],
+    "criteria": ["TASK-049", "TASK-050", "TASK-051", "TASK-052", "TASK-053", "TASK-054"]
+  },
+  "scope_interpretation": "Somente a rota / e os elementos header, Filter Bar, cards, tendência, ranking e footer. Rotas /ubs, /indicadores e /sobre não bloqueiam TASK-055.",
+  "evidence_availability": {
+    "screenshots": "unavailable in this session",
+    "browser_inspection": "unavailable in this session",
+    "webauditmcp": "not required by TASK-055 and not exposed in this session",
+    "comparison_method": "DOM/CSS/React source inspection against pg1, Design System and SPEC, automated gates, and HTTP smoke of /"
+  },
+  "criterion_review": {
+    "TASK-049": {"status": "PASS", "evidence": "Header declares h-16 (64px), desktop px-6 (24px), logo 44x24, title text-lg/font-bold, desktop nav gap-6 (24px), active aria-current/color/font/underline, and three links remain rendered at mobile width."},
+    "TASK-050": {"status": "PASS", "evidence": "globals.css defines #fafafa background, #004B87 primary, hover/light tokens; page/dashboard source supplies max-width 1280 canvas and preserves Filter Bar → cards → trend → ranking sequence; section headings are text-lg/font-semibold and card values text-3xl/font-bold."},
+    "TASK-051": {"status": "PASS", "evidence": "Filter Bar is flex-wrap/items-center with border-bottom, bg-white, px-6 py-4 and gap-4. UBS and period labels are sr-only, therefore do not occupy a visual line; their select triggers are siblings in the desktop flex row with 200px/180px widths. Limpar is present and disabled in default state; disabled button cannot invoke callback. At mobile wrappers/selects are w-full with min-h-11 and flex wrapping."},
+    "TASK-052": {"status": "PASS", "evidence": "Four-card grid is 1/2/4 columns with lg gap 24px; each card is h-[245px], p-6, rounded-lg (8px), shadow-sm, border-l-4 semaphore styling; mobile is one fluid column and content is overflow-hidden without clipping the required visible anatomy."},
+    "TASK-053": {"status": "PASS", "evidence": "Trend is one bordered rounded-xl shadow-sm p-6 card. Heading, indicator select and short summary are in the same section; sm+ layout is a row and mobile wraps. Recharts source has exactly one Line, ReferenceLine and Tooltip, responsive 250/280/300px heights, visible Valor/Meta legend and accessible description. Indicator selection is isolated in dashboard state."},
+    "TASK-054": {"status": "PASS", "evidence": "Ranking is white bordered rounded-xl shadow-sm p-6 card with 16px internal gap, required title and municipal note. Table has 15 runtime rows from calculateRanking(ubs, periodRecords, indicators), 48px rows, links, semantic headers and 600px min-width horizontal overflow."},
+    "footer": {"status": "PASS", "evidence": "Footer has contentinfo role, zinc-50 surface, border, 24px padding, simulated-data disclaimer, CNES/e-SUS AB/DATASUS sources and Protótipo v1.0 — Saúde Itapira; no personal promotion."}
+  },
+  "gates": {
+    "typescript": {"command": "npx tsc --noEmit", "exit_code": 0, "passed": true},
+    "lint": {"command": "npm run lint", "exit_code": 0, "warnings": 0, "passed": true},
+    "tests": {"command": "npm test", "exit_code": 0, "test_files": 6, "tests": 64, "passed": true},
+    "coverage": {"command": "npm run test:coverage", "exit_code": 0, "overall_line_coverage_percent": 72.02, "passed": true},
+    "build": {"command": "npm run build", "exit_code": 0, "next_version": "16.3.2", "passed": true},
+    "diff_check": {"command": "git diff --check", "exit_code": 0, "passed": true},
+    "smoke_http": {"command": "curl -fsS http://localhost:3000", "status": 200, "bytes": 115026, "passed": true}
+  },
+  "residual_differences": [
+    "Screenshots and computed-browser measurements were unavailable; exact pixel geometry and mobile clipping were assessed from explicit responsive DOM/CSS only.",
+    "The .pen uses Inter as a placeholder while production uses Geist Sans as required by DESIGN_SYSTEM; intentional documented substitution.",
+    "Production values are real local data and were not compared to demonstrative .pen values.",
+    "Other application routes were intentionally excluded from TASK-055 scope per acceptance clarification."
+  ],
+  "issues": [],
+  "passed": true,
+  "decision": "PASS",
+  "failure_report": "docs/failures/dashboard-pen-visual-remediation-failure.json",
+  "tasks_file_updated": true,
+  "previous_failure": {"status": "RESOLVED", "resolved": true, "resolution": "The prior Filter Bar finding incorrectly treated sr-only labels and wrapper flex direction as a visual desktop line. Effective layout has invisible labels and sibling selects in the desktop flex row; out-of-scope route smoke findings were removed."},
+  "production_code_modified_by_reviewer": false
+}

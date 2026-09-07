@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import type { TrendPoint } from '@/lib/types';
 import {
   CartesianGrid,
@@ -15,6 +17,7 @@ import {
 type TrendChartProps = {
   data: TrendPoint[];
   indicatorName: string;
+  indicatorFilter?: ReactNode;
 };
 
 type TooltipPayload = {
@@ -59,18 +62,24 @@ function TrendTooltip({ active, payload }: TrendTooltipProps) {
   );
 }
 
-export function TrendChart({ data, indicatorName }: TrendChartProps) {
+export function TrendChart({ data, indicatorName, indicatorFilter }: TrendChartProps) {
   const latestPoint = data[data.length - 1];
   const meta = latestPoint?.meta ?? 0;
   const chartLabel = `Gráfico de evolução da ${indicatorName}. ${data.length} ${data.length === 1 ? 'mês' : 'meses'} com valor atual ${latestPoint ? formatPercent(latestPoint.valor) : 'indisponível'} e meta ${formatPercent(meta)}.`;
   const descriptionId = 'trend-chart-description';
 
   return (
-    <section aria-labelledby="trend-chart-title" className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm sm:p-5 md:p-6">
-      <h2 id="trend-chart-title" className="text-xl font-semibold text-zinc-800">
+    <section aria-labelledby="trend-chart-title" className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
+      <h2 id="trend-chart-title" className="text-lg font-semibold text-zinc-800">
         Evolução histórica
       </h2>
-      <p id={descriptionId} className="mt-2 text-sm leading-relaxed text-zinc-600">
+      <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+        {indicatorFilter}
+        <p className="min-w-0 flex-1 pb-2 text-sm text-zinc-600">
+          Série {indicatorName}; meta {formatPercent(meta)}; janela ativa: {data.length} {data.length === 1 ? 'ponto' : 'pontos'}.
+        </p>
+      </div>
+      <p id={descriptionId} className="sr-only">
         {indicatorName}: {data.length > 0 ? data.map((point) => `${formatMonth(point.mes)} ${formatPercent(point.valor)}`).join(', ') : 'sem dados'}.
         Meta: {formatPercent(meta)}.
       </p>
@@ -110,6 +119,10 @@ export function TrendChart({ data, indicatorName }: TrendChartProps) {
             />
           </LineChart>
         </ResponsiveContainer>
+      </div>
+      <div className="mt-3 flex items-center gap-5 text-sm text-zinc-700" aria-label="Legenda do gráfico">
+        <span className="inline-flex items-center gap-2"><span className="h-0.5 w-5 bg-primary" aria-hidden="true" />Valor</span>
+        <span className="inline-flex items-center gap-2"><span className="w-5 border-t border-dashed border-zinc-400" aria-hidden="true" />Meta</span>
       </div>
       <ul className="sr-only" aria-label={`Dados mensais de ${indicatorName}`}>
         {data.map((point) => (

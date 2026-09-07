@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-09-07T08:17:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-051",
+  "audit_type": "static_and_runtime_revalidation",
+  "url": "http://localhost:3000",
+  "device": "desktop_and_mobile_static_review",
+  "scope": "Revalidação exclusiva das correções de TASK-051; sem alteração em src/, branch, stash ou docs/TASKS.md.",
+  "reference": {
+    "task_file": "docs/TASKS.md",
+    "design_system": "docs/DESIGN_SYSTEM.md",
+    "pen_frame": "pg1/R7hShX",
+    "files_reviewed": [
+      "src/components/dashboard/dashboard-client.tsx",
+      "src/components/filters/ubs-filter.tsx",
+      "src/components/filters/period-filter.tsx",
+      "src/components/dashboard/dashboard-client.test.tsx",
+      "src/components/dashboard/trend-chart.tsx",
+      "src/components/dashboard/ranking-table.tsx"
+    ]
+  },
+  "criteria_validation": {
+    "accessible_labels": {
+      "passed": true,
+      "evidence": "UBS e Período usam label htmlFor associado ao SelectTrigger por id gerado, com classe sr-only; os accessible names são UBS e Período."
+    },
+    "clear_button_visibility_and_disabled_state": {
+      "passed": true,
+      "evidence": "O botão permanece renderizado em todos os estados da Filter Bar, exibe Limpar e possui aria-label Limpar filtros. No estado padrão hasNonDefaultFilters é falso e o botão fica disabled; quando showEmpty é verdadeiro também fica disabled."
+    },
+    "disabled_does_not_dispatch": {
+      "passed": true,
+      "evidence": "O controle é um button nativo com disabled={!hasNonDefaultFilters || showEmpty}; portanto eventos de ativação não são disparados enquanto desabilitado. O callback resetFilters só está ligado ao onClick desse botão."
+    },
+    "filter_bar_desktop": {
+      "passed": true,
+      "evidence": "A Filter Bar usa bg-white, border-b, px-6/py-4 e gap-4. Em 1280px os wrappers passam a sm:w-auto e os SelectTriggers usam lg:w-[200px] para UBS e lg:w-[180px] para Período; labels sr-only não ocupam linha acima e o pai usa flex-wrap/items-center."
+    },
+    "filter_bar_mobile": {
+      "passed": true,
+      "evidence": "Em viewport estreita os wrappers usam w-full e o pai flex-wrap; os SelectTriggers mantêm min-h-11 (44px), ocupam a largura disponível e empilham sem largura fixa/overflow de controle."
+    },
+    "text_and_aria": {
+      "passed": true,
+      "evidence": "Texto visível Limpar é conciso e aria-label Limpar filtros preserva o nome acionável esperado; UBS e Período mantêm nomes acessíveis explícitos."
+    },
+    "trend_and_ranking_preservation": {
+      "passed": true,
+      "evidence": "A seleção do indicador continua isolada no TrendChart; ranking continua derivado de periodRecords e independente do filtro de UBS. A suíte direcionada confirma preservação de cards/ranking ao trocar indicador e preservação de conteúdo/links/scores do ranking ao selecionar UBS."
+    }
+  },
+  "validation": {
+    "typescript": {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0,
+      "passed": true
+    },
+    "lint": {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "warnings": 0,
+      "passed": true
+    },
+    "tests": {
+      "command": "npm test",
+      "exit_code": 0,
+      "test_files": 6,
+      "tests": 64,
+      "passed": true
+    },
+    "build": {
+      "command": "npm run build",
+      "exit_code": 0,
+      "next_version": "16.3.2",
+      "passed": true
+    },
+    "diff_check": {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "passed": true
+    },
+    "runtime_smoke": {
+      "command": "curl -sSI http://localhost:3000/",
+      "http_status": 200,
+      "passed": true
+    },
+    "webauditmcp": {
+      "status": "NOT_AVAILABLE_IN_THIS_SESSION",
+      "passed": null,
+      "note": "Nenhuma ferramenta WebAuditMCP foi exposta ao Reviewer nesta sessão; não foi possível executar audit_lighthouse, scan_axe ou security_headers."
+    }
+  },
+  "scope_guard": {
+    "tasks_file_modified": false,
+    "source_files_modified_by_reviewer": false,
+    "branch_or_stash_changed": false
+  },
+  "issues": [],
+  "passed": true,
+  "decision": "PASS",
+  "authorization": "TASK-051 aprovada. TASK-055 pode ser autorizada para nova execução pelo Owner; docs/TASKS.md não foi editado nesta revisão."
+}
