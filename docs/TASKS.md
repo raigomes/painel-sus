@@ -152,23 +152,23 @@
 
 ## Regras de negócio
 
-- [ ] **ID**: `TASK-012`
+- [x] **ID**: `TASK-012`
   - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
   - **Dependencies**: `TASK-006`, `TASK-007`
   - **Acceptance**:
-    - [ ] `getIndicatorStatus` implementa os limites de RB-01
-    - [ ] Meta inválida ou entrada não finita lança erro
-    - [ ] Testes cobrem os limites exatos de 80% e 100%
-    - [ ] O teste direcionado e `npx tsc --noEmit` terminam sem erros
+    - [x] `getIndicatorStatus` implementa os limites de RB-01
+    - [x] Meta inválida ou entrada não finita lança erro
+    - [x] Testes cobrem os limites exatos de 80% e 100%
+    - [x] O teste direcionado e `npx tsc --noEmit` terminam sem erros
 
-- [ ] **ID**: `TASK-013`
+- [x] **ID**: `TASK-013`
   - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
   - **Dependencies**: `TASK-012`
   - **Acceptance**:
-    - [ ] `filterByPeriod` ancora no maior mês recebido
-    - [ ] As janelas retornam 1, 3, 6 e 12 meses calendário inclusivos
-    - [ ] A função não usa `new Date()` e ordena por mês crescente
-    - [ ] Testes cobrem virada de ano e entrada vazia
+    - [x] `filterByPeriod` ancora no maior mês recebido
+    - [x] As janelas retornam 1, 3, 6 e 12 meses calendário inclusivos
+    - [x] A função não usa `new Date()` e ordena por mês crescente
+    - [x] Testes cobrem virada de ano e entrada vazia
 
 - [ ] **ID**: `TASK-014`
   - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`

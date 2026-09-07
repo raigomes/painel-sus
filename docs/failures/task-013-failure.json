@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-09-07T01:37:30Z",
+  "agent_id": "coder",
+  "task_id": "TASK-013",
+  "error_category": "test_coverage_gap",
+  "severity": "blocking",
+  "file_path": "src/lib/filters.test.ts",
+  "line_number": 67,
+  "error_message": "A suíte não demonstra explicitamente a janela inclusiva atravessando a virada de ano: o teste chamado 'cruza o ano' está ancorado em 2026-06 e verifica apenas 2026-04..2026-06.",
+  "code_snippet": "it(\"ancora no maior mês, cruza o ano e não muta a entrada\", () => { ... filterByPeriod(input, \"ultimo-trimestre\") ... })",
+  "root_cause": "Os dados de fixture abrangem dois anos, mas nenhum caso de janela é ancorado em janeiro (ou outro mês inicial) para exigir a inclusão de dezembro do ano anterior.",
+  "correction_applied": "",
+  "prevention_rule": "Para filterByPeriod, manter um caso dedicado ancorado em YYYY-01 e verificar explicitamente a lista esperada de meses do ano anterior; testar também que o snapshot profundo de records e objetos permanece inalterado.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false
+}
