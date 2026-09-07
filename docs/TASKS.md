@@ -278,14 +278,14 @@
     - [x] O artigo possui nome acessível e números tabulares
     - [x] Testes cobrem conteúdo e os três estados
 
-- [ ] **ID**: `TASK-025`
+- [x] **ID**: `TASK-025`
   - **Files**: `src/components/dashboard/indicator-grid.tsx`
   - **Dependencies**: `TASK-024`
   - **Acceptance**:
-    - [ ] Um card é renderizado para cada item recebido
-    - [ ] Quatro itens produzem quatro artigos
-    - [ ] Grid usa uma coluna no mobile, duas a partir de 640 px e quatro a partir de 1024 px
-    - [ ] Espaçamento segue o Design System alinhado à SPEC v1.2
+    - [x] Um card é renderizado para cada item recebido
+    - [x] Quatro itens produzem quatro artigos
+    - [x] Grid usa uma coluna no mobile, duas a partir de 640 px e quatro a partir de 1024 px
+    - [x] Espaçamento segue o Design System alinhado à SPEC v1.2
 
 - [ ] **ID**: `TASK-026`
   - **Files**: `src/components/dashboard/trend-chart.tsx`

@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-09-07T03:20:00Z",
+  "task_id": "TASK-025",
+  "agent_id": "coder",
+  "audit_type": "static",
+  "scope": "src/components/dashboard/indicator-grid.tsx",
+  "commands": [
+    { "command": "npx tsc --noEmit", "exit_code": 0 },
+    { "command": "npm run lint", "exit_code": 0, "warnings": 0 },
+    { "command": "npm test", "exit_code": 0, "test_files": 4, "tests": 54 },
+    { "command": "npm run test:coverage", "exit_code": 0 },
+    { "command": "npm run build", "exit_code": 0 },
+    { "command": "git diff --check", "exit_code": 0 }
+  ],
+  "acceptance_validation": {
+    "one_card_per_item": "PASS: items.map renders exactly one IndicatorCard per item",
+    "four_items_four_articles": "PASS by child semantics: IndicatorCard renders one article per invocation",
+    "grid_breakpoints": "PASS: grid-cols-1 sm:grid-cols-2 lg:grid-cols-4; Tailwind sm=640px and lg=1024px",
+    "design_system_spacing": "PASS: gap-4 default and lg:gap-6 match the Design System grid specification",
+    "server_compatible": "PASS: no client directive, state, events, or function props",
+    "exact_props": "PASS: IndicatorGridProps is { items: IndicatorDisplay[] } and child receives display",
+    "stable_order_and_key": "PASS: source order is preserved and key is item.indicator.id",
+    "scope": "PASS: implementation is limited to src/components/dashboard/indicator-grid.tsx",
+    "extra_wrappers_state_logic": "PASS: no extra wrapper, state, or business logic"
+  },
+  "dynamic_audit": {
+    "status": "NOT_APPLICABLE_DEFERRED",
+    "reason": "WebAuditMCP/Lighthouse/axe/security headers belong to TASK-045–048. Integrated and responsive rendering belongs to TASK-029/030/043/044. TASK-025 is not integrated into a route and requires only composition and grid classes."
+  },
+  "passed": true,
+  "authorization": "AUTHORIZED_TASK_025"
+}

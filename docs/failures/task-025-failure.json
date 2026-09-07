@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-09-07T03:20:00Z",
+  "task_id": "TASK-025",
+  "status": "RECLASSIFIED_NOT_APPLICABLE",
+  "error_category": "webauditmcp_unavailable",
+  "severity": "none",
+  "message": "Registro anterior reclassificado: WebAuditMCP/Lighthouse/axe/security headers não são gates de TASK-025 e foram corretamente adiados para TASK-045–048. A renderização integrada/responsiva foi corretamente adiada para TASK-029/030/043/044.",
+  "correction_applied": "Reclassificação do relatório; nenhum código foi alterado.",
+  "blocking": false,
+  "auto_update_prompt": false
+}
