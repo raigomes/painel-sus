@@ -29,11 +29,12 @@ export interface DashboardClientProps {
   ubs: UBS[];
   indicators: Indicator[];
   history: HistoryRecord[];
+  className?: string;
 }
 
 const INITIAL_INDICATOR: Indicator['id'] = 'cobertura-vacinal';
 
-export function DashboardClient({ ubs, indicators, history }: DashboardClientProps) {
+export function DashboardClient({ ubs, indicators, history, className }: DashboardClientProps) {
   const { filters, setUbsId, setPeriod, resetFilters } = useFilters();
   const [selectedIndicatorId, setSelectedIndicatorId] = useState<Indicator['id']>(INITIAL_INDICATOR);
 
@@ -86,20 +87,19 @@ export function DashboardClient({ ubs, indicators, history }: DashboardClientPro
   const hasNonDefaultFilters = filters.ubsId !== null || filters.period !== 'ultimo-mes';
 
   return (
-    <div className="space-y-6 md:space-y-8">
-      <div className="flex flex-wrap items-end gap-4 border-b border-zinc-200 bg-white px-4 py-4 sm:px-6">
+    <div className={className}>
+      <div className="flex flex-wrap items-center gap-4 border-b border-zinc-200 bg-white px-6 py-4">
         <UBSFilter ubs={ubs} value={filters.ubsId} onChange={setUbsId} />
         <PeriodFilter value={filters.period} onChange={setPeriod} />
-        {hasNonDefaultFilters && !showEmpty && (
-          <button
-            type="button"
-            onClick={resetFilters}
-            aria-label="Limpar filtros"
-            className="min-h-11 rounded-md px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          >
-            Limpar filtros
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={resetFilters}
+          disabled={!hasNonDefaultFilters || showEmpty}
+          aria-label="Limpar filtros"
+          className="min-h-11 rounded-md px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+        >
+          Limpar
+        </button>
       </div>
 
       {showEmpty ? (
@@ -107,20 +107,26 @@ export function DashboardClient({ ubs, indicators, history }: DashboardClientPro
       ) : (
         <>
           <IndicatorGrid items={cards} />
-          <section className="space-y-4">
-            {selectedIndicator && (
-              <IndicatorFilter
-                indicators={indicators}
-                value={selectedIndicator.id}
-                onChange={setSelectedIndicatorId}
-              />
-            )}
-            {selectedIndicator && (
-              <TrendChart data={trendPoints} indicatorName={selectedIndicator.nome} />
-            )}
-          </section>
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold text-zinc-800">Ranking das UBS</h2>
+          {selectedIndicator && (
+            <TrendChart
+              data={trendPoints}
+              indicatorName={selectedIndicator.nome}
+              indicatorFilter={(
+                <IndicatorFilter
+                  indicators={indicators}
+                  value={selectedIndicator.id}
+                  onChange={setSelectedIndicatorId}
+                />
+              )}
+            />
+          )}
+          <section className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold text-zinc-800">Ranking municipal das UBS</h2>
+              <p className="text-sm text-zinc-600">
+                Comparação municipal — 15 UBS na janela selecionada. O filtro de UBS não altera este ranking.
+              </p>
+            </div>
             <RankingTable rows={ranking} />
           </section>
         </>

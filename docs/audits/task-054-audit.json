@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-09-07T05:09:30Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-054",
+  "audit_type": "static_acceptance_revalidation",
+  "url": "http://localhost:3000",
+  "device": "desktop_and_mobile_static_review",
+  "authorization": {
+    "scope": "Revalidação focada de TASK-054 após atualização do teste",
+    "production_acceptance": true,
+    "allowed": [
+      "validar implementação de produção",
+      "validar caption sr-only",
+      "executar teste direcionado, suite completa, TypeScript, lint, coverage, build e git diff --check",
+      "atualizar este relatório de auditoria"
+    ],
+    "not_executed_by_authorization": [
+      "WebAuditMCP",
+      "alteração em src/",
+      "alteração em docs/TASKS.md"
+    ],
+    "tasks_file_modified": false
+  },
+  "reference": {
+    "pen_frame": "pg1/R7hShX",
+    "design_system": "docs/DESIGN_SYSTEM.md §4.4",
+    "production_files": [
+      "src/components/dashboard/dashboard-client.tsx",
+      "src/components/dashboard/ranking-table.tsx"
+    ],
+    "test_file": "src/components/dashboard/ranking-table.test.tsx"
+  },
+  "acceptance_criteria": {
+    "ranking_card": "PASS — dashboard-client renderiza card branco com border, rounded-xl (12px), shadow-sm, p-6 (24px) e gap-4 (16px)",
+    "visible_title": "PASS — título visível é Ranking municipal das UBS, text-lg/font-semibold",
+    "visible_note": "PASS — nota municipal exata é renderizada visivelmente sob o título",
+    "table_rows_and_responsive": "PASS — RankingTable recebe o ranking municipal, wrapper usa overflow-x-auto, tabela tem min-width 600px, linhas usam h-12 (48px) e links são preservados",
+    "caption_accessibility": "PASS — caption semântico permanece presente com classe sr-only: Ranking das 15 UBS por pontuação composta. O filtro de UBS não altera este ranking.",
+    "pen_alignment": "PASS — composição preserva a geometria do card, título e nota visível previstos no frame de referência, separando nota visual de caption assistivo"
+  },
+  "validation": {
+    "directed_test": {
+      "command": "npx vitest run src/components/dashboard/ranking-table.test.tsx",
+      "exit_code": 0,
+      "test_files": 1,
+      "tests": 5,
+      "passed": true
+    },
+    "full_suite": {
+      "command": "npm test",
+      "exit_code": 0,
+      "test_files": 6,
+      "tests": 64,
+      "passed": true
+    },
+    "typescript": {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0,
+      "passed": true
+    },
+    "lint": {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "warnings": 0,
+      "passed": true
+    },
+    "coverage": {
+      "command": "npm run test:coverage",
+      "exit_code": 0,
+      "tests": 64,
+      "overall_line_coverage_percent": 72.02,
+      "ranking_table_line_coverage_percent": 100,
+      "passed": true
+    },
+    "build": {
+      "command": "npm run build",
+      "exit_code": 0,
+      "next_version": "16.3.2",
+      "passed": true
+    },
+    "diff_check": {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "passed": true
+    },
+    "webauditmcp": {
+      "status": "NOT_EXECUTED",
+      "reason": "Explicitamente fora do escopo solicitado nesta revalidação; não usado para decidir TASK-054"
+    },
+    "tasks_file": {
+      "modified": false,
+      "reason": "Explicitamente proibido nesta revalidação"
+    }
+  },
+  "issues": [],
+  "production_acceptance": "PASS",
+  "overall_review": "PASS",
+  "passed": true
+}

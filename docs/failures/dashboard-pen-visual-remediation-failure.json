@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-09-07T05:22:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-055",
+  "error_category": "visual_regression_mismatch",
+  "severity": "resolved",
+  "file_path": "src/components/filters/ubs-filter.tsx",
+  "line_number": 35,
+  "error_message": "Finding anterior sobre Filter Bar desktop foi incorreto: labels são sr-only e não ocupam linha visual; os Selects são irmãos na flex row da Filter Bar.",
+  "code_snippet": "<label htmlFor={labelId} className=\"sr-only\">UBS</label> ... <SelectTrigger ... />",
+  "root_cause": "A revisão anterior inferiu desvio visual pelo nome flex-col do wrapper, sem avaliar a renderização efetiva dos labels sr-only.",
+  "correction_applied": "Revisão de escopo e layout efetivo; nenhuma alteração em src/.",
+  "prevention_rule": "Avaliar layout visual efetivo e visibilidade computada, não classes isoladas; aplicar somente o escopo explícito da acceptance.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "additional_findings": [
+    {
+      "error_category": "scope_misclassification",
+      "severity": "resolved",
+      "file_path": "docs/audits/dashboard-pen-visual-remediation.json",
+      "line_number": 1,
+      "error_message": "Smoke de rotas /ubs, /indicadores e /sobre foi indevidamente usado para bloquear TASK-055, embora a tarefa limite a comparação à rota / e aos elementos do dashboard pg1.",
+      "correction_applied": "Escopo corrigido no relatório; essas rotas foram removidas dos gates de TASK-055."
+    }
+  ],
+  "validation": {
+    "typescript": {"command": "npx tsc --noEmit", "exit_code": 0},
+    "lint": {"command": "npm run lint", "exit_code": 0, "warnings": 0},
+    "tests": {"command": "npm test", "exit_code": 0, "tests": 64},
+    "coverage": {"command": "npm run test:coverage", "exit_code": 0, "line_coverage_percent": 72.02},
+    "build": {"command": "npm run build", "exit_code": 0},
+    "diff_check": {"command": "git diff --check", "exit_code": 0},
+    "smoke_http": {"root_status": 200},
+    "webauditmcp": {"status": "NOT_REQUIRED", "reason": "Não é requisito da acceptance de TASK-055"}
+  },
+  "production_assessment": "RESOLVED — não há defeito real evidenciado na rota / nos critérios TASK-049–TASK-054. TASK-055 aprovada.",
+  "owner_action": "Nenhuma correção de produção necessária; failure anterior classificada como resolvida."
+}

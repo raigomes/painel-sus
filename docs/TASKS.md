@@ -346,6 +346,84 @@
     - [x] Não existe fetch HTTP nem conteúdo padrão do Create Next App
     - [x] `npm run build` gera `/` sem erros
 
+## Correção de paridade visual do Dashboard
+
+> Auditoria de referência: `docs/audits/dashboard-pen-visual-gap-audit.json`. O frame `pg1` de `docs/layout/painel-sus.pen` orienta geometria e composição visual; PRD/SPEC prevalecem em conflitos de conteúdo, dados e acessibilidade. Não alterar valores de produção para imitar exemplos estáticos do `.pen`.
+
+- [x] **ID**: `TASK-049`
+  - **Files**: `src/components/layout/header.tsx`
+  - **Dependencies**: `TASK-031`
+  - **Acceptance**:
+    - [x] Header desktop usa altura de 64 px, padding horizontal de 24 px e navegação com gap de 24 px
+    - [x] Marca usa `public/logo.png` em 44×24 px e título “Painel SUS” em 18 px/700 sem subtítulo adicional
+    - [x] Estado ativo preserva `aria-current`, cor, peso e underline
+    - [x] Em 375 px os três links permanecem visíveis, operáveis e sem overflow horizontal
+
+- [x] **ID**: `TASK-050`
+  - **Files**: `src/app/globals.css`, `src/app/page.tsx`, `src/components/dashboard/dashboard-client.tsx`
+  - **Dependencies**: `TASK-049`
+  - **Acceptance**:
+    - [x] Tokens globais resolvem background para `#fafafa`, primary para `#004B87` e primary hover/light conforme o Design System
+    - [x] A página usa largura máxima de 1280 px, canvas zinc-50 e ritmo vertical coerente com `pg1`
+    - [x] Título e introdução exigidos pela TASK-031 permanecem disponíveis sem romper a sequência visual principal Filter Bar → Cards → Trend → Ranking
+    - [x] Títulos de seção do dashboard usam 18 px/600 e valores dos cards permanecem em 30 px/700
+
+- [x] **ID**: `TASK-051`
+  - **Files**: `src/components/dashboard/dashboard-client.tsx`, `src/components/filters/ubs-filter.tsx`, `src/components/filters/period-filter.tsx`
+  - **Dependencies**: `TASK-050`
+  - **Acceptance**:
+    - [x] Em 1280 px a Filter Bar usa fundo branco, borda inferior, padding 16×24 px, gap de 16 px e controles alinhados horizontalmente
+    - [x] UBS e período usam larguras de 200 px e 180 px, respectivamente, com labels acessíveis sem ocupar linha acima dos controles
+    - [x] A ação visual “Limpar” permanece presente e desabilitada no estado padrão, sem disparar callback quando desabilitada
+    - [x] Em 375 px os controles ocupam a largura disponível, empilham sem overflow e mantêm alvos de 44 px
+
+- [x] **ID**: `TASK-052`
+  - **Files**: `src/components/dashboard/indicator-card.tsx`, `src/components/dashboard/indicator-grid.tsx`
+  - **Dependencies**: `TASK-050`
+  - **Acceptance**:
+    - [x] Em 1280 px a grade apresenta quatro cards de largura uniforme, altura de 245 px e gap de 24 px
+    - [x] Cards usam padding de 24 px, radius de 8 px, shadow-sm e borda esquerda semafórica de 4 px
+    - [x] Anatomia visual segue ícone, nome, valor, meta e tendência; texto de estado permanece acessível sem criar desalinhamento entre cards
+    - [x] Em 375 px os cards usam uma coluna, largura fluida e não recortam conteúdo
+
+- [x] **ID**: `TASK-053`
+  - **Files**: `src/components/dashboard/dashboard-client.tsx`, `src/components/dashboard/trend-chart.tsx`, `src/components/filters/indicator-filter.tsx`
+  - **Dependencies**: `TASK-051`, `TASK-052`
+  - **Acceptance**:
+    - [x] Título, seletor de 260×44 px e resumo curto ficam dentro do mesmo card de tendência com border, radius 12 px, shadow e padding 24 px
+    - [x] Em 1280 px label, seletor e resumo ficam na mesma linha; em 375 px quebram sem overflow
+    - [x] Gráfico mantém exatamente uma `Line`, `ReferenceLine`, tooltip e altura responsiva definida na SPEC
+    - [x] Legenda visível identifica “Valor” e “Meta”, enquanto a descrição detalhada permanece disponível para tecnologia assistiva
+    - [x] Trocar o indicador continua alterando somente série, meta e resumo do gráfico
+
+- [x] **ID**: `TASK-054`
+  - **Files**: `src/components/dashboard/dashboard-client.tsx`, `src/components/dashboard/ranking-table.tsx`, `src/components/dashboard/ranking-table.test.tsx`
+  - **Dependencies**: `TASK-053`
+  - **Acceptance**:
+    - [x] Ranking fica em card branco com border, radius 12 px, shadow-sm, padding 24 px e gap interno de 16 px
+    - [x] Título visível é “Ranking municipal das UBS” em 18 px/600
+    - [x] Nota visível informa “Comparação municipal — 15 UBS na janela selecionada. O filtro de UBS não altera este ranking.”
+    - [x] Tabela preserva 15 linhas, altura de 48 px, links e overflow horizontal em 375 px
+
+- [x] **ID**: `TASK-055`
+  - **Files**: `docs/audits/dashboard-pen-visual-remediation.json`, `docs/failures/dashboard-pen-visual-remediation-failure.json`, `docs/TASKS.md`
+  - **Dependencies**: `TASK-049`, `TASK-050`, `TASK-051`, `TASK-052`, `TASK-053`, `TASK-054`
+  - **Acceptance**:
+    - [x] Reviewer compara header, Filter Bar, cards, tendência, ranking e footer com `pg1` em 1280 px e 375 px
+    - [x] Auditoria registra evidência visual disponível e diferenças residuais, sem exigir que dados reais imitem valores demonstrativos do `.pen`
+    - [x] Footer permanece conforme PRD/SPEC, sem promoção pessoal, com fontes e versão completas
+    - [x] TypeScript, lint, testes e build passam sem regressões
+    - [x] Qualquer desvio dos critérios TASK-049–TASK-054 mantém a tarefa aberta e gera o arquivo de falha
+
+- [x] **ID**: `TASK-056`
+  - **Files**: `src/components/layout/header.tsx`, `.next/`
+  - **Dependencies**: `TASK-055`
+  - **Acceptance**:
+    - [x] Header não importa nem renderiza `Building2` e usa somente `/logo.png` para a marca visual
+    - [x] Cache de desenvolvimento `.next` é regenerado após encerrar o servidor Next.js anterior
+    - [x] Nova instância de `next dev` responde HTTP 200 sem referenciar o chunk obsoleto `building-2.mjs`
+    - [x] TypeScript, lint, testes e build continuam passando
+
 ## Detalhe de UBS
 
 - [ ] **ID**: `TASK-032`

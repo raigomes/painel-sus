@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-09-07T05:05:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-053",
+  "audit_type": "static_and_runtime_revalidation",
+  "url": "http://localhost:3000",
+  "device": "desktop_and_mobile_static_review",
+  "authorization": {
+    "scope": "Revalidação TASK-053",
+    "ignored_gates": ["CSP", "WebAuditMCP"],
+    "reason": "Explicitamente autorizados como gates de TASK-041/TASK-047, fora do escopo desta tarefa",
+    "tasks_file_modified": false
+  },
+  "reference": {
+    "pen_frame": "pg1/JdXb9",
+    "design_system": "docs/DESIGN_SYSTEM.md §4.3",
+    "files_reviewed": [
+      "src/components/dashboard/dashboard-client.tsx",
+      "src/components/dashboard/trend-chart.tsx",
+      "src/components/filters/indicator-filter.tsx",
+      "src/components/dashboard/indicator-card.tsx",
+      "src/components/dashboard/dashboard-client.test.tsx"
+    ]
+  },
+  "gates": {
+    "typescript": {"command": "npx tsc --noEmit", "exit_code": 0, "passed": true},
+    "lint": {"command": "npm run lint", "exit_code": 0, "warnings": 0, "passed": true},
+    "tests": {"command": "npm test", "exit_code": 0, "test_files": 6, "tests": 64, "passed": true},
+    "coverage": {"command": "npm run test:coverage", "exit_code": 0, "line_coverage_percent": 71.94, "passed": true},
+    "build": {"command": "npm run build", "exit_code": 0, "passed": true},
+    "git_diff_check": {"command": "git diff --check", "exit_code": 0, "passed": true},
+    "runtime_smoke": {"command": "curl -fsS http://localhost:3000", "http_status": 200, "passed": true, "evidence": ["Evolução histórica", "Indicador do gráfico", "Valor", "Meta"]},
+    "csp_security_headers": {"status": "ignored", "owner_task": "TASK-041"},
+    "webauditmcp": {"status": "ignored", "owner_task": "TASK-047"}
+  },
+  "criteria_validation": {
+    "trend_card_composition": {"passed": true, "evidence": "TrendChart renderiza um único section com border, rounded-xl (12px), shadow-sm e p-6 (24px), contendo título, controles/resumo, gráfico e legenda."},
+    "heading18": {"passed": true, "evidence": "trend-chart.tsx usa text-lg font-semibold no heading Evolução histórica (18px/600)."},
+    "label_select_summary_desktop": {"passed": true, "evidence": "IndicatorFilter usa label e Select em linha a partir de sm; SelectTrigger é h-11/min-h-11 e sm:w-[260px]. O resumo ocupa flex-1 na mesma linha do conjunto em desktop."},
+    "mobile_wrap": {"passed": true, "evidence": "A composição do cabeçalho usa flex-col por padrão e o filtro usa w-full; não há largura fixa no mobile. Em sm+ passa a flex-row, evitando overflow em 375px."},
+    "line_reference_tooltip_height": {"passed": true, "evidence": "Há exatamente um componente Line, um ReferenceLine, Tooltip e ResponsiveContainer; alturas h-[250px], sm:h-[280px] e md:h-[300px] seguem a SPEC."},
+    "legend": {"passed": true, "evidence": "Legenda visível contém exatamente os rótulos Valor e Meta, com marcadores de linha sólida e tracejada."},
+    "accessibility": {"passed": true, "evidence": "Section possui aria-labelledby; gráfico possui role=img, aria-label e aria-describedby; descrição detalhada e lista mensal permanecem sr-only; label associa-se ao SelectTrigger por id; alvo tem altura mínima 44px."},
+    "indicator_isolation": {"passed": true, "evidence": "selectedIndicatorId é consumido somente pelo TrendChart/IndicatorFilter; cards e ranking são derivados independentemente. Teste direcionado confirma que trocar indicador não altera cards/ranking."}
+  },
+  "issues": [],
+  "passed": true,
+  "decision": "PASS",
+  "failure_report": null,
+  "tasks_file_modified": false
+}

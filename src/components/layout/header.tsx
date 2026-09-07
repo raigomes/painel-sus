@@ -1,7 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { Building2 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const navigation = [
@@ -23,21 +23,18 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-200 border-b border-zinc-200 bg-white">
-      <div className="mx-auto flex min-h-16 w-full max-w-7xl flex-col items-start justify-between gap-2 px-4 py-2 sm:flex-row sm:items-center sm:gap-4 sm:px-6">
+      <div className="flex h-16 w-full items-center justify-between gap-2 px-2 sm:px-6">
         <Link
           href="/"
           aria-label="Painel SUS - Início"
-          className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md px-2 text-primary transition-colors hover:bg-primary-light focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md px-1 text-primary transition-colors hover:bg-primary-light focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:px-2"
         >
-          <Building2 aria-hidden="true" className="size-6 text-primary" />
-          <span className="flex flex-col leading-tight">
-            <span className="text-lg font-bold text-primary">Painel SUS</span>
-            <span className="text-xs font-medium text-zinc-600">Saúde Itapira</span>
-          </span>
+          <Image src="/logo.png" alt="" width={44} height={24} priority />
+          <span className="text-lg font-bold text-primary">Painel SUS</span>
         </Link>
 
-        <nav aria-label="Navegação principal" className="w-full sm:w-auto">
-          <ul className="flex flex-wrap items-center gap-1 sm:gap-2">
+        <nav aria-label="Navegação principal" className="shrink-0">
+          <ul className="flex items-center gap-1 sm:gap-6">
             {navigation.map((item) => {
               const active = isActiveRoute(pathname, item.href);
 
@@ -46,7 +43,7 @@ export default function Header() {
                   <Link
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`inline-flex min-h-11 items-center rounded-md border-b-2 px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                    className={`inline-flex min-h-11 items-center rounded-md border-b-2 px-1 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:px-3 ${
                       active
                         ? "border-primary font-semibold text-primary"
                         : "border-transparent font-medium text-zinc-700 hover:border-primary hover:bg-primary-light hover:text-primary"

@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-09-07T05:10:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-054",
+  "error_category": "stale_test_expectation",
+  "severity": "blocking",
+  "file_path": "src/components/dashboard/ranking-table.test.tsx",
+  "line_number": 26,
+  "error_message": "Teste espera 'Comparação municipal — 15 UBS na janela selecionada' dentro da caption; produção agora exibe essa nota visivelmente no dashboard-client e usa caption sr-only distinto para acessibilidade.",
+  "code_snippet": "expect(screen.getByText(\"Comparação municipal — 15 UBS na janela selecionada\")).toBeInTheDocument();",
+  "root_cause": "O teste existente não foi atualizado após a separação correta entre nota visível de contexto (dashboard section) e caption semântico para tecnologia assistiva (RankingTable).",
+  "correction_applied": "",
+  "prevention_rule": "Quando o conteúdo visual e o texto assistivo têm funções distintas, testar cada contrato no nível correto: nota visível no dashboard e caption sr-only na tabela.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "production_assessment": "A implementação atende os critérios de TASK-054 e está alinhada a pg1/R7hShX e DESIGN_SYSTEM §4.4; a falha é exclusivamente do teste legado.",
+  "owner_action": "Owner deve ampliar TASK-054 para incluir src/components/dashboard/ranking-table.test.tsx e atualizar o teste; Reviewer não alterou src/ nem docs/TASKS.md."
+}

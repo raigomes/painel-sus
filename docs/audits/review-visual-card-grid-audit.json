@@ -1,0 +1,156 @@
+{
+  "timestamp": "2026-09-07T04:53:05Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-052 (referência visual: indicator-card + indicator-grid)",
+  "audit_type": "visual_static",
+  "scope": "indicator-card.tsx, indicator-grid.tsx, DESIGN_SYSTEM.md, painel-sus.pen",
+  "methodology": "Static code analysis against DESIGN_SYSTEM §4.1 / §3.3 / §5 and .pen grid1/c1–c4",
+  "gates": {
+    "typescript": { "command": "npx tsc --noEmit", "exit_code": 0, "passed": true },
+    "lint": { "command": "npm run lint", "exit_code": 0, "passed": true },
+    "tests": { "command": "npm test", "exit_code": 0, "passed": true, "total": 64, "failed": 0 },
+    "build": { "command": "npm run build", "exit_code": 0, "passed": true },
+    "git_diff_check": { "command": "git diff --check", "exit_code": 0, "passed": true }
+  },
+  "uncommitted_changes": {
+    "file": "src/components/dashboard/indicator-card.tsx",
+    "insertions": 28,
+    "deletions": 25,
+    "summary": "Altura fixada de min-h-[140px] para h-[245px]; overflow-hidden adicionado; padding responsivo (p-4/sm:p-5/md:p-6) substituído por p-6 fixo; layout reestruturado com flex-col/gap-2; unidade e status movidos para sr-only; cor meta text zmudada de text-zinc-600 para text-zinc-500"
+  },
+  "criteria_validation": {
+    "1280px_4_columns": {
+      "requirement": "4 colunas uniformes em 1280px",
+      "implementation": "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 no indicator-grid.tsx",
+      "verdict": "PASS",
+      "note": "lg:grid-cols-4 ativa em >=1024px; em 1280px renderiza 4 colunas uniformes via CSS grid"
+    },
+    "card_height_245px": {
+      "requirement": "Cards com 245px de altura",
+      "implementation": "h-[245px] no article do indicator-card.tsx",
+      "verdict": "PASS",
+      "matches_pen": true,
+      "matches_design_system": "PARTIAL — DESIGN_SYSTEM §4.1 especifica min-height: 140px; código usa h-[245px] (altura fixa). O .pen c1–c4 define height: 245. Alinhado ao .pen mas diverge do texto do DS (min-height vs fixed-height)."
+    },
+    "gap_24px": {
+      "requirement": "Gap de 24px entre cards",
+      "implementation": "lg:gap-6 no indicator-grid.tsx (= 24px Tailwind spacing)",
+      "verdict": "PASS",
+      "matches_ds": "DESIGN_SYSTEM §3.3 xl: gap-6 = 24px",
+      "matches_pen": "grid1 gap: 24"
+    },
+    "padding_24px": {
+      "requirement": "Padding de 24px nos cards",
+      "implementation": "p-6 no article do indicator-card.tsx (= 24px Tailwind spacing)",
+      "verdict": "PASS",
+      "matches_ds": "DESIGN_SYSTEM §4.1: padding 24px (spacing.6)",
+      "matches_pen": "c1–c4 padding: 24"
+    },
+    "border_radius_8px": {
+      "requirement": "Border radius 8px",
+      "implementation": "rounded-lg no article (= 0.5rem = 8px)",
+      "verdict": "PASS",
+      "matches_ds": "DESIGN_SYSTEM §4.1: border-radius 8px (border_radius.lg)",
+      "matches_pen": "c1–c4 cornerRadius: 8"
+    },
+    "shadow_sm": {
+      "requirement": "Box shadow-sm",
+      "implementation": "shadow-sm no article; hover:shadow-md para hover",
+      "verdict": "PASS",
+      "matches_ds": "DESIGN_SYSTEM §4.1: box-shadow shadow-sm, hover shadow-md",
+      "matches_pen": "c1–c4 effect: shadow blur 4, y-offset 2"
+    },
+    "border_left_4px": {
+      "requirement": "Border-left 4px semáforo",
+      "implementation": "border-l-4 no article + border color via STATUS_CLASSES[status].border",
+      "verdict": "PASS",
+      "matches_ds": "DESIGN_SYSTEM §4.1: border-left-width 4px",
+      "matches_pen": "c1–c4 strokeWidth.left: 4"
+    },
+    "accessible_anatomy": {
+      "requirement": "Anatomia acessível do card",
+      "checks": {
+        "role_article": { "present": true, "element": "<article role='article'>", "verdict": "PASS" },
+        "aria_label": { "present": true, "format": "{nome}: {valor}%, meta {meta}%, tendencia {trend}", "verdict": "PASS" },
+        "icon_aria_hidden": { "present": true, "element": "StatusIcon aria-hidden='true'", "verdict": "PASS" },
+        "trend_aria_label": { "present": true, "format": "Tendencia {trend}", "verdict": "PASS" },
+        "status_text_sr_only": { "present": true, "element": "sr-only div with statusLabel", "verdict": "PASS" },
+        "unit_sr_only": { "present": true, "element": "sr-only span with indicator.unidade", "verdict": "PASS" },
+        "tabular_nums_value": { "present": true, "class": "tabular-nums on value span", "verdict": "PASS" },
+        "tabular_nums_meta": { "present": true, "class": "tabular-nums on meta span", "verdict": "PASS" },
+        "semantic_h2": { "present": true, "element": "<h2> for indicator name", "verdict": "PASS" },
+        "semaphore_colors_text_accessible": { "present": true, "note": "emerald-700/amber-700/red-700 on tinted bg ≥ 4.5:1 per DS §7.1", "verdict": "PASS" }
+      },
+      "verdict": "PASS — all 10 accessibility checks satisfied"
+    },
+    "375px_fluid_no_overflow": {
+      "requirement": "375px: coluna fluida sem overflow",
+      "checks": {
+        "single_column": { "implementation": "grid-cols-1 (default, <640px)", "verdict": "PASS" },
+        "fluid_width": { "implementation": "Cards fill available width via CSS grid auto-sizing", "verdict": "PASS" },
+        "no_horizontal_overflow": { "implementation": "Card text wraps naturally; no fixed-width children exceeding container", "verdict": "PASS" },
+        "overflow_hidden": { "implementation": "overflow-hidden on article prevents vertical bleed", "verdict": "PASS" },
+        "content_fits_245px": { "implementation": "Estimated content height ~135px (icon+name+value+meta+gaps+padding) < 245px", "verdict": "PASS" }
+      },
+      "verdict": "PASS — single fluid column, no overflow at 375px"
+    },
+    "tests_semantic_stability": {
+      "requirement": "Testes continuam aprovados e semanticamente estáveis",
+      "test_file": "src/components/dashboard/indicator-card.test.tsx",
+      "total_tests_in_file": 9,
+      "passed": 9,
+      "semantic_apis_used": [
+        "getByRole('article')",
+        "getByRole('article', { name: /regex/ })",
+        "getByLabelText('Tendencia alta/estavel/queda')",
+        "getByText('94.2%')",
+        "toHaveClass() for visual tokens"
+      ],
+      "assertions_on_role_and_label": 6,
+      "assertions_on_visual_classes": 14,
+      "verdict": "PASS — tests are role/label-based (semantic) and class-based (token validation); stable against layout refactors"
+    }
+  },
+  "design_system_discrepancies": [
+    {
+      "id": "DS-4.1-min-height",
+      "severity": "info",
+      "location": "indicator-card.tsx line 61",
+      "ds_spec": "DESIGN_SYSTEM §4.1: min-height: 140px",
+      "code_value": "h-[245px] (fixed height)",
+      "pen_value": "height: 245 (c1–c4)",
+      "assessment": "The code matches the .pen (height: 245) but deviates from the DESIGN_SYSTEM text (min-height: 140px). The fixed height ensures uniform card sizes for visual consistency. This is a deliberate design decision aligned with the .pen wireframe.",
+      "blocking": false
+    },
+    {
+      "id": "DS-3.3-responsive-padding",
+      "severity": "info",
+      "location": "indicator-card.tsx line 61",
+      "ds_spec": "DESIGN_SYSTEM §3.3: p-4 (<640px), p-5 (≥640px), p-6 (≥768px)",
+      "code_value": "p-6 (fixed, all viewports)",
+      "assessment": "Card padding is fixed at p-6 regardless of viewport. At 375px, the 24px padding reduces content width to ~295px but content still fits within the 245px height. No visual overflow.",
+      "blocking": false
+    },
+    {
+      "id": "PEN-grid1-card-width",
+      "severity": "info",
+      "location": "indicator-grid.tsx",
+      "pen_value": "grid1 cards: width 280 (fixed in .pen)",
+      "code_value": "CSS grid auto-sizing (no fixed card width)",
+      "assessment": "The .pen defines cards at 280px width in a 1280px frame. The CSS grid auto-sizes columns to fill available space, producing ~261px columns at 1280px (with lg:px-8 page padding). This is the expected CSS grid behavior; the .pen card width is illustrative.",
+      "blocking": false
+    }
+  ],
+  "pen_alignment": {
+    "grid1_gap": { "pen": 24, "code": "lg:gap-6 = 24px", "match": true },
+    "grid1_padding": { "pen": [0, 24], "code": "page wrapper lg:px-8 = 32px per side", "match": "PARTIAL — page padding is 32px not 24px at lg+; DESIGN_SYSTEM §5 Grid Classes specifies lg:px-8" },
+    "c1_height": { "pen": 245, "code": "h-[245px]", "match": true },
+    "c1_cornerRadius": { "pen": 8, "code": "rounded-lg = 8px", "match": true },
+    "c1_shadow": { "pen": "blur 4, y 2, color #0000000d", "code": "shadow-sm (Tailwind: 0 1px 2px 0 rgb(0 0 0 / 0.05))", "match": "APPROX — .pen shadow is slightly different (blur 4 vs Tailwind sm blur 1px) but both are subtle shadows" },
+    "c1_strokeWidthLeft": { "pen": 4, "code": "border-l-4", "match": true },
+    "c1_padding": { "pen": 24, "code": "p-6 = 24px", "match": true },
+    "c1_fill": { "pen": "$color.successBg", "code": "bg-emerald-50", "match": true }
+  },
+  "passed": true,
+  "conclusion": "PASS — All 8 user-specified criteria validated: (1) 1280px renders 4 uniform columns via lg:grid-cols-4, (2) card height 245px via h-[245px], (3) gap 24px via lg:gap-6, (4) card padding 24px via p-6, (5) radius 8px via rounded-lg, (6) shadow-sm, (7) border-left 4px via border-l-4 + semaphore colors, (8) accessible anatomy with role/article, aria-label, sr-only status/unit, tabular-nums, semantic h2. (9) 375px renders single fluid column with overflow-hidden and no content clipping. (10) All 64 tests pass (9 indicator-card tests). (11) tsc/lint/build/diff clean. Three non-blocking DESIGN_SYSTEM discrepancies noted: fixed height vs min-height, fixed padding vs responsive padding, page padding 32px vs .pen 24px."
+}

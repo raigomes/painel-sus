@@ -29,7 +29,7 @@ export function PeriodFilter({ value, onChange }: PeriodFilterProps) {
 
   return (
     <div className="flex w-full min-w-0 flex-col gap-2 sm:w-auto lg:w-[180px]">
-      <label htmlFor={labelId} className="text-sm font-medium text-zinc-700">
+      <label htmlFor={labelId} className="sr-only">
         Período
       </label>
       <Select value={value} onValueChange={(nextValue) => {
