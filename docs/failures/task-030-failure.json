@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-09-07T03:50:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-030",
+  "error_category": "test_quality_insufficient",
+  "severity": "resolved",
+  "file_path": "src/components/dashboard/dashboard-client.test.tsx",
+  "line_number": 1,
+  "error_message": "Falha anterior resolvida na segunda correção: TrendChart real exercitado e botões duplicados no estado vazio eliminados.",
+  "code_snippet": "Sem falha vigente.",
+  "root_cause": "A primeira correção mantinha mock do TrendChart e renderizava o reset da barra junto com o EmptyState.",
+  "correction_applied": "Teste agora usa TrendChart real, sem vi.mock; DashboardClient oculta o reset da barra quando showEmpty é verdadeiro.",
+  "prevention_rule": "Testes de integração devem exercitar componentes de produção e estados vazios não devem expor ações acessíveis duplicadas.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "resolved_at": "2026-09-07T03:53:30Z",
+  "verification": {
+    "directed_tests": "passed",
+    "full_suite": "passed",
+    "typescript": "passed",
+    "lint": "passed_without_warnings",
+    "coverage": "passed",
+    "build": "passed",
+    "diff_check": "passed"
+  }
+}

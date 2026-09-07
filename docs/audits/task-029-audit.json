@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-09-07T03:38:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-029",
+  "audit_type": "static_revalidation",
+  "scope": "Revalidação após correção, sem TASK-030 e sem WebAuditMCP, conforme autorização explícita",
+  "passed": true,
+  "commands": {
+    "npx tsc --noEmit": { "exit_code": 0 },
+    "npm run lint": { "exit_code": 0, "warnings": 0 },
+    "npm test -- --run": { "exit_code": 0, "test_files": 5, "tests": 59 },
+    "npm run test:coverage": { "exit_code": 0, "overall_statements": 40.43 },
+    "npm run build": { "exit_code": 0, "routes": ["/", "/_not-found"] },
+    "git diff --check": { "exit_code": 0 },
+    "npm audit --json": { "exit_code": 0, "high": 0, "critical": 0, "moderate": 0, "low": 0 }
+  },
+  "acceptance": {
+    "initial_state": {
+      "passed": true,
+      "evidence": "useFilters inicia ubsId=null e period=ultimo-mes; selectedIndicatorId inicia cobertura-vacinal."
+    },
+    "ubs_scope": {
+      "passed": true,
+      "evidence": "visibleRecords limita exclusivamente cartões e gráfico; ranking recebe ubs completo e periodRecords."
+    },
+    "period_scope": {
+      "passed": true,
+      "evidence": "periodRecords é derivado por useMemo(filterByPeriod(history, filters.period)) e alimenta cartões, gráfico, tendência e ranking."
+    },
+    "trend_uses_period_records": {
+      "passed": true,
+      "evidence": "cards chama getTrend(periodRecords, indicator.id, filters.ubsId), não history bruto; a dependência periodRecords está declarada no useMemo de cards."
+    },
+    "ranking_municipal_15_ubs": {
+      "passed": true,
+      "evidence": "calculateRanking(ubs, periodRecords, indicators) preserva o conjunto municipal completo mesmo quando filters.ubsId seleciona uma UBS."
+    },
+    "indicator_selector_isolation": {
+      "passed": true,
+      "evidence": "selectedIndicatorId afeta apenas selectedIndicator, trendPoints, meta/nome/resumo e série do TrendChart; não é dependência de cards ou ranking."
+    },
+    "memo_dependencies": {
+      "passed": true,
+      "evidence": "periodRecords depende de history e filters.period; visibleRecords de periodRecords e filters.ubsId; ranking de ubs, periodRecords e indicators; cards inclui indicators, filters.ubsId, visibleRecords, ubs e periodRecords; trendPoints inclui visibleRecords, selectedIndicator, filters.ubsId e ubs."
+    },
+    "empty_state_and_reset": {
+      "passed": true,
+      "evidence": "visibleRecords.length === 0 renderiza EmptyState; onClear/resetFilters restaura UBS e período."
+    },
+    "previous_failure_regression": {
+      "passed": true,
+      "evidence": "A falha registrada em docs/failures/task-029-failure.json foi corrigida: a tendência deixou de usar history completo e passou a usar a janela periodRecords."
+    },
+    "visual_integration": {
+      "passed": true,
+      "evidence": "DashboardClient integra UBSFilter, PeriodFilter, IndicatorFilter, IndicatorGrid, TrendChart, RankingTable e EmptyState; TrendChart mantém LineChart com uma única Line."
+    }
+  },
+  "deferred_by_request": {
+    "TASK-030": "não exigida nesta revalidação",
+    "WebAuditMCP": "não executado; explicitamente não exigido nesta revalidação",
+    "TASKS.md": "não editado; explicitamente solicitado"
+  },
+  "authorization": {
+    "npm_audit": "pass: nenhuma vulnerabilidade high ou critical registrada",
+    "web_audit": "fora do escopo autorizado"
+  }
+}

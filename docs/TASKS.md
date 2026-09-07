@@ -287,64 +287,64 @@
     - [x] Grid usa uma coluna no mobile, duas a partir de 640 px e quatro a partir de 1024 px
     - [x] Espaçamento segue o Design System alinhado à SPEC v1.2
 
-- [ ] **ID**: `TASK-026`
+- [x] **ID**: `TASK-026`
   - **Files**: `src/components/dashboard/trend-chart.tsx`
   - **Dependencies**: `TASK-004`
   - **Acceptance**:
-    - [ ] O Client Component usa Recharts `LineChart` e exatamente uma `Line`
-    - [ ] `ReferenceLine`, eixos e tooltip informam meta, mês e percentual
-    - [ ] Todos os pontos recebidos aparecem em ordem
-    - [ ] Região nomeada e resumo textual comunicam indicador, valores e meta
-    - [ ] O componente não usa `BarChart`
+    - [x] O Client Component usa Recharts `LineChart` e exatamente uma `Line`
+    - [x] `ReferenceLine`, eixos e tooltip informam meta, mês e percentual
+    - [x] Todos os pontos recebidos aparecem em ordem
+    - [x] Região nomeada e resumo textual comunicam indicador, valores e meta
+    - [x] O componente não usa `BarChart`
 
-- [ ] **ID**: `TASK-027`
+- [x] **ID**: `TASK-027`
   - **Files**: `src/components/dashboard/ranking-table.tsx`, `src/components/dashboard/ranking-table.test.tsx`
   - **Dependencies**: `TASK-006`, `TASK-007`, `TASK-015`
   - **Acceptance**:
-    - [ ] Tabela semântica contém caption e cinco headers com `scope="col"`
-    - [ ] Linhas preservam a ordem e pontuação com uma casa decimal
-    - [ ] Cada UBS possui link para `/ubs/[id]`
-    - [ ] Estado é comunicado por texto além de cor e a tabela permite overflow horizontal
-    - [ ] Testes cobrem semântica, ordem, links e estados
+    - [x] Tabela semântica contém caption e cinco headers com `scope="col"`
+    - [x] Linhas preservam a ordem e pontuação com uma casa decimal
+    - [x] Cada UBS possui link para `/ubs/[id]`
+    - [x] Estado é comunicado por texto além de cor e a tabela permite overflow horizontal
+    - [x] Testes cobrem semântica, ordem, links e estados
 
-- [ ] **ID**: `TASK-028`
+- [x] **ID**: `TASK-028`
   - **Files**: `src/components/dashboard/empty-state.tsx`
   - **Dependencies**: `TASK-003`
   - **Acceptance**:
-    - [ ] O estado informa ausência de registros para os filtros
-    - [ ] Botão “Limpar filtros” possui alvo mínimo de 44×44 px
-    - [ ] Ativar o botão chama `onClear` uma vez
-    - [ ] Não existe texto ou ação “Tentar novamente”
+    - [x] O estado informa ausência de registros para os filtros
+    - [x] Botão “Limpar filtros” possui alvo mínimo de 44×44 px
+    - [x] Ativar o botão chama `onClear` uma vez
+    - [x] Não existe texto ou ação “Tentar novamente”
 
-- [ ] **ID**: `TASK-029`
+- [x] **ID**: `TASK-029`
   - **Files**: `src/components/dashboard/dashboard-client.tsx`
   - **Dependencies**: `TASK-016`, `TASK-017`, `TASK-022`, `TASK-023`, `TASK-025`, `TASK-026`, `TASK-027`, `TASK-028`
   - **Acceptance**:
-    - [ ] Estado inicial usa todas as UBS, último mês e Cobertura Vacinal no gráfico
-    - [ ] UBS filtra somente cartões e gráfico; período filtra cartões, gráfico e ranking
-    - [ ] Ranking sempre é calculado com as 15 UBS da janela ativa
-    - [ ] Seletor do gráfico troca somente a série, meta e resumo do gráfico
-    - [ ] Ausência de registros mostra `EmptyState` e limpar restaura UBS e período
+    - [x] Estado inicial usa todas as UBS, último mês e Cobertura Vacinal no gráfico
+    - [x] UBS filtra somente cartões e gráfico; período filtra cartões, gráfico e ranking
+    - [x] Ranking sempre é calculado com as 15 UBS da janela ativa
+    - [x] Seletor do gráfico troca somente a série, meta e resumo do gráfico
+    - [x] Ausência de registros mostra `EmptyState` e limpar restaura UBS e período
 
-- [ ] **ID**: `TASK-030`
-  - **Files**: `src/components/dashboard/dashboard-client.test.tsx`
+- [x] **ID**: `TASK-030`
+  - **Files**: `src/components/dashboard/dashboard-client.tsx`, `src/components/dashboard/dashboard-client.test.tsx`
   - **Dependencies**: `TASK-006`, `TASK-029`
   - **Acceptance**:
-    - [ ] Teste confirma os três valores iniciais dos controles
-    - [ ] Teste confirma que trocar indicador altera o gráfico sem alterar cartões ou ranking
-    - [ ] Teste confirma que selecionar UBS preserva as 15 linhas do ranking
-    - [ ] Teste confirma que período atualiza cartões, gráfico e ranking
-    - [ ] Teste cobre estado vazio e limpeza dos filtros
+    - [x] Teste confirma os três valores iniciais dos controles
+    - [x] Teste confirma que trocar indicador altera o gráfico sem alterar cartões ou ranking
+    - [x] Teste confirma que selecionar UBS preserva as 15 linhas do ranking
+    - [x] Teste confirma que período atualiza cartões, gráfico e ranking
+    - [x] Teste cobre estado vazio e limpeza dos filtros
 
-- [ ] **ID**: `TASK-031`
+- [x] **ID**: `TASK-031`
   - **Files**: `src/app/page.tsx`
   - **Dependencies**: `TASK-010`, `TASK-021`, `TASK-029`
   - **Acceptance**:
-    - [ ] A página permanece Server Component
-    - [ ] Dados locais completos são passados ao `DashboardClient`
-    - [ ] Título e introdução identificam painel e período dos dados
-    - [ ] Não existe fetch HTTP nem conteúdo padrão do Create Next App
-    - [ ] `npm run build` gera `/` sem erros
+    - [x] A página permanece Server Component
+    - [x] Dados locais completos são passados ao `DashboardClient`
+    - [x] Título e introdução identificam painel e período dos dados
+    - [x] Não existe fetch HTTP nem conteúdo padrão do Create Next App
+    - [x] `npm run build` gera `/` sem erros
 
 ## Detalhe de UBS
 

@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-09-07T04:02:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-031",
+  "error_category": "deferred_visual_requirement",
+  "severity": "non_blocking_deferred",
+  "file_path": "src/data/history.ts",
+  "line_number": 20,
+  "error_message": "Issue visual futura: o smoke do dashboard inicial não demonstra simultaneamente os três estados de semáforo nem as três tendências; isso pertence ao alinhamento visual e às tarefas TASK-043/TASK-046, não à acceptance de TASK-031.",
+  "code_snippet": "const indicatorBases: Record<Indicator[\"id\"], number> = { cobertura-vacinal: 0.9, pre-natal: 0.86, hipertensao: 0.84, diabetes: 0.82 }; ... monthIndex * 0.008",
+  "root_cause": "As bases determinísticas aprovadas em TASK-010 mantêm os dados exibidos no estado inicial em estados amarelos e tendências estáveis. TASK-010 não exigia variedade municipal no último mês; alterar esses dados sem decisão prévia violaria o escopo aprovado.",
+  "correction_applied": "Reclassificação documental: não bloqueia TASK-031; a exigência foi transferida para TASK-043/TASK-046 sem alterar código, dados aprovados ou docs/TASKS.md.",
+  "prevention_rule": "Antes de declarar o dashboard funcional finalizado, o smoke deve usar os dados de produção local e confirmar visualmente pelo menos um card verde, um amarelo e um vermelho, além de tendências alta, estável e queda; manter testes de integração para essa variedade.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "status": "reclassified_non_blocking_deferred",
+  "blocks_task_031": false,
+  "future_owner": "TASK-043/TASK-046",
+  "historical_references": [
+    "docs/failures/pen-semaphore-only-yellow-states.json",
+    "docs/failures/pen-trend-variety-missing.json"
+  ],
+  "evidence": {
+    "typescript": "passed",
+    "lint": "passed, zero warnings",
+    "suite": "passed, 6 files / 64 tests",
+    "coverage": "passed execution, 71.82% overall statements; dashboard-client 100% statements",
+    "build": "passed, route / generated",
+    "diff_check": "passed",
+    "local_smoke": "passed for shell, four cards, filters, chart, ranking, header/footer; failed for required status/trend variety",
+    "webaudit": "not run; reserved for final gates",
+    "tasks_file": "not edited per request"
+  }
+}

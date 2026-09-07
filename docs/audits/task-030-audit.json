@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-09-07T03:53:30Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-030",
+  "audit_type": "static_test_review",
+  "scope": "Revalidação independente após segunda correção; sem WebAuditMCP e sem alteração de docs/TASKS.md conforme solicitação.",
+  "passed": true,
+  "commands": {
+    "npm test -- --run src/components/dashboard/dashboard-client.test.tsx": { "exit_code": 0, "test_files": 1, "tests": 5 },
+    "npm test -- --run": { "exit_code": 0, "test_files": 6, "tests": 64 },
+    "npx tsc --noEmit": { "exit_code": 0 },
+    "npm run lint": { "exit_code": 0, "warnings": 0 },
+    "npm run test:coverage": { "exit_code": 0, "overall_statements": 69.74, "dashboard_client_statements": 100, "dashboard_client_branches": 92.59 },
+    "npm run build": { "exit_code": 0, "routes": ["/", "/_not-found"] },
+    "git diff --check": { "exit_code": 0 },
+    "git diff": { "exit_code": 0, "reviewed": true, "note": "Arquivos da tarefa permanecem não rastreados; inspeção foi feita diretamente nos arquivos e no status do repositório." },
+    "WebAuditMCP": { "status": "not_run", "authorized": false, "reason": "explicitamente não requerido" }
+  },
+  "acceptance": {
+    "three_initial_values": { "passed": true, "evidence": "Teste verifica UBS=all, Período=ultimo-mes e Indicador=cobertura-vacinal." },
+    "indicator_graph_only": { "passed": true, "evidence": "Teste troca para Diabetes e verifica nome, dados/série, meta e resumo do TrendChart real; não há vi.mock no teste e DashboardClient importa/renderiza TrendChart de produção. Cards e ranking permanecem idênticos." },
+    "ubs_preserves_15_ranking": { "passed": true, "evidence": "Teste seleciona UBS Centro e confirma exatamente 15 linhas, links e scores idênticos no ranking; card e gráfico mudam." },
+    "period_changes_cards_chart_ranking": { "passed": true, "evidence": "Teste troca para Último trimestre e confirma atualização de card, série/resumo do gráfico e pontuações do ranking." },
+    "empty_and_reset": { "passed": true, "evidence": "Fixture determinística sem registros para a UBS selecionada renderiza EmptyState; único botão Limpar filtros disponível nesse estado é acionado e restaura all/ultimo-mes." }
+  },
+  "regressions": {
+    "TASK-029": { "passed": true, "evidence": "Suíte completa passa; período continua alimentando cartões, gráfico e ranking, UBS preserva ranking municipal de 15 linhas, e a implementação usa periodRecords para a janela ativa." },
+    "duplicate_empty_buttons": { "passed": true, "evidence": "DashboardClient renderiza o reset da barra somente quando hasNonDefaultFilters && !showEmpty; no estado vazio, apenas EmptyState fornece o botão Limpar filtros." },
+    "trend_chart_mock_regression": { "passed": true, "evidence": "dashboard-client.test.tsx não contém vi.mock; o teste exercita o LineChart/TrendChart real." }
+  },
+  "authorization": {
+    "scope": "static validation requested by user",
+    "web_audit": "fora do escopo autorizado",
+    "tasks_update": "fora do escopo autorizado"
+  },
+  "failure_reference": "docs/failures/task-030-failure.json",
+  "failure_status": "resolved"
+}

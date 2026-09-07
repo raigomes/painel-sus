@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-09-07T03:20:00Z",
+  "task_id": "TASK-026",
+  "audit_type": "static_review",
+  "url": null,
+  "device": "not_applicable",
+  "scope": "src/components/dashboard/trend-chart.tsx",
+  "webAuditMCP": "not_run_by_task_scope",
+  "checks": {
+    "client_component": { "passed": true, "evidence": "Arquivo inicia com 'use client'." },
+    "props": { "passed": true, "evidence": "TrendChartProps recebe data: TrendPoint[] e indicatorName: string; exportado." },
+    "single_line_chart": { "passed": true, "evidence": "ResponsiveContainer envolve LineChart; existe exatamente uma ocorrência de componente Line." },
+    "reference_line_and_axes": { "passed": true, "evidence": "ReferenceLine usa meta do último ponto; XAxis mensal e YAxis 0–120% com formatação percentual." },
+    "tooltip": { "passed": true, "evidence": "Custom tooltip informa mês formatado, Valor e Meta em percentual." },
+    "point_order": { "passed": true, "evidence": "data é passada diretamente ao LineChart e o resumo/lista acessível percorre data sem reorder ou sort." },
+    "named_region_and_summary": { "passed": true, "evidence": "section nomeada por aria-labelledby; aria-label/aria-describedby e resumo textual informam indicador, valores, janela/quantidade e meta." },
+    "accessible_data": { "passed": true, "evidence": "Dados mensais são repetidos em lista sr-only com valor e meta; região possui role img e descrição associada." },
+    "responsive_height": { "passed": true, "evidence": "Container width 100% e altura CSS 250px/280px/300px nos breakpoints default/sm/md." },
+    "reduced_animation": { "passed": true, "evidence": "Line define isAnimationActive={false}, evitando animação para o componente." },
+    "no_barchart": { "passed": true, "evidence": "Nenhuma referência a BarChart no arquivo auditado." },
+    "scope": { "passed": true, "evidence": "git diff --check limpo e única alteração não rastreada é src/components/dashboard/trend-chart.tsx; docs/TASKS.md não foi alterado." }
+  },
+  "verification_commands": {
+    "npx tsc --noEmit": "passed",
+    "npm run lint": "passed",
+    "npm test": "passed: 4 files, 54 tests",
+    "npm run build": "passed",
+    "git diff --check": "passed"
+  },
+  "issues": [],
+  "passed": true,
+  "decision": "PASS"
+}

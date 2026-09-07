@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-09-07T03:31:00Z",
+  "audit_type": "static_acceptance",
+  "task_id": "TASK-027",
+  "url": null,
+  "device": null,
+  "scores": null,
+  "webaudit_status": "NOT_APPLICABLE_DEFERRED",
+  "webaudit_scope": "Deferred to TASK-045–TASK-048; not an acceptance criterion of TASK-027.",
+  "acceptance_criteria": {
+    "semantic_table_caption_and_headers": "passed: caption plus exactly five scope=col headers",
+    "row_order_and_one_decimal_score": "passed: received order preserved and pontuacao.toFixed(1)",
+    "ubs_links": "passed: every tested row links to /ubs/[id]",
+    "state_text_beyond_color": "passed: Verde, Amarelo and Vermelho text rendered",
+    "state_icons_and_classes": "passed: Lucide icon aria-hidden plus background/border/text/icon classes for all three states",
+    "horizontal_overflow": "passed: overflow-x-auto wrapper and min-w-[600px] table",
+    "tests": "passed: directed tests cover semantics, order, links, score formatting, overflow and states"
+  },
+  "validation": {
+    "directed_test": "PASS — 1 file, 5 tests",
+    "full_suite": "PASS — 5 files, 59 tests",
+    "typescript": "PASS — npx tsc --noEmit",
+    "lint": "PASS — zero warnings",
+    "coverage": "PASS — ranking-table.tsx 100% statements/branches/functions/lines; aggregate 43.99% statements",
+    "build": "PASS — next build",
+    "diff_check": "PASS — git diff --check"
+  },
+  "issues": [],
+  "passed": true,
+  "authorization": "AUTHORIZED_FOR_TASKS_MARKING",
+  "tasks_file_modified": false
+}

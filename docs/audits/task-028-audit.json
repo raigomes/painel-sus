@@ -1,0 +1,65 @@
+{
+  "timestamp": "2026-09-07T03:31:00Z",
+  "task_id": "TASK-028",
+  "agent_id": "reviewer",
+  "audit_type": "static_component_review",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scope": {
+    "file": "src/components/dashboard/empty-state.tsx",
+    "criteria": [
+      "mensagem de ausência para os filtros",
+      "botão literal Limpar filtros",
+      "callback uma vez por ativação",
+      "alvo mínimo de 44x44px",
+      "acessibilidade",
+      "ausência de Tentar novamente",
+      "escopo limitado ao arquivo declarado"
+    ]
+  },
+  "checks": {
+    "empty_message_for_filters": {
+      "passed": true,
+      "evidence": "Texto literal Não há registros para os filtros selecionados."
+    },
+    "button_literal": {
+      "passed": true,
+      "evidence": "O único botão contém exatamente Limpar filtros."
+    },
+    "callback_once_per_activation": {
+      "passed": true,
+      "evidence": "Há um único handler onClick={onClear} no botão; não há efeitos, listeners adicionais ou chamadas duplicadas. Sem teste declarado, validado por inspeção do handler, sem criar gate adicional."
+    },
+    "touch_target": {
+      "passed": true,
+      "evidence": "Classes min-h-11 e min-w-11 correspondem a 44px por 44px no Tailwind."
+    },
+    "accessibility": {
+      "passed": true,
+      "evidence": "section possui aria-labelledby apontando para h2; botão é nativo, type=button e possui foco visível."
+    },
+    "retry_absent": {
+      "passed": true,
+      "evidence": "Não há texto nem ação Tentar novamente no componente."
+    },
+    "scope": {
+      "passed": true,
+      "evidence": "Implementação confinada a src/components/dashboard/empty-state.tsx; nenhum escopo adicional foi introduzido."
+    }
+  },
+  "commands": [
+    {"command": "npx tsc --noEmit", "exit_code": 0},
+    {"command": "npm run lint", "exit_code": 0, "warnings": 0},
+    {"command": "npm test -- --run", "exit_code": 0, "tests": 59, "test_files": 5},
+    {"command": "npm run build", "exit_code": 0},
+    {"command": "git diff --check", "exit_code": 0}
+  ],
+  "webaudit": {
+    "server_responding": true,
+    "webaudit_mcp_available": false,
+    "note": "WebAuditMCP não está instalado/exposto neste ambiente. A rota respondeu em http://localhost:3000; o EmptyState não está montado na página atual, portanto a validação específica do componente foi estática."
+  },
+  "scores": {},
+  "issues": [],
+  "passed": true
+}
