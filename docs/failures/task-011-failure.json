@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-09-07T00:35:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-011",
+  "error_category": "vitest_alias_resolution_failure",
+  "severity": "blocking",
+  "file_path": "vitest.config.ts",
+  "line_number": 3,
+  "error_message": "npm test -- src/data/data-integrity.test.ts falha antes da coleta dos testes: Vite/Vitest não resolve o alias @/ usado por src/data/history.ts. O erro aponta para src/data/history.ts:1 e informa que @/data/indicators não pode ser resolvido.",
+  "code_snippet": "export default defineConfig({ test: { environment: \"jsdom\", globals: true, setupFiles: \"./src/test/setup.ts\" } });",
+  "root_cause": "tsconfig.json declara paths @/* -> ./src/* para o TypeScript, mas vitest.config.ts não configura alias equivalente (nem plugin de integração de paths). Os módulos de dados usam imports @/ (history.ts:1-3, indicators.ts:1 e ubs.ts:1), portanto o Vitest falha no grafo de imports antes de executar data-integrity.test.ts. A parte do diagnóstico do Coder sobre npx tsc falhar por assinatura de vi.mock não foi reproduzida: npx tsc --noEmit terminou com código 0.",
+  "correction_applied": "",
+  "prevention_rule": "Manter resolução de aliases consistente entre tsconfig.json e Vitest antes de adicionar testes que importem módulos do projeto; não usar vi.mock como workaround de resolução. Reexecutar o teste direcionado, tsc e lint após a correção.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "scope_assessment": {
+    "implementation_scope": "PASS: a tentativa altera somente src/data/data-integrity.test.ts; não altera produção, configuração ou TASKS.md.",
+    "test_scope": "PASS: o arquivo testa exclusivamente integridade de historyData, ubsList e indicatorsList, cobrindo cardinalidade, referências, meses, limites, desvio padrão e tendência geral conforme TASK-011.",
+    "test_quality": "PASS qualitativo: há cinco testes independentes e asserções correspondentes aos critérios; a implementação não foi executada devido ao erro de infraestrutura de resolução.",
+    "config_boundary": "BLOCKING: não é possível corrigir somente src/data/data-integrity.test.ts usando imports relativos, porque history.ts continua importando @/data/indicators e @/data/ubs. Alterar apenas o teste para contornar historyData deixaria de testar o módulo de dados real. É necessária correção autorizada em vitest.config.ts (ou mudança equivalente de configuração) pelo Owner, com eventual subdivisão por exceder o arquivo declarado da TASK-011."
+  },
+  "commands": [
+    {
+      "command": "npm test -- src/data/data-integrity.test.ts",
+      "exit_code": 1,
+      "result": "failed during module resolution; Tests 0"
+    },
+    {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0,
+      "result": "passed; reported vi.mock signature error not reproduced"
+    },
+    {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "warnings": 0,
+      "result": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "passed"
+    }
+  ],
+  "acceptance": {
+    "cardinality_references_and_continuous_months": "implemented but unexecuted",
+    "value_and_registered_limits": "implemented but unexecuted",
+    "standard_deviation_and_general_trend": "implemented but unexecuted",
+    "directed_test_without_failures": "FAIL"
+  },
+  "decision": "FAIL",
+  "minimum_guidance": "Owner deve autorizar/subdividir a correção de resolução @/ no Vitest, preservando o escopo da TASK-011, ou delegar a correção de configuração como tarefa separada. Depois, remover o workaround vi.mock se ele não for necessário e executar novamente o teste direcionado."
+}

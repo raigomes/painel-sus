@@ -140,14 +140,15 @@
     - [x] Cada série respeita o limite de desvio padrão da SPEC
     - [x] Junho supera julho em pelo menos 42 das 60 séries
 
-- [ ] **ID**: `TASK-011`
-  - **Files**: `src/data/data-integrity.test.ts`
+- [x] **ID**: `TASK-011`
+  - **Files**: `vitest.config.ts`, `src/data/data-integrity.test.ts`
   - **Dependencies**: `TASK-006`, `TASK-010`
   - **Acceptance**:
-    - [ ] Testes verificam cardinalidade, referências e meses contínuos
-    - [ ] Testes verificam limites de valores e cadastrados
-    - [ ] Testes verificam desvio padrão por série e tendência geral
-    - [ ] `npm test -- src/data/data-integrity.test.ts` termina sem falhas
+    - [x] Vitest resolve o alias `@` para `src` sem mocks de infraestrutura nem nova dependência
+    - [x] Testes verificam cardinalidade, referências e meses contínuos
+    - [x] Testes verificam limites de valores e cadastrados
+    - [x] Testes verificam desvio padrão por série e tendência geral
+    - [x] `npm test -- src/data/data-integrity.test.ts` termina sem falhas
 
 ## Regras de negócio
 

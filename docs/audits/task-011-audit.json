@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-09-07T00:38:30Z",
+  "audit_type": "static_data",
+  "task_id": "TASK-011",
+  "scope": {
+    "authorized_files": ["vitest.config.ts", "src/data/data-integrity.test.ts"],
+    "attributable_changes": ["vitest.config.ts", "src/data/data-integrity.test.ts"],
+    "scope_passed": true,
+    "evidence": "git status/diff inspection identified the TASK-011 implementation only in the two authorized files; no package.json/package-lock.json change was attributable to this correction."
+  },
+  "alias": {
+    "passed": true,
+    "evidence": "vitest.config.ts imports node:path and node:url, derives projectRoot from import.meta.url, and configures resolve.alias['@'] as resolve(projectRoot, 'src'), an absolute path. tsconfig.json independently maps @/* to ./src/*.",
+    "new_dependency": false,
+    "infrastructure_mocks": false
+  },
+  "test_design": {
+    "passed": true,
+    "test_count": 5,
+    "groups": [
+      {
+        "name": "cardinality_and_references",
+        "test": "contém 720 registros, 15 UBS, 4 indicadores e referências válidas",
+        "criteria": ["cardinality", "references"]
+      },
+      {
+        "name": "continuous_months",
+        "test": "mantém 12 meses únicos e contínuos em cada série",
+        "criteria": ["continuous_months"]
+      },
+      {
+        "name": "value_and_registered_limits",
+        "test": "respeita as regras de CNES, cadastrados e referências de indicadores",
+        "criteria": ["value_limits", "registered_limits"]
+      },
+      {
+        "name": "standard_deviation",
+        "test": "limita o desvio padrão populacional a 15% da média de cada série",
+        "criteria": ["standard_deviation"]
+      },
+      {
+        "name": "general_trend",
+        "test": "apresenta tendência de alta em pelo menos 42 das 60 séries",
+        "criteria": ["general_trend"]
+      }
+    ],
+    "real_module_imports": {
+      "passed": true,
+      "evidence": "data-integrity.test.ts imports historyData, indicatorsList and ubsList from @/data/history, @/data/indicators and @/data/ubs; no vi.mock, jest.mock, module substitution, or infrastructure mock is present."
+    }
+  },
+  "commands": [
+    {
+      "command": "npm test -- src/data/data-integrity.test.ts",
+      "exit_code": 0,
+      "passed": true,
+      "test_files": "1 passed",
+      "tests": "5 passed",
+      "evidence": "Vitest v3.2.7; all five integrity groups executed against real imports."
+    },
+    {
+      "command": "npm test",
+      "exit_code": 0,
+      "passed": true,
+      "test_files": "1 passed",
+      "tests": "5 passed"
+    },
+    {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0,
+      "passed": true,
+      "evidence": "No TypeScript diagnostics."
+    },
+    {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "passed": true,
+      "warnings": 0,
+      "evidence": "ESLint completed without errors or warnings."
+    },
+    {
+      "command": "npm run test:coverage",
+      "exit_code": 0,
+      "passed": true,
+      "test_files": "1 passed",
+      "tests": "5 passed",
+      "evidence": "Coverage provider v8 completed successfully; data module coverage was 98.98% statements/lines. No coverage threshold is specified by TASK-011."
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "passed": true
+    }
+  ],
+  "criteria_results": {
+    "alias_resolves_absolute_src_without_new_dependency": "PASS",
+    "no_infrastructure_vi_mock": "PASS",
+    "cardinality_references_and_continuous_months": "PASS",
+    "value_and_registered_limits": "PASS",
+    "standard_deviation_and_general_trend": "PASS",
+    "real_module_imports": "PASS",
+    "attributable_scope_only_two_authorized_files": "PASS",
+    "directed_test_without_failures": "PASS"
+  },
+  "webauditMCP": {
+    "status": "not_run",
+    "reason": "No WebAuditMCP tool was exposed in this review session; TASK-011 is a local data-integrity test/configuration task with no product-surface acceptance criterion.",
+    "required_follow_up": "Run WebAuditMCP at the applicable web/release gate."
+  },
+  "passed": true,
+  "decision": "PASS",
+  "release_note": "Owner may mark TASK-011 and release dependent tasks. Reviewer did not edit docs/TASKS.md."
+}

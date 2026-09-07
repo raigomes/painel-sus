@@ -39,7 +39,7 @@ Scripts requeridos:
 }
 ```
 
-`vitest.config.ts` usa `jsdom`, globals e `src/test/setup.ts`; o setup importa `@testing-library/jest-dom/vitest`.
+`vitest.config.ts` usa `jsdom`, globals e `src/test/setup.ts`; o setup importa `@testing-library/jest-dom/vitest`. A configuração do Vitest deve resolver explicitamente o alias `@` para o diretório absoluto `src`, mantendo compatibilidade com `paths` do `tsconfig.json` sem adicionar nova dependência.
 
 ## 2. Rotas do App Router
 
