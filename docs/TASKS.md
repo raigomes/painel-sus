@@ -121,24 +121,24 @@
     - [x] Cada unidade possui nome, equipe e endereço
     - [x] Cada unidade possui entre 1.500 e 4.500 cadastrados
 
-- [ ] **ID**: `TASK-009`
+- [x] **ID**: `TASK-009`
   - **Files**: `src/data/indicators.ts`
   - **Dependencies**: `TASK-004`
   - **Acceptance**:
-    - [ ] `indicatorsList` exporta exatamente quatro objetos `Indicator`
-    - [ ] IDs e metas correspondem à seção 4 do PRD
-    - [ ] Cada indicador possui descrição, unidade e fonte
-    - [ ] `npx tsc --noEmit` termina sem erros
+    - [x] `indicatorsList` exporta exatamente quatro objetos `Indicator`
+    - [x] IDs e metas correspondem à seção 4 do PRD
+    - [x] Cada indicador possui descrição, unidade e fonte
+    - [x] `npx tsc --noEmit` termina sem erros
 
-- [ ] **ID**: `TASK-010`
+- [x] **ID**: `TASK-010`
   - **Files**: `src/data/history.ts`
   - **Dependencies**: `TASK-008`, `TASK-009`
   - **Acceptance**:
-    - [ ] `historyData` exporta exatamente 720 registros
-    - [ ] Cada combinação UBS/indicador contém os 12 meses de `2025-07` a `2026-06`
-    - [ ] Valores ficam entre zero e 130% da meta correspondente
-    - [ ] Cada série respeita o limite de desvio padrão da SPEC
-    - [ ] Junho supera julho em pelo menos 42 das 60 séries
+    - [x] `historyData` exporta exatamente 720 registros
+    - [x] Cada combinação UBS/indicador contém os 12 meses de `2025-07` a `2026-06`
+    - [x] Valores ficam entre zero e 130% da meta correspondente
+    - [x] Cada série respeita o limite de desvio padrão da SPEC
+    - [x] Junho supera julho em pelo menos 42 das 60 séries
 
 - [ ] **ID**: `TASK-011`
   - **Files**: `src/data/data-integrity.test.ts`

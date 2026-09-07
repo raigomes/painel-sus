@@ -1,0 +1,59 @@
+{
+  "timestamp": "2026-09-07T00:00:00Z",
+  "audit_type": "static-data",
+  "task_id": "TASK-009",
+  "url": null,
+  "device": null,
+  "commands": [
+    {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0
+    },
+    {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "warnings": 0
+    },
+    {
+      "command": "npx tsx -e <deterministic indicators validation>",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "scope": {
+    "implementation_files_attributable": [
+      "src/data/indicators.ts"
+    ],
+    "out_of_scope_implementation_files": []
+  },
+  "data_validation": {
+    "count": 4,
+    "ids": [
+      "cobertura-vacinal",
+      "pre-natal",
+      "hipertensao",
+      "diabetes"
+    ],
+    "unique_ids": true,
+    "metas": {
+      "cobertura-vacinal": 95,
+      "pre-natal": 60,
+      "hipertensao": 50,
+      "diabetes": 50
+    },
+    "required_fields_present": true,
+    "prd_units_match": true,
+    "semantic_coherence_review": true
+  },
+  "dynamic_webaudit": {
+    "status": "not_applicable",
+    "reason": "TASK-009 altera somente dados locais de indicadores e não implementa rota ou superfície visual; não foi executada auditoria dinâmica.",
+    "tools": []
+  },
+  "scores": {},
+  "issues": [],
+  "passed": true
+}

@@ -1,0 +1,123 @@
+{
+  "timestamp": "2026-09-07T03:13:29Z",
+  "audit_type": "static_data",
+  "task_id": "TASK-010",
+  "url": null,
+  "device": null,
+  "scope": {
+    "implementation_files_attributable": [
+      "src/data/history.ts"
+    ],
+    "inspected_supporting_files": [
+      "src/lib/types.ts",
+      "src/data/ubs.ts",
+      "src/data/indicators.ts"
+    ],
+    "other_worktree_changes_excluded": [
+      "docs/TASKS.md",
+      "docs/audits/task-008-audit.json",
+      "docs/audits/task-009-audit.json",
+      "src/data/indicators.ts",
+      "src/data/ubs.ts"
+    ]
+  },
+  "commands": [
+    {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "warnings": 0,
+      "result": "passed"
+    },
+    {
+      "command": "independent bundled TypeScript verification via esbuild + node",
+      "exit_code": 0,
+      "result": "passed",
+      "reproducibility": {
+        "runs": 2,
+        "sha256_outputs": [
+          "4e2030b61cbda4619cd36eecbfd4741e40ca9f8c7a5f3b64121709908581807d",
+          "4e2030b61cbda4619cd36eecbfd4741e40ca9f8c7a5f3b64121709908581807d"
+        ]
+      }
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "passed"
+    }
+  ],
+  "metrics": {
+    "record_count": 720,
+    "unique_ubs_indicator_series": 60,
+    "referenced_ubs": 15,
+    "referenced_indicators": 4,
+    "months_per_series": 12,
+    "month_range": [
+      "2025-07",
+      "2026-06"
+    ],
+    "worst_population_stddev_to_mean_ratio": 0.03351507310227829,
+    "worst_population_stddev_to_mean_percent": 3.351507310227829,
+    "june_2026_greater_than_july_2025_series": 60,
+    "required_increasing_series": 42,
+    "mean_zero_handling": "explicit: zero mean with zero standard deviation yields ratio 0; nonzero deviation yields Infinity"
+  },
+  "criteria": {
+    "exactly_720_history_records": {
+      "passed": true,
+      "evidence": "Independent check reported historyData.length === 720"
+    },
+    "exactly_60_unique_ubs_indicator_combinations": {
+      "passed": true,
+      "evidence": "Independent grouping reported 60 distinct ubsId/indicatorId keys"
+    },
+    "each_series_has_exactly_12_unique_continuous_months": {
+      "passed": true,
+      "evidence": "All groups have 12 records, 12 unique months, and exact expected inclusive range 2025-07..2026-06"
+    },
+    "valid_references_to_15_ubs_and_4_indicators": {
+      "passed": true,
+      "evidence": "All record IDs resolve against ubsList and indicatorsList; observed 15 UBS IDs and 4 indicator IDs"
+    },
+    "finite_nonnegative_values_within_130_percent_of_matching_meta": {
+      "passed": true,
+      "evidence": "Every value passed Number.isFinite, >= 0, and <= matching indicator.meta * 1.3"
+    },
+    "population_stddev_at_most_15_percent_of_series_mean": {
+      "passed": true,
+      "evidence": "Worst observed population standard-deviation/mean ratio was 0.0335150731 (3.3515%), below 15%; zero-mean case handled explicitly"
+    },
+    "june_2026_exceeds_july_2025_in_at_least_42_series": {
+      "passed": true,
+      "evidence": "60 of 60 series increased, versus required 42"
+    },
+    "history_record_type_conformance": {
+      "passed": true,
+      "evidence": "history.ts imports HistoryRecord and returns HistoryRecord[]; fields are ubsId, indicatorId, mes, valor with valid indicator union"
+    },
+    "deterministic_data_and_order": {
+      "passed": true,
+      "evidence": "Generation uses fixed months, stable ubsList order, indicatorsList order, and arithmetic deterministicOffset; two independent executions produced identical SHA-256 output"
+    },
+    "runtime_generation_without_randomness_current_date_or_internal_mutation": {
+      "passed": true,
+      "evidence": "history.ts contains no Math.random, Date/new Date, time-dependent API, or array mutation; createHistory executes once at import and produces fresh records"
+    },
+    "export_mutability_assessment": {
+      "passed": true,
+      "evidence": "No mutation occurs during generation/import. historyData is typed as HistoryRecord[] (not readonly), so downstream consumers could intentionally mutate the export; this is an API hardening observation, not an observed runtime mutation or TASK-010 acceptance failure"
+    }
+  },
+  "issues": [],
+  "passed": true,
+  "owner_action": "Owner may mark TASK-010 and release TASK-011. TASKS.md was intentionally not edited by Reviewer.",
+  "webauditmcp": {
+    "status": "not_applicable_to_task",
+    "reason": "TASK-010 changes only a local data module and has no route or visual surface; dynamic WebAuditMCP audit is reserved for the independent web gate."
+  }
+}
