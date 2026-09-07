@@ -220,23 +220,23 @@
     - [x] A rota inicial renderiza um único `<main id="main-content">` sem substituir ainda o conteúdo da TASK-031
     - [x] `npx tsc --noEmit` termina sem erros
 
-- [ ] **ID**: `TASK-019`
+- [x] **ID**: `TASK-019`
   - **Files**: `src/components/layout/header.tsx`
   - **Dependencies**: `TASK-018`
   - **Acceptance**:
-    - [ ] Header contém links para Dashboard, Indicadores e Sobre
-    - [ ] Navegação possui nome acessível e alvos mínimos de 44×44 px
-    - [ ] A rota ativa usa `aria-current="page"`, peso e underline além de cor
-    - [ ] O layout permanece utilizável a 375 px
+    - [x] Header contém links para Dashboard, Indicadores e Sobre
+    - [x] Navegação possui nome acessível e alvos mínimos de 44×44 px
+    - [x] A rota ativa usa `aria-current="page"`, peso e underline além de cor
+    - [x] O layout permanece utilizável a 375 px
 
-- [ ] **ID**: `TASK-020`
+- [x] **ID**: `TASK-020`
   - **Files**: `src/components/layout/footer.tsx`
   - **Dependencies**: `TASK-018`
   - **Acceptance**:
-    - [ ] Footer informa que os dados são simulados
-    - [ ] Footer lista CNES, e-SUS AB e DATASUS
-    - [ ] Footer mostra “Protótipo v1.0 — Saúde Itapira”
-    - [ ] Conteúdo não fica recortado e usa `role="contentinfo"`
+    - [x] Footer informa que os dados são simulados
+    - [x] Footer lista CNES, e-SUS AB e DATASUS
+    - [x] Footer mostra “Protótipo v1.0 — Saúde Itapira”
+    - [x] Conteúdo não fica recortado e usa `role="contentinfo"`
 
 - [ ] **ID**: `TASK-021`
   - **Files**: `src/app/layout.tsx`, `src/components/layout/header.tsx`, `src/components/layout/footer.tsx`

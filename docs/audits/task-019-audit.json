@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-09-07T05:40:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-019",
+  "audit_type": "static_component_review",
+  "url": "not_applicable",
+  "device": "static + 375px plausibility",
+  "passed": true,
+  "scores": {
+    "typescript": 100,
+    "lint": 100,
+    "tests": 100,
+    "build": 100,
+    "diff_check": 100
+  },
+  "commands": [
+    {"command": "npx tsc --noEmit", "exit_code": 0},
+    {"command": "npm run lint", "exit_code": 0, "warnings": 0},
+    {"command": "npm test", "exit_code": 0, "tests_passed": 45},
+    {"command": "npm run test:coverage", "exit_code": 0, "tests_passed": 45},
+    {"command": "npm run build", "exit_code": 0},
+    {"command": "git diff --check", "exit_code": 0}
+  ],
+  "findings": [
+    "Header is a Client Component and imports usePathname as required by SPEC 4.2.",
+    "Navigation contains exactly Dashboard (/), Indicadores (/indicadores), and Sobre (/sobre); no menu or extra scope was introduced.",
+    "Active-route rule maps / and every /ubs/* path to Dashboard, and uses exact or descendant matching for the other destinations.",
+    "Active links expose aria-current=page and combine primary color, font-semibold, and border-b-2 underline; inactive links retain transparent border and font-medium.",
+    "Navigation has aria-label=Navegação principal and links use min-h-11 (44px); logo link also meets the minimum height.",
+    "At 375px the header stacks logo and navigation, wraps navigation links, and uses horizontal padding/gaps that plausibly fit without forced horizontal overflow.",
+    "The header is not integrated into layout.tsx, which is correct for TASK-019 and avoids TASK-021 integration scope; current rendered root remains the intentional TASK-018 shell.",
+    "Historical active-navigation underline failure is addressed in the implementation through border-b-2 border-primary rather than color alone."
+  ],
+  "web_audit": {
+    "status": "not_executed",
+    "reason": "WebAuditMCP tools are not exposed in this execution environment; dynamic Lighthouse/axe/security assertions were not fabricated.",
+    "server_check": "http://localhost:3000 responded HTTP 200"
+  },
+  "authorization": "PASS — Owner may mark TASK-019 as complete; Reviewer did not edit docs/TASKS.md."
+}

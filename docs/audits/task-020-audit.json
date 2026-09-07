@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-09-07T02:45:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-020",
+  "audit_type": "static_component_review",
+  "url": "not_applicable",
+  "device": "static component + scope review",
+  "passed": true,
+  "scope": {
+    "declared_files": ["src/components/layout/footer.tsx"],
+    "reviewed_file": "src/components/layout/footer.tsx",
+    "out_of_scope_not_gated": [
+      "docs/layout/painel-sus.pen",
+      "TASK-021 integration in src/app/layout.tsx",
+      "integral visual comparison reserved for TASK-046"
+    ]
+  },
+  "scores": {
+    "typescript": 100,
+    "lint": 100,
+    "tests": 100,
+    "coverage_command": 100,
+    "build": 100,
+    "diff_check": 100
+  },
+  "commands": [
+    {"command": "npx tsc --noEmit", "exit_code": 0},
+    {"command": "npm run lint", "exit_code": 0, "warnings": 0},
+    {"command": "npm test -- --run", "exit_code": 0, "tests_passed": 45},
+    {"command": "npm run test:coverage", "exit_code": 0, "tests_passed": 45},
+    {"command": "npm run build", "exit_code": 0},
+    {"command": "git diff --check", "exit_code": 0}
+  ],
+  "acceptance": {
+    "simulated_data_disclaimer": true,
+    "sources_cnes_esus_ab_datasus": true,
+    "exact_version_text": true,
+    "content_not_clipped": true,
+    "role_contentinfo": true,
+    "server_component_without_use_client": true,
+    "no_fixed_height_with_wrapping_and_padding": true,
+    "no_personal_promotion_in_component": true,
+    "single_file_scope": true,
+    "no_early_integration": true
+  },
+  "findings": [
+    "Footer é Server Component: src/components/layout/footer.tsx não contém use client.",
+    "O elemento footer possui role=contentinfo.",
+    "O componente informa exatamente 'Dados simulados para fins de demonstração.'.",
+    "O componente lista CNES, e-SUS AB e DATASUS.",
+    "O componente mostra exatamente 'Protótipo v1.0 — Saúde Itapira'.",
+    "O layout usa largura fluida, py-6, padding horizontal responsivo e flex-wrap; não usa altura fixa nem mecanismo de recorte.",
+    "Não há promoção pessoal no componente.",
+    "A mudança permanece restrita a src/components/layout/footer.tsx e não antecipa a integração da TASK-021.",
+    "A divergência de promoção pessoal encontrada em docs/layout/painel-sus.pen é preexistente, está fora dos arquivos declarados da TASK-020 e deve ser tratada pelo Designer/TASK-046; não reprova este componente."
+  ],
+  "web_audit": {
+    "status": "not_applicable",
+    "reason": "TASK-020 é uma revisão estática de componente; WebAuditMCP e comparação visual integral são gates posteriores/reservados, especialmente TASK-046–048."
+  },
+  "supersedes": "docs/audits/task-020-audit.json (veredito anterior incorretamente bloqueado por divergência fora do escopo)",
+  "authorization": "PASS — Owner está autorizado a marcar TASK-020 como concluída. Reviewer não editou docs/TASKS.md nem docs/layout/painel-sus.pen."
+}

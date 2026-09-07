@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-09-07T02:45:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-020",
+  "status": "superseded_not_a_failure",
+  "error_category": "out_of_scope_reference_divergence",
+  "severity": "informational",
+  "file_path": "docs/layout/painel-sus.pen",
+  "line_number": 5692,
+  "error_message": "A referência visual contém promoção pessoal ('raigomes.dev'), mas docs/layout/painel-sus.pen não pertence aos arquivos declarados da TASK-020.",
+  "correction_applied": "Nenhuma. A referência não foi editada.",
+  "resolution": "Não é falha da TASK-020. Registrar para o Designer e para a auditoria visual integral da TASK-046.",
+  "prevention_rule": "Aplicar o gate somente aos arquivos e critérios declarados da tarefa; divergências preexistentes de .pen devem ser tratadas no escopo do Designer/TASK-046.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "related_task": "TASK-046"
+}
