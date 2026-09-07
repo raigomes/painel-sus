@@ -486,52 +486,52 @@
 
 ## Detalhe de UBS
 
-- [ ] **ID**: `TASK-032`
+- [x] **ID**: `TASK-032`
   - **Files**: `src/components/ubs/ubs-info-card.tsx`
   - **Dependencies**: `TASK-008`
   - **Acceptance**:
-    - [ ] Card exibe nome, CNES, equipe, cadastrados e endereço
-    - [ ] Rótulos são compreensíveis sem depender da posição visual
-    - [ ] Cadastrados usam formatação `pt-BR`
-    - [ ] `npx tsc --noEmit` termina sem erros
+    - [x] Card exibe nome, CNES, equipe, cadastrados e endereço
+    - [x] Rótulos são compreensíveis sem depender da posição visual
+    - [x] Cadastrados usam formatação `pt-BR`
+    - [x] `npx tsc --noEmit` termina sem erros
 
-- [ ] **ID**: `TASK-033`
+- [x] **ID**: `TASK-033`
   - **Files**: `src/components/ubs/radar-chart.tsx`
   - **Dependencies**: `TASK-004`
   - **Acceptance**:
-    - [ ] Client Component usa `RadarChart` com quatro eixos
-    - [ ] Séries de valor e meta possuem legenda visível
-    - [ ] Dados chegam exclusivamente por `RadarChartProps`
-    - [ ] Região e resumo textual informam UBS e os quatro valores
+    - [x] Client Component usa `RadarChart` com quatro eixos
+    - [x] Séries de valor e meta possuem legenda visível
+    - [x] Dados chegam exclusivamente por `RadarChartProps`
+    - [x] Região e resumo textual informam UBS e os quatro valores
 
-- [ ] **ID**: `TASK-034`
+- [x] **ID**: `TASK-034`
   - **Files**: `src/components/ubs/history-table.tsx`
   - **Dependencies**: `TASK-009`, `TASK-012`
   - **Acceptance**:
-    - [ ] Tabela possui 12 linhas mensais e cinco colunas
-    - [ ] Meses ficam em ordem crescente
-    - [ ] Caption, headers e estados são semanticamente identificados
-    - [ ] Todas as colunas permanecem acessíveis por overflow horizontal
+    - [x] Tabela possui 12 linhas mensais e cinco colunas
+    - [x] Meses ficam em ordem crescente
+    - [x] Caption, headers e estados são semanticamente identificados
+    - [x] Todas as colunas permanecem acessíveis por overflow horizontal
 
-- [ ] **ID**: `TASK-035`
+- [x] **ID**: `TASK-035`
   - **Files**: `src/app/ubs/[id]/page.tsx`
   - **Dependencies**: `TASK-010`, `TASK-021`, `TASK-032`
   - **Acceptance**:
-    - [ ] Server Component valida ID inteiro positivo e busca a UBS local
-    - [ ] ID inexistente mostra “UBS não encontrada” e link para `/`
-    - [ ] UBS existente mostra breadcrumb e card informativo
-    - [ ] `generateMetadata` usa nome da UBS ou estado não encontrado
-    - [ ] `npm run build` gera a rota dinâmica sem erros
+    - [x] Server Component valida ID inteiro positivo e busca a UBS local
+    - [x] ID inexistente mostra “UBS não encontrada” e link para `/`
+    - [x] UBS existente mostra breadcrumb e card informativo
+    - [x] `generateMetadata` usa nome da UBS ou estado não encontrado
+    - [x] `npm run build` gera a rota dinâmica sem erros
 
-- [ ] **ID**: `TASK-036`
+- [x] **ID**: `TASK-036`
   - **Files**: `src/app/ubs/[id]/page.tsx`
   - **Dependencies**: `TASK-014`, `TASK-033`, `TASK-034`, `TASK-035`
   - **Acceptance**:
-    - [ ] Quatro pontos radar usam o último mês disponível da UBS
-    - [ ] Radar apresenta valor e meta abaixo do card informativo
-    - [ ] Tabela recebe os 12 meses completos da unidade
-    - [ ] A página não usa estado Client nem fetch HTTP
-    - [ ] `/ubs/1` e `/ubs/999` compilam sem erro
+    - [x] Quatro pontos radar usam o último mês disponível da UBS
+    - [x] Radar apresenta valor e meta abaixo do card informativo
+    - [x] Tabela recebe os 12 meses completos da unidade
+    - [x] A página não usa estado Client nem fetch HTTP
+    - [x] `/ubs/1` e `/ubs/999` compilam sem erro
 
 ## Indicadores e Sobre
 

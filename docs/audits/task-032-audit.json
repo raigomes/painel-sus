@@ -1,0 +1,65 @@
+{
+  "timestamp": "2026-09-07T14:41:00Z",
+  "task_id": "TASK-032",
+  "agent_id": "coder",
+  "audit_type": "static_component_review",
+  "scope": {
+    "component": "src/components/ubs/ubs-info-card.tsx",
+    "references": [
+      "docs/PRD.md",
+      "docs/SPEC.md",
+      "docs/TASKS.md",
+      "docs/DESIGN_SYSTEM.md",
+      "docs/layout/painel-sus.pen#pg2",
+      "src/lib/types.ts",
+      "src/data/ubs.ts"
+    ],
+    "webaudit_gate": "not_requested"
+  },
+  "checks": {
+    "server_component": {
+      "passed": true,
+      "evidence": "No 'use client' directive, state, event handlers, browser APIs, or client-only dependencies."
+    },
+    "props_contract": {
+      "passed": true,
+      "evidence": "Exports UBSInfoCardProps with ubs: UBS, matching SPEC section 5 and receives the domain UBS type."
+    },
+    "five_required_fields": {
+      "passed": true,
+      "fields": ["nome", "codigo/CNES", "equipe", "cadastrados", "endereco"]
+    },
+    "explicit_labels": {
+      "passed": true,
+      "evidence": "Uses a semantic dl with visible dt labels: CNES, Equipe, Cadastrados, and Endereço; name is presented as the card heading."
+    },
+    "pt_br_formatting": {
+      "passed": true,
+      "evidence": "cadastrados is formatted with Intl.NumberFormat('pt-BR')."
+    },
+    "visual_card": {
+      "passed": true,
+      "evidence": "Matches pg2 info-card direction: white surface, zinc border, 12px radius via rounded-xl, shadow-sm, responsive padding up to 24px, responsive field grid, and readable hierarchy."
+    },
+    "scope": {
+      "passed": true,
+      "evidence": "Change is limited to the requested UBS information card; no route, data, security, authorization, or WebAudit gate changes are required for TASK-032."
+    }
+  },
+  "verification": {
+    "typescript": {"command": "npx tsc --noEmit", "exit_code": 0},
+    "lint": {"command": "npm run lint", "exit_code": 0, "warnings": 0},
+    "tests": {"command": "npm test", "exit_code": 0, "test_files": 6, "tests": 69},
+    "coverage": {"command": "npm run test:coverage", "exit_code": 0, "lines": 70.68, "statements": 70.68, "branches": 89.28, "functions": 83.05},
+    "build": {"command": "npm run build", "exit_code": 0},
+    "diff_check": {"command": "git diff --check", "exit_code": 0}
+  },
+  "authorization": {
+    "status": "PASS",
+    "basis": "TASK-032 acceptance criteria are satisfied by static inspection and all requested local verification commands passed.",
+    "tasks_file_updated": false,
+    "reason": "Explicit user instruction: do not modify TASKS.md."
+  },
+  "passed": true,
+  "issues": []
+}

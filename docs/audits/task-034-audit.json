@@ -1,0 +1,66 @@
+{
+  "timestamp": "2026-09-07T15:12:00Z",
+  "audit_type": "task_review",
+  "task_id": "TASK-034",
+  "agent_id": "reviewer",
+  "file_path": "src/components/ubs/history-table.tsx",
+  "verdict": "PASS",
+  "static_checks": {
+    "tsc_no_emit": { "exit_code": 0, "errors": 0, "passed": true },
+    "lint": { "exit_code": 0, "errors": 0, "warnings": 0, "passed": true },
+    "test": { "exit_code": 0, "files": 6, "tests": 69, "failures": 0, "passed": true },
+    "test_coverage": { "exit_code": 0, "passed": true, "history_table_coverage": "0% (presentation-only, no dedicated tests; not required by TASK-034)" },
+    "build": { "exit_code": 0, "passed": true },
+    "git_diff_check": { "exit_code": 0, "passed": true, "note": "Only docs/TASKS.md checkbox changes from prior approvals; no src/ diff" }
+  },
+  "acceptance_criteria_validation": [
+    {
+      "criterion": "Tabela possui 12 linhas mensais e cinco colunas",
+      "status": "PASS",
+      "evidence": "Component renders dynamic rows from uniqueMonths (derived from records prop via Set dedup + sort) and dynamic columns from activeIndicators (filtered from indicators prop). When parent passes 12 months × 4 indicators, the table renders 12 rows × 5 columns (Mês + 4 indicator names). The component is a pure Server-compatible presentation component; data shape responsibility lies in the parent (TASK-036)."
+    },
+    {
+      "criterion": "Meses ficam em ordem crescente",
+      "status": "PASS",
+      "evidence": "Line 86: `const uniqueMonths = [...new Set(records.map((r) => r.mes))].sort();`. Lexicographic sort on 'YYYY-MM' strings guarantees ascending calendar order without using new Date()."
+    },
+    {
+      "criterion": "Caption, headers e estados são semanticamente identificados",
+      "status": "PASS",
+      "evidence": "Caption: <caption className='sr-only'> with dynamic range text (line 108-113). Headers: all <th> carry scope='col' (lines 117-130). Status: StatusBadge component renders accessible text labels 'Verde'/'Amarelo'/'Vermelho' alongside aria-hidden icons (lines 70-83). aria-label on table element (line 105). ul.sr-only provides structured data for screen readers (lines 179-191)."
+    },
+    {
+      "criterion": "Todas as colunas permanecem acessíveis por overflow horizontal",
+      "status": "PASS",
+      "evidence": "Line 103: <div className='mt-4 overflow-x-auto'> wraps the table. Line 106: table has min-w-[600px] to prevent column collapse. This matches the DS pattern for responsive tables."
+    }
+  ],
+  "spec_alignment": {
+    "server_component": { "passed": true, "evidence": "No 'use client' directive, no hooks, no event handlers. Pure props-based rendering. Matches SPEC §4 matrix: 'ubs/history-table.tsx | Server | Tabela HTML derivada de props'." },
+    "props_interface": { "passed": true, "evidence": "HistoryTableProps matches SPEC §5: { records: HistoryRecord[]; indicators: Indicator[]; }." },
+    "status_via_helper": { "passed": true, "evidence": "Line 157: getIndicatorStatus(record.valor, indicator.meta) imported from @/lib/filters. No inline status logic." },
+    "data_via_props": { "passed": true, "evidence": "All data arrives via records and indicators props. No imports from data modules, no HTTP fetch, no new Date()."},
+    "semantic_html": { "passed": true, "evidence": "Uses native <table>, <thead>, <tbody>, <caption>, <th scope='col'>, <tr>, <td> elements per SPEC §10."}
+  },
+  "design_system_alignment": {
+    "card_wrapper": { "passed": true, "note": "rounded-xl border border-zinc-200 bg-white p-4 shadow-sm matches pg2 History Card tokens (cornerRadius 12, white fill, border, shadow, padding 24)."},
+    "title": { "passed": true, "note": "Histórico mensal in text-lg font-semibold text-zinc-900. pg2 shows '📊 Histórico Mensal' — minor visual residual (no emoji, lowercase m). Not a blocking deviation."},
+    "table_header": { "passed": true, "note": "h-10 border-b border-zinc-200 bg-zinc-100 matches pg2 tblHeader tokens."},
+    "row_height": { "passed": true, "note": "h-12 matches pg2 row height 48px."},
+    "alternating_rows": { "passed": true, "note": "white/zinc-50 alternation matches pg2 row fills."},
+    "status_tokens": { "passed": true, "note": "Local STATUS_CLASSES match DESIGN_SYSTEM §1.2 semantic semaphore colors exactly (emerald/amber/red families)."},
+    "cell_typography": { "passed": true, "note": "font-bold tabular-nums for values, font-medium for month labels. Matches DS §2.4 tabular-nums requirement."}
+  },
+  "observations": [
+    {
+      "type": "code_quality",
+      "severity": "info",
+      "description": "STATUS_CLASSES is defined locally (lines 27-49) with identical values to @/lib/constants.ts STATUS_CLASSES. Minor DRY duplication. The property names differ slightly (bg vs background) but the Tailwind classes are identical. Not blocking."
+    },
+    {
+      "type": "test_coverage",
+      "severity": "info",
+      "description": "history-table.tsx has 0% test coverage. TASK-034 acceptance criteria do not require a test file (Files constraint is only history-table.tsx). However, SPEC §11 lists test coverage requirements and this component would benefit from tests in a future coverage gate."
+    }
+  ]
+}

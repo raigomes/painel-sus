@@ -1,0 +1,140 @@
+{
+  "timestamp": "2026-09-07T15:58:00Z",
+  "audit_type": "static_and_dynamic",
+  "task_id": "TASK-036",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scores": {
+    "typescript": "passed",
+    "lint": "passed",
+    "test_suite": "passed",
+    "coverage": "passed",
+    "build": "passed",
+    "diff_check": "passed",
+    "smoke_http_1": 200,
+    "smoke_http_999": 404
+  },
+  "issues": [],
+  "passed": true,
+  "evidence": {
+    "typescript_check": {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    "lint_check": {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "result": "passed, zero warnings"
+    },
+    "test_suite": {
+      "command": "npm test",
+      "exit_code": 0,
+      "files": 6,
+      "tests": 69,
+      "result": "passed"
+    },
+    "coverage": {
+      "command": "npm run test:coverage",
+      "exit_code": 0,
+      "overall_statements": 55.26,
+      "ubs_page_statements": 0,
+      "ubs_components_statements": 0,
+      "note": "ubs/ components (page.tsx, ubs-info-card.tsx, radar-chart.tsx, history-table.tsx) have 0% coverage — no direct unit tests exist yet. This is expected per task-by-task flow; TASK-042 is the consolidation gate for full coverage. Logic correctness was verified by code tracing and smoke HTML inspection.",
+      "result": "passed execution"
+    },
+    "build": {
+      "command": "npm run build",
+      "exit_code": 0,
+      "result": "passed, route /ubs/[id] generated as dynamic (ƒ)"
+    },
+    "diff_check": {
+      "command": "git diff --check HEAD",
+      "exit_code": 0,
+      "result": "passed, no whitespace errors"
+    },
+    "smoke_http_1": {
+      "url": "http://localhost:3000/ubs/1",
+      "http_status": 200,
+      "title": "UBS Vila Nova — Painel SUS",
+      "contains_breadcrumb": true,
+      "breadcrumb_semantic": "nav[aria-label=Breadcrumb] > ol > li with Dashboard(link) > separator(aria-hidden, role=separator) > UBS(static) > separator > {nome}(aria-current=page)",
+      "contains_info_card": true,
+      "contains_radar": true,
+      "radar_aria_label": "Gráfico radar comparando 4 indicadores da UBS Vila Nova. Cobertura Vacinal X% (meta 95%), Pré-natal X% (meta 60%), Hipertensão X% (meta 50%), Diabetes X% (meta 50%).",
+      "contains_history_table": true,
+      "history_months_count": 12,
+      "history_months_range": "jul/25 to jun/26",
+      "history_columns": 5,
+      "no_use_client_in_page": true,
+      "no_fetch_http": true,
+      "result": "PASS"
+    },
+    "smoke_http_999": {
+      "url": "http://localhost:3000/ubs/999",
+      "http_status": 404,
+      "title": "UBS não encontrada — Painel SUS",
+      "contains_h1": true,
+      "h1_text": "UBS não encontrada",
+      "contains_return_link": true,
+      "return_link_text": "Voltar ao Dashboard",
+      "return_link_href": "/",
+      "result": "PASS"
+    }
+  },
+  "criterion_results": [
+    {
+      "criterion": "Quatro pontos radar usam o último mês disponível da UBS",
+      "status": "PASS",
+      "detail": "page.tsx extrai os registros da UBS, coleta meses únicos, ordena lexicalmente e seleciona o último (2026-06). Mapeia os 4 indicadores para RadarDataPoint com valor do registro desse mês e meta do indicador. RadarChart recebe data.length=4 e renderiza 4 eixos PolarAngleAxis. ARIA label confirma '4 indicadores'."
+    },
+    {
+      "criterion": "Radar apresenta valor e meta abaixo do card informativo",
+      "status": "PASS",
+      "detail": "DOM order: <UBSInfoCard> → <div class='mt-6 flex flex-col gap-6'> → <RadarChart>. RadarChart exibe título 'Radar comparativo', gráfico com séries Valor/Meta (emerald/zinc-400), legenda visível e descrição sr-only."
+    },
+    {
+      "criterion": "Tabela recebe os 12 meses completos da unidade",
+      "status": "PASS",
+      "detail": "tableRecords recebe todos os ubsRecords (48 registros = 4 indicadores × 12 meses). HistoryTable extrai 12 meses únicos (2025-07 a 2026-06), ordena crescentemente, renderiza 5 colunas (Mês + 4 indicadores). Todos os 12 meses visíveis no HTML: jul/25, ago/25, set/25, out/25, nov/25, dez/25, jan/26, fev/26, mar/26, abr/26, mai/26, jun/26."
+    },
+    {
+      "criterion": "A página não usa estado Client nem fetch HTTP",
+      "status": "PASS",
+      "detail": "page.tsx: sem 'use client', sem fetch(). UBSInfoCard: sem 'use client'. HistoryTable: sem 'use client' (Server Component). RadarChart: tem 'use client' mas é client-only com Recharts (correto conforme SPEC §4 matriz Server/Client). Dados vêm de import estático historyData/ubsList/indicatorsList."
+    },
+    {
+      "criterion": "/ubs/1 e /ubs/999 compilam sem erro",
+      "status": "PASS",
+      "detail": "Build limpo: rota /ubs/[id] gerada como dynamic (ƒ). /ubs/1 retorna HTTP 200 com conteúdo completo. /ubs/999 retorna HTTP 404 via notFound() com not-found.tsx customizada."
+    }
+  ],
+  "additional_verifications": [
+    {
+      "check": "Breadcrumb preservado de TASK-035",
+      "status": "PASS",
+      "detail": "nav[aria-label='Breadcrumb'] > ol > li com Dashboard(link) > separator(aria-hidden, role='separator') > UBS(static) > separator > {nome}(aria-current='page'). Hierarquia 'Dashboard > UBS > {nome}' completa."
+    },
+    {
+      "check": "Metadata preservada de TASK-035",
+      "status": "PASS",
+      "detail": "generateMetadata retorna '${ubs.nome} — Painel SUS' com description 'Detalhes da ${ubs.nome} (CNES ${ubs.codigo}) no Painel SUS.'. Para ID inválido: 'UBS não encontrada — Painel SUS'."
+    },
+    {
+      "check": "Labels e containers coerentes com DESIGN_SYSTEM",
+      "status": "PASS",
+      "detail": "RadarChart: rounded-xl border border-zinc-200 bg-white p-4 shadow-sm. HistoryTable: mesmo padrão. UBSInfoCard: mesmo padrão. Títulos em text-lg font-semibold. Anatomia consistente com §4 do Design System."
+    },
+    {
+      "check": "RadarChart acessibilidade",
+      "status": "PASS",
+      "detail": "role='img' com aria-label dinâmico contendo todos os 4 valores. aria-describedby apontando para sr-only description. Legend desc customizada com Valor/Meta. sr-only list com dados tabulados. Tooltip com role='status'."
+    },
+    {
+      "check": "HistoryTable acessibilidade",
+      "status": "PASS",
+      "detail": "table com aria-label. caption sr-only com contagem de meses e range. th com scope='col'. StatusBadge com label textual (Verde/Amarelo/Vermelho) além de cor e ícone. sr-only list com dados tabulados."
+    }
+  ],
+  "note": "Auditoria independente TASK-036. Todos os 5 critérios de aceitação PASS. Nenhuma falha encontrada. A cobertura de testes dos componentes UBS permanece em 0% (sem testes unitários diretos), mas isso é esperado dentro do fluxo sequencial — o gate TASK-042 consolidará cobertura completa. A correção lógica e semântica foi verificada por tracing estático do código e inspeção HTML via smoke test."
+}

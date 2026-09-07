@@ -1,0 +1,59 @@
+{
+  "timestamp": "2026-09-07T15:40:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-035",
+  "error_category": "visual_regression_mismatch",
+  "severity": "blocking",
+  "file_path": "src/app/ubs/[id]/page.tsx",
+  "line_number": 41,
+  "error_message": "Duas falhas de aceitação: (1) notFound() exibe 404 padrão Next.js em inglês ao invés de 'UBS não encontrada' personalizada com link para '/' conforme PRD US-07; (2) Breadcrumb mostra apenas '← Voltar ao Dashboard' ao invés de 'Dashboard > UBS > [Nome da UBS]' conforme PRD US-13",
+  "code_snippet": "// Falha 1: notFound() dispara 404 padrão\ndefault async function UBSPage({ params }: UBSPageProps) {\n  const { id: rawId } = await params;\n  const id = parseInt(rawId, 10);\n  if (!Number.isFinite(id) || id <= 0 || !Number.isInteger(id)) {\n    notFound(); // Exibe '404: This page could not be found.'\n  }\n  const ubs = ubsList.find((u) => u.id === id);\n  if (!ubs) {\n    notFound(); // Exibe '404: This page could not be found.'\n  }\n  // ...\n}\n// Falha 2: Breadcrumb incompleto\n<nav aria-label=\"Breadcrumb\" className=\"mb-4\">\n  <Link href=\"/\">← Voltar ao Dashboard</Link>\n</nav>",
+  "root_cause": "1) notFound() dispara o boundary 404 do Next.js, exibindo '404: This page could not be found.' em inglês, sem texto 'UBS não encontrada' nem link de retorno ao dashboard conforme PRD US-07. 2) O breadcrumb implementa apenas um link de retorno, mas US-13 exige 'Dashboard > UBS > [Nome da UBS]' com três níveis hierárquicos.",
+  "correction_applied": "Corrigido em revalidação 2026-09-07T15:44:58Z: (1) not-found.tsx criado com <h1>UBS não encontrada</h1> e <Link href='/'>Voltar ao Dashboard</Link>; notFound() agora aciona a boundary personalizada. (2) Breadcrumb implementado com nav[aria-label='Breadcrumb'] > ol > li: Dashboard(link) > separator(aria-hidden, role='separator') > UBS(static span) > separator > {nome}(aria-current='page'). Ambas as correções validadas via smoke HTTP.",
+  "prevention_rule": "1) Renderizar estado não encontrado diretamente na página (sem notFound()), exibindo 'UBS não encontrada' e um link para '/'. 2) Implementar breadcrumb de três níveis: 'Dashboard' (link para '/') > 'UBS' (link para '/') > '[Nome da UBS]' (texto estático).",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "status": "resolved",
+  "blocks_task_035": false,
+  "resolution_timestamp": "2026-09-07T15:44:58Z",
+  "resolution_audit": "docs/audits/task-035-audit.json",
+  "evidence": {
+    "typescript": "passed",
+    "lint": "passed, zero warnings",
+    "suite": "passed, 6 files / 69 tests",
+    "coverage": "passed execution, 56.25% overall statements; UBS page 0% (no unit tests for server components)",
+    "build": "passed, route /ubs/[id] generated as dynamic (ƒ)",
+    "diff_check": "passed, no whitespace errors",
+    "local_smoke_http_1": "200 - UBS Vila Nova exibida com breadcrumb completo e card informativo",
+    "local_smoke_http_999": "404 - not-found.tsx renderiza 'UBS não encontrada' (h1) + 'Voltar ao Dashboard' (link href='/'). Title: 'UBS não encontrada — Painel SUS'",
+    "webaudit": "not run; reserved for final gates",
+    "tasks_file": "not edited per request"
+  },
+  "criterion_failures": [
+    {
+      "criterion": "ID inexistente mostra 'UBS não encontrada' e link para '/'",
+      "status": "FAIL → RESOLVED",
+      "detail": "Original: notFound() exibia 404 padrão do Next.js. Correção: not-found.tsx renderiza <h1>UBS não encontrada</h1> e <Link href='/'>Voltar ao Dashboard</Link>. HTTP 404 + texto correto confirmados via curl."
+    },
+    {
+      "criterion": "UBS existente mostra breadcrumb e card informativo",
+      "status": "PARTIAL_FAIL → RESOLVED",
+      "detail": "Original: breadcrumb mostrava apenas '← Voltar ao Dashboard'. Correção: nav[aria-label='Breadcrumb'] > ol > li com Dashboard(link) > separator(aria-hidden, role='separator') > UBS(static) > separator > {nome}(aria-current='page'). Card UBSInfoCard OK."
+    },
+    {
+      "criterion": "Server Component valida ID inteiro positivo e busca a UBS local",
+      "status": "PASS",
+      "detail": "Server Component (sem 'use client'). Valida parseInt + Number.isFinite + id > 0 + Number.isInteger. Busca ubsList.find()."
+    },
+    {
+      "criterion": "generateMetadata usa nome da UBS ou estado não encontrado",
+      "status": "PASS",
+      "detail": "Retorna 'UBS não encontrada — Painel SUS' para IDs inválidos e '${ubs.nome} — Painel SUS' para existentes."
+    },
+    {
+      "criterion": "npm run build gera a rota dinâmica sem erros",
+      "status": "PASS",
+      "detail": "Build OK. Rota /ubs/[id] gerada como dynamic (ƒ)."
+    }
+  ]
+}

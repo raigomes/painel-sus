@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-09-07T15:44:58Z",
+  "audit_type": "static_and_dynamic",
+  "task_id": "TASK-035",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scores": {
+    "typescript": "passed",
+    "lint": "passed",
+    "test_suite": "passed",
+    "coverage": "passed",
+    "build": "passed",
+    "diff_check": "passed",
+    "smoke_http_1": 200,
+    "smoke_http_999": 404
+  },
+  "issues": [],
+  "passed": true,
+  "evidence": {
+    "typescript_check": {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    "lint_check": {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "result": "passed, zero warnings"
+    },
+    "test_suite": {
+      "command": "npm test",
+      "exit_code": 0,
+      "files": 6,
+      "tests": 69,
+      "result": "passed"
+    },
+    "coverage": {
+      "command": "npm run test:coverage",
+      "exit_code": 0,
+      "overall_statements": 56.25,
+      "ubs_page_statements": 0,
+      "result": "passed execution"
+    },
+    "build": {
+      "command": "npm run build",
+      "exit_code": 0,
+      "result": "passed, route /ubs/[id] generated as dynamic (ƒ)"
+    },
+    "diff_check": {
+      "command": "git diff --check HEAD",
+      "exit_code": 0,
+      "result": "passed, no whitespace errors"
+    },
+    "smoke_http_1": {
+      "url": "http://localhost:3000/ubs/1",
+      "http_status": 200,
+      "title": "UBS Vila Nova — Painel SUS",
+      "contains_breadcrumb": true,
+      "breadcrumb_semantic": "nav[aria-label=Breadcrumb] > ol > li with Dashboard(link) > separator(aria-hidden, role=separator) > UBS(static) > separator > {nome}(aria-current=page)",
+      "contains_info_card": true,
+      "result": "PASS"
+    },
+    "smoke_http_999": {
+      "url": "http://localhost:3000/ubs/999",
+      "http_status": 404,
+      "title": "UBS não encontrada — Painel SUS",
+      "contains_h1": true,
+      "h1_text": "UBS não encontrada",
+      "contains_return_link": true,
+      "return_link_text": "Voltar ao Dashboard",
+      "return_link_href": "/",
+      "accessible_name": "UBS não encontrada — link 'Voltar ao Dashboard' para /",
+      "result": "PASS"
+    }
+  },
+  "criterion_results": [
+    {
+      "criterion": "Server Component valida ID inteiro positivo e busca a UBS local",
+      "status": "PASS",
+      "detail": "page.tsx é Server Component (sem 'use client'). Valida parseInt + Number.isFinite + id > 0 + Number.isInteger. Busca ubsList.find()."
+    },
+    {
+      "criterion": "ID inexistente mostra 'UBS não encontrada' e link para '/'",
+      "status": "PASS",
+      "detail": "not-found.tsx renderiza <h1>UBS não encontrada</h1> e <Link href='/'>Voltar ao Dashboard</Link>. HTTP 404 confirmado via curl. Title 'UBS não encontrada — Painel SUS' confirmado no RSC payload."
+    },
+    {
+      "criterion": "UBS existente mostra breadcrumb e card informativo",
+      "status": "PASS",
+      "detail": "Breadcrumb semântico: nav[aria-label='Breadcrumb'] > ol > li com Dashboard(link) > separator(aria-hidden, role='separator') > UBS(static span) > separator > {nome}(aria-current='page'). Card: UBSInfoCard renderizado."
+    },
+    {
+      "criterion": "generateMetadata usa nome da UBS ou estado não encontrado",
+      "status": "PASS",
+      "detail": "Válido: '${ubs.nome} — Painel SUS' + description com CNES. Inválido: 'UBS não encontrada — Painel SUS'."
+    },
+    {
+      "criterion": "npm run build gera a rota dinâmica sem erros",
+      "status": "PASS",
+      "detail": "Build OK. Rota /ubs/[id] gerada como dynamic (ƒ)."
+    },
+    {
+      "criterion": "Sem client/fetch",
+      "status": "PASS",
+      "detail": "page.tsx e not-found.tsx não contêm 'use client'. Dados vêm de import estático ubsList. Nenhum fetch HTTP."
+    }
+  ],
+  "note": "Auditoria anterior (2026-09-07T15:40:00Z) registrou FAIL com base em notFound() exibindo 404 padrão e breadcrumb incompleto. O código foi corrigido posteriormente: notFound() agora aciona not-found.tsx (boundary personalizada com 'UBS não encontrada'), e o breadcrumb implementa a hierarquia completa 'Dashboard > UBS > [Nome]'. Esta revalidação confirma que todas as correções foram aplicadas."
+}
