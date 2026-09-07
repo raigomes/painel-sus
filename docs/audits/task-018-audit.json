@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-09-07T02:40:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-018",
+  "audit_type": "independent_static_and_local_html_revalidation",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scope": [
+    "docs/failures/task-018-failure.json",
+    "docs/SPEC.md",
+    "docs/TASKS.md",
+    "docs/DESIGN_SYSTEM.md",
+    "docs/layout/painel-sus.pen",
+    "src/app/layout.tsx",
+    "src/app/globals.css",
+    "src/app/page.tsx"
+  ],
+  "acceptance": {
+    "html_pt_br_and_contextual_metadata": {"status": "PASS", "evidence": "layout.tsx usa lang=pt-BR, title Painel SUS e descrição contextual do Previne Brasil/Saúde Itapira."},
+    "geist_screen_height_and_flexible_shell": {"status": "PASS", "evidence": "Geist é carregado por next/font; @theme mapeia --font-sans para --font-geist-sans sem circularidade; body usa min-h-screen flex flex-col e main usa flex-1."},
+    "skip_link": {"status": "PASS", "evidence": "HTML local contém href=\"#main-content\", alvo único id=\"main-content\" e classes sr-only/focus:not-sr-only para visibilidade no foco."},
+    "global_focus_and_reduced_motion": {"status": "PASS", "evidence": "globals.css preserva outline e aplica :focus-visible com outline 2px solid var(--primary) e offset 2px; não há remoção global insegura de outline. prefers-reduced-motion reduz animações/transições e desativa smooth scrolling."},
+    "single_main_initial_route_and_template": {"status": "PASS", "evidence": "Inspeção HTML local em / encontrou main_count=1 e main_id_count=1. page.tsx preserva o conteúdo do template inicial; a troca do main interno por div é semântica e necessária para evitar duplicidade."},
+    "typescript": {"status": "PASS", "evidence": "npx tsc --noEmit terminou com exit code 0."}
+  },
+  "additional_review_evidence": {
+    "lint": {"status": "PASS", "exit_code": 0, "warnings": 0},
+    "suite": {"status": "PASS", "exit_code": 0, "tests": "45/45"},
+    "coverage": {"status": "PASS", "exit_code": 0, "summary": "48.37% statements; nenhum threshold de cobertura configurado"},
+    "build": {"status": "PASS", "exit_code": 0},
+    "diff_check": {"status": "PASS", "exit_code": 0},
+    "local_html": {"status": "PASS", "status_code": 200, "main_count": 1, "main_id_count": 1, "skip_target_count": 1, "lang_pt_br_count": 1, "header_count": 0, "footer_count": 0},
+    "dependency_audit": {"status": "PASS", "exit_code": 0, "high": 0, "critical": 0}
+  },
+  "webauditmcp": {
+    "audit_lighthouse": "NOT_APPLICABLE_DEFERRED",
+    "scan_axe": "NOT_APPLICABLE_DEFERRED",
+    "security_headers": "NOT_APPLICABLE_DEFERRED",
+    "reason": "Não constam na acceptance da TASK-018. São gates posteriores: headers na TASK-041 e auditorias WebAuditMCP/Lighthouse/axe/security nos gates TASK-045–048, após o produto completo.",
+    "passed": null
+  },
+  "issues": [],
+  "passed": true,
+  "authorization": "PASS. Autorizar o Owner a marcar TASK-018 como concluída e liberar TASK-019/TASK-020. TASKS.md não foi editado pelo Reviewer."
+}

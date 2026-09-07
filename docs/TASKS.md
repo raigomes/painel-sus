@@ -198,26 +198,27 @@
     - [x] Histórico insuficiente retorna `estavel`
     - [x] Testes cobrem os quatro comportamentos
 
-- [ ] **ID**: `TASK-017`
+- [x] **ID**: `TASK-017`
   - **Files**: `src/hooks/use-filters.ts`, `src/hooks/use-filters.test.tsx`
   - **Dependencies**: `TASK-006`, `TASK-004`
   - **Acceptance**:
-    - [ ] O hook inicia com todas as UBS e último mês
-    - [ ] Alterações de UBS e período preservam o outro campo
-    - [ ] `resetFilters` restaura o estado inicial
-    - [ ] O teste direcionado termina sem falhas
+    - [x] O hook inicia com todas as UBS e último mês
+    - [x] Alterações de UBS e período preservam o outro campo
+    - [x] `resetFilters` restaura o estado inicial
+    - [x] O teste direcionado termina sem falhas
 
 ## Layout compartilhado
 
-- [ ] **ID**: `TASK-018`
-  - **Files**: `src/app/layout.tsx`, `src/app/globals.css`
+- [x] **ID**: `TASK-018`
+  - **Files**: `src/app/layout.tsx`, `src/app/globals.css`, `src/app/page.tsx`
   - **Dependencies**: `TASK-003`
   - **Acceptance**:
-    - [ ] `html` usa `lang="pt-BR"` e metadata contextual do Painel SUS
-    - [ ] Body usa Geist, altura mínima de tela e estrutura flexível
-    - [ ] Skip link aponta para `#main-content` e fica visível ao foco
-    - [ ] Foco global e movimento reduzido atendem à seção 10 da SPEC
-    - [ ] `npx tsc --noEmit` termina sem erros
+    - [x] `html` usa `lang="pt-BR"` e metadata contextual do Painel SUS
+    - [x] Body usa Geist, altura mínima de tela e estrutura flexível
+    - [x] Skip link aponta para `#main-content` e fica visível ao foco
+    - [x] Foco global e movimento reduzido atendem à seção 10 da SPEC
+    - [x] A rota inicial renderiza um único `<main id="main-content">` sem substituir ainda o conteúdo da TASK-031
+    - [x] `npx tsc --noEmit` termina sem erros
 
 - [ ] **ID**: `TASK-019`
   - **Files**: `src/components/layout/header.tsx`

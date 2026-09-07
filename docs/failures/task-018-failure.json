@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-09-07T02:40:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-018",
+  "status": "superseded_not_a_failure",
+  "agent_id_original": "reviewer",
+  "task_id_original": "TASK-018",
+  "note": "O veredito anterior foi corrigido. WebAuditMCP, Lighthouse, axe e security headers não são critérios da TASK-018; ficam NOT_APPLICABLE_DEFERRED para TASK-041 e TASK-045–048. Todos os critérios declarados da TASK-018 passaram. Consulte docs/audits/task-018-audit.json.",
+  "previous_blocker": "dynamic_audit_unavailable",
+  "resolution": "Removido como bloqueio indevido; não há falha ativa na TASK-018.",
+  "auto_update_prompt": false
+}
