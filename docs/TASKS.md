@@ -238,14 +238,14 @@
     - [x] Footer mostra “Protótipo v1.0 — Saúde Itapira”
     - [x] Conteúdo não fica recortado e usa `role="contentinfo"`
 
-- [ ] **ID**: `TASK-021`
+- [x] **ID**: `TASK-021`
   - **Files**: `src/app/layout.tsx`, `src/components/layout/header.tsx`, `src/components/layout/footer.tsx`
   - **Dependencies**: `TASK-019`, `TASK-020`
   - **Acceptance**:
-    - [ ] Header aparece antes de `<main id="main-content">`
-    - [ ] Main cresce para preencher a página
-    - [ ] Footer aparece depois do main em todas as rotas
-    - [ ] `npm run build` termina sem erros
+    - [x] Header aparece antes de `<main id="main-content">`
+    - [x] Main cresce para preencher a página
+    - [x] Footer aparece depois do main em todas as rotas
+    - [x] `npm run build` termina sem erros
 
 ## Filtros e dashboard
 

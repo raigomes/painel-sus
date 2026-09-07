@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-09-07T02:48:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-021",
+  "audit_type": "static_layout_and_build",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scope": {
+    "requested_files": [
+      "src/app/layout.tsx",
+      "src/components/layout/header.tsx",
+      "src/components/layout/footer.tsx"
+    ],
+    "changed_files": ["src/app/layout.tsx"],
+    "unrelated_changes": []
+  },
+  "commands": [
+    {"command": "npx tsc --noEmit", "exit_code": 0},
+    {"command": "npm run lint", "exit_code": 0, "warnings": 0},
+    {"command": "npm test -- --passWithNoTests", "exit_code": 0, "tests": 45, "test_files": 3},
+    {"command": "npm run test:coverage", "exit_code": 0, "lines": 44.95},
+    {"command": "npm run build", "exit_code": 0, "routes_built": ["/"]},
+    {"command": "git diff --check", "exit_code": 0}
+  ],
+  "html_inspection": {
+    "route": "/",
+    "http_status": 200,
+    "skip_link_href": "#main-content",
+    "landmarks": ["header", "nav", "main#main-content", "footer[role=contentinfo]"],
+    "header_before_main": true,
+    "main_count": 1,
+    "main_id": "main-content",
+    "main_class_contains_flex_1": true,
+    "footer_after_main": true,
+    "passed": true
+  },
+  "routes_checked": {
+    "/": 200,
+    "/ubs/1": 404,
+    "/ubs/999": 404,
+    "/indicadores": 404,
+    "/sobre": 404,
+    "note": "As rotas adicionais ainda não existem nesta base; RootLayout é compartilhado pelo App Router e a ordem é definida centralmente em src/app/layout.tsx."
+  },
+  "web_audit_mcp": {
+    "status": "unavailable",
+    "note": "Nenhuma ferramenta WebAuditMCP foi exposta neste ambiente; Lighthouse, axe e security_headers não puderam ser executados. Não há escopo de performance/segurança específico em TASK-021."
+  },
+  "visual_alignment": {
+    "header_footer_components_unchanged": true,
+    "layout_order_matches_spec": true,
+    "tokens_and_structure_consistent": true
+  },
+  "issues": [],
+  "passed": true,
+  "authorization": "TASK-021 autorizada para marcação pelo Owner; Reviewer não alterou docs/TASKS.md."
+}
