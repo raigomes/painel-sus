@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-09-06T00:00:00Z",
+  "agent_id": "coder",
+  "task_id": "REVIEW-CURRENT-STATE",
+  "error_category": "acceptance_criteria_not_satisfied",
+  "severity": "blocking",
+  "file_path": "src/app/page.tsx",
+  "line_number": 3,
+  "error_message": "O estado atual ainda é o template Create Next App e não implementa o produto Painel SUS; as tarefas concluídas de base não liberam as tarefas de dados/produto.",
+  "code_snippet": "export default function Home() { ... To get started, edit the page.tsx file. ... }",
+  "root_cause": "Somente artefatos de setup, tipos e constantes estão presentes. Não existem módulos de dados, regras de negócio, componentes funcionais do dashboard ou rotas adicionais.",
+  "correction_applied": "",
+  "prevention_rule": "Antes de liberar dependentes, validar cada critério de aceitação contra arquivos e comportamento efetivamente presentes, sem considerar a marcação histórica da tarefa como evidência suficiente.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "related_tasks": ["TASK-008", "TASK-009", "TASK-010", "TASK-012", "TASK-018", "TASK-029", "TASK-031"],
+  "related_files": ["src/app/page.tsx", "src/app/layout.tsx", "src/lib/constants.ts", "docs/TASKS.md"]
+}

@@ -3,6 +3,45 @@
 > Fonte de requisitos: `docs/PRD.md` v1.2 e `docs/SPEC.md` v1.2. Ordem definida por dependências. Cada tarefa altera no máximo três arquivos, deve caber em menos de 30 minutos e possui critérios verificáveis.
 >
 > Precondição do fluxo da Squad: antes das tarefas visuais, o Designer deve alinhar `docs/DESIGN_SYSTEM.md` e `docs/layout/painel-sus.pen` ao LineChart, ao seletor de indicador e ao ranking municipal definidos na SPEC v1.2.
+>
+> Estado verificado em 2026-09-06: `docs/DESIGN_SYSTEM.md` v1.2 e `docs/layout/painel-sus.pen` existem; as tarefas `TASK-001`, `TASK-002`, `TASK-003`, `TASK-004` e `TASK-006` estão concluídas. `src/app/layout.tsx` e `src/app/page.tsx` ainda contêm o template inicial do Next.js, e os módulos de dados, regras de negócio, componentes do produto e rotas adicionais ainda não existem.
+
+## Plano de execução do Coder
+
+### Prioridades
+
+- **P0 — caminho crítico ou gate:** `TASK-005`, `TASK-007`–`TASK-010`, `TASK-012`–`TASK-016`, `TASK-018`, `TASK-021`, `TASK-029`, `TASK-031`, `TASK-035`, `TASK-036`, `TASK-039`, `TASK-041` e `TASK-042`.
+- **P1 — entrega funcional ou teste obrigatório:** `TASK-011`, `TASK-017`, `TASK-019`, `TASK-020`, `TASK-022`–`TASK-027`, `TASK-030`, `TASK-032`–`TASK-034`, `TASK-037`, `TASK-038`, `TASK-040`, `TASK-043` e `TASK-044`.
+- **Gate independente do Reviewer:** `TASK-045`–`TASK-048`; o Coder não executa nem conclui essas tarefas.
+
+### Fluxo obrigatório de execução e revisão
+
+1. O Owner delega somente uma tarefa atômica ao Coder, respeitando arquivos, dependências e critérios declarados.
+2. Ao concluir, o Coder entrega alterações e evidências, mas não marca a tarefa como concluída.
+3. O Owner delega imediatamente a mesma tarefa ao Reviewer para validação independente dos critérios, testes e regressões aplicáveis.
+4. Somente após o Reviewer retornar **PASS**, o Owner marca a tarefa e seus critérios como concluídos em `docs/TASKS.md` e libera suas dependentes.
+5. Se o Reviewer retornar **FAIL**, a tarefa permanece aberta, a falha é registrada em `docs/failures/` e a mesma tarefa volta ao Coder para correção; após a correção, uma nova revisão é obrigatória.
+6. As tarefas `TASK-045`–`TASK-048` continuam sendo gates exclusivos do Reviewer e não são executadas pelo Coder.
+
+### Ondas executáveis
+
+1. **Onda 1 — risco e desbloqueio:** executar `TASK-005` primeiro. Em paralelo, quando houver mais de um executor, podem avançar `TASK-007`, `TASK-008`, `TASK-009`, `TASK-017`, `TASK-018`, `TASK-026`, `TASK-028` e `TASK-033`. `TASK-032` aguarda `TASK-008`.
+2. **Onda 2 — dados e regras:** após `TASK-007`–`TASK-009`, executar `TASK-010`, `TASK-012`, `TASK-022`, `TASK-023`, `TASK-024`, `TASK-027`, `TASK-032` e `TASK-034` conforme suas dependências; continuar a cadeia `TASK-012` → `TASK-013` → `TASK-014` → (`TASK-015` e `TASK-016`).
+3. **Onda 3 — shell e componentes:** executar `TASK-019` e `TASK-020` após `TASK-018`, integrar em `TASK-021` e concluir `TASK-025` após `TASK-024`.
+4. **Onda 4 — integrações de produto:** executar `TASK-029` → `TASK-030` → `TASK-031`; em paralelo, concluir `TASK-035` → `TASK-036` e `TASK-037` → `TASK-038` → `TASK-039`, além de `TASK-040`.
+5. **Onda 5 — endurecimento:** executar `TASK-041` → `TASK-042` → `TASK-043` → `TASK-044`; somente então transferir para o Reviewer em `TASK-045`.
+
+### Caminho crítico atual
+
+`TASK-007` → `TASK-012` → `TASK-013` → `TASK-014` → `TASK-016` → `TASK-029` → `TASK-031` → `TASK-041` → `TASK-042` → `TASK-043` → `TASK-044` → `TASK-045` → `TASK-046` → `TASK-047` → `TASK-048`.
+
+### Riscos e regras de parada
+
+- **Dependências (`TASK-005`):** o histórico `docs/failures/setup-05-peer-dependency-failure.json` registra `ERESOLVE` e seis vulnerabilidades altas. Em 2026-09-06, o Coder atualizou `next` e `eslint-config-next` juntos para `16.3.2`; `npm install` e `npm run build` passaram sem `ERESOLVE`, mas `npm audit --json` ainda encontrou quatro vulnerabilidades altas com correção disponível (`brace-expansion`, `fast-uri`, `js-yaml` e `nanoid`). O responsável autorizou atualização controlada das dependências diretas de desenvolvimento dentro das versões principais previstas na SPEC, desde que todos os gates permaneçam sem quebra. Mudança de versão principal exige nova decisão e atualização prévia da SPEC. Permanecem proibidos `--force`, `--legacy-peer-deps`, `overrides` e `resolutions` ad hoc.
+- **Dados (`TASK-010`):** os 720 registros devem ser determinísticos e satisfazer cardinalidade, continuidade, limite, desvio padrão e tendência antes de `TASK-011`; não preencher manualmente sem validação reproduzível.
+- **Estado inconsistente conhecido:** `TASK-006` possui artefatos concluídos, embora `TASK-005` ainda esteja aberta. Os testes podem ser usados durante o desenvolvimento, mas o gate final `TASK-042` continua bloqueado por `TASK-005`.
+- **Atomicidade:** executar uma tarefa por vez por agente e respeitar os arquivos declarados. Se uma tarefa ultrapassar 30 minutos ou três arquivos, interromper e devolver ao Owner para subdivisão, sem ampliar silenciosamente o escopo.
+- **Visual:** toda implementação deve seguir `docs/DESIGN_SYSTEM.md` v1.2 e o `.pen`, preservando LineChart de série única, seletor próprio, ranking municipal com 15 UBS, três estados, três tendências, histórico de 12 meses, navegação ativa sublinhada e footer completo.
 
 ## Base e dependências
 
@@ -40,15 +79,15 @@
     - [x] `IndicatorStatus`, `Trend` e `PeriodFilter` contêm exatamente seus valores especificados
     - [x] `npx tsc --noEmit` termina sem erros
 
-- [ ] **ID**: `TASK-005`
+- [x] **ID**: `TASK-005`
   - **Files**: `package.json`, `package-lock.json`
   - **Dependencies**: `[]`
   - **Acceptance**:
-    - [ ] `next` está fixado em `16.3.2` e as dependências de teste permanecem nas faixas autorizadas pela SPEC
-    - [ ] `npm install` termina com código zero e sem aviso `ERESOLVE`
-    - [ ] Nenhum conflito é ocultado com `--force` ou `--legacy-peer-deps`
-    - [ ] `npm audit --json` não registra vulnerabilidade alta ou crítica com correção disponível
-    - [ ] `npm run build` termina sem erros
+    - [x] `next` está fixado em `16.3.2` e as dependências de teste permanecem nas faixas autorizadas pela SPEC
+    - [x] `npm install` termina com código zero e sem aviso `ERESOLVE`
+    - [x] Nenhum conflito é ocultado com `--force` ou `--legacy-peer-deps`
+    - [x] `npm audit --json` não registra vulnerabilidade alta ou crítica com correção disponível
+    - [x] `npm run build` termina sem erros
 
 - [x] **ID**: `TASK-006`
   - **Files**: `vitest.config.ts`, `src/test/setup.ts`
@@ -59,15 +98,15 @@
     - [x] O setup importa `@testing-library/jest-dom/vitest`
     - [x] `npm test -- --passWithNoTests` termina sem erros
 
-- [ ] **ID**: `TASK-007`
+- [x] **ID**: `TASK-007`
   - **Files**: `src/lib/constants.ts`
   - **Dependencies**: `TASK-004`
   - **Acceptance**:
-    - [ ] `META_THRESHOLDS` contém os limites 100 e 80
-    - [ ] `PERIOD_LABELS` contém as quatro labels PT-BR
-    - [ ] `PERIOD_MONTHS` mapeia as janelas para 1, 3, 6 e 12
-    - [ ] `STATUS_CLASSES` define background, border, text e icon para os três estados
-    - [ ] `npx tsc --noEmit` termina sem erros
+    - [x] `META_THRESHOLDS` contém os limites 100 e 80
+    - [x] `PERIOD_LABELS` contém as quatro labels PT-BR
+    - [x] `PERIOD_MONTHS` mapeia as janelas para 1, 3, 6 e 12
+    - [x] `STATUS_CLASSES` define background, border, text e icon para os três estados
+    - [x] `npx tsc --noEmit` termina sem erros
 
 ## Dados locais
 

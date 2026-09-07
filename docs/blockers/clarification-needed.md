@@ -28,4 +28,40 @@ As decisões abaixo continuam vinculantes e não precisam de nova resposta:
 4. A antiga `SETUP-05` foi reaberta como `TASK-005`, incluindo atualização autorizada do Next.js, instalação sem `ERESOLVE` e evidência de `npm audit --json`.
 5. O alinhamento de `docs/DESIGN_SYSTEM.md` e do `.pen` com LineChart, seletor e ranking municipal foi registrado como precondição visual e gate do Reviewer.
 
-O blocker está encerrado e permanece neste arquivo para rastreabilidade.
+O blocker de negócio está encerrado e permanece neste arquivo para rastreabilidade.
+
+---
+
+## Bloqueio técnico aberto — TASK-005 (2026-09-06)
+
+**Status:** RESOLVIDO — 2026-09-06
+
+O Coder executou a atualização autorizada de `next` e `eslint-config-next` para `16.3.2`:
+
+- `npm install`: código zero e sem aviso `ERESOLVE`;
+- `npm run build`: código zero;
+- `npm audit --json`: código 1, com quatro vulnerabilidades altas e `fixAvailable: true` em `brace-expansion`, `fast-uri`, `js-yaml` e `nanoid`.
+
+A `TASK-005` permanece aberta porque seu critério proíbe vulnerabilidade alta ou crítica com correção disponível. O gate `TASK-042` também permanece bloqueado.
+
+### Decisão do responsável — 2026-09-06
+
+Foi autorizada a opção recomendada: atualização controlada das dependências diretas de desenvolvimento que introduzem as cadeias vulneráveis, limitada às versões principais já previstas na SPEC e condicionada à aprovação de instalação, TypeScript, lint, testes, auditoria e build.
+
+Se a correção exigir mudança de versão principal fora das faixas autorizadas, o Coder deve parar. O Owner apresentará nova pergunta ao responsável e atualizará a SPEC antes de qualquer mudança.
+
+Permanecem proibidos `npm audit fix --force`, `--legacy-peer-deps`, `overrides` e `resolutions` ad hoc.
+
+### Resolução
+
+O Coder aplicou atualizações compatíveis dentro das versões principais autorizadas. O Reviewer validou independentemente:
+
+- `npm install`: código zero e sem `ERESOLVE`;
+- `npm audit --json`: código zero e zero vulnerabilidades;
+- `npx tsc --noEmit`: código zero;
+- `npm run lint`: código zero;
+- `npm test -- --passWithNoTests`: código zero;
+- `npm run test:coverage -- --passWithNoTests`: código zero;
+- `npm run build`: código zero com Next.js `16.3.2`.
+
+A `TASK-005` recebeu **PASS** do Reviewer e foi encerrada. A ausência atual de testes efetivos não reprova esta tarefa, mas deve ser eliminada pelas tarefas de testes antes do gate `TASK-042`.
