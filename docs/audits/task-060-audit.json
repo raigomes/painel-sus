@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-09-07T14:21:00Z",
+  "task_id": "TASK-060",
+  "agent_id": "reviewer",
+  "audit_type": "static_visual_quality_revalidation",
+  "url": "http://localhost:3000/",
+  "device": "desktop",
+  "scope": "Somente acceptance de TASK-060 e smoke da rota /; rotas fora da acceptance ignoradas.",
+  "checks": {
+    "active_header_leading_20px": "pass — leading-5",
+    "active_header_no_visual_radius": "pass — rounded-none",
+    "active_header_underline_2px_corner_1px": "pass — h-0.5 rounded-[1px]",
+    "active_header_min44_focus_aria": "pass — min-h-11, focus-visible ring, aria-current",
+    "active_header_weight_600_primary_color": "pass — font-semibold text-primary",
+    "footer_exact_disclaimer_and_promotion": "pass — disclaimer e raigomes.dev presentes no código",
+    "footer_sources": "pass — CNES, e-SUS AB, DATASUS",
+    "footer_version": "pass — Protótipo v1.0 — Saúde Itapira",
+    "footer_fluid_wrapping_375": "pass — w-full, break-words, flex-col, px responsivo; sem altura fixa",
+    "footer_contrast_zinc600_on_zinc50": "pass — 7.41:1, >= 4.5:1",
+    "footer_line_height": "pass — 1.75 explícito",
+    "typecheck": "pass — npx tsc --noEmit, exit 0",
+    "lint": "pass — npm run lint, exit 0, sem warnings",
+    "test_suite": "pass — 69 tests",
+    "coverage": "pass — 72.15% statements",
+    "build": "pass — npm run build, exit 0",
+    "diff_check": "pass — git diff --check, exit 0",
+    "smoke_root": "pass — GET / HTTP 200",
+    "web_audit_mcp": "not available in this runtime; no dynamic score asserted"
+  },
+  "commands": [
+    "npx tsc --noEmit",
+    "npm run lint",
+    "npm test -- --run",
+    "npm run test:coverage",
+    "npm run build",
+    "git diff --check",
+    "curl GET http://localhost:3000/"
+  ],
+  "scores": {
+    "performance": null,
+    "accessibility": null,
+    "best_practices": null,
+    "seo": null,
+    "security": null
+  },
+  "issues": [],
+  "passed": true,
+  "authorization": "Revalidação limitada pelo solicitante à acceptance de TASK-060 e à rota /; rotas fora do escopo não foram auditadas.",
+  "web_audit_mcp": "not_available_in_tool_runtime"
+}

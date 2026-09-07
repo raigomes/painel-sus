@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-09-07T16:30:00Z",
+  "agent_id": "reviewer",
+  "task_id": "dashboard-pen-followup",
+  "audit_type": "static_dom_css_runtime_pen_followup",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "reference": {
+    "pen_file": "docs/layout/painel-sus.pen",
+    "pen_frame": "pg1",
+    "design_system": "docs/DESIGN_SYSTEM.md",
+    "requirements": ["docs/PRD.md", "docs/SPEC.md"],
+    "tasks": "docs/TASKS.md"
+  },
+  "evidence_availability": {
+    "screenshots": "not available in this session",
+    "browser": "runtime DOM/SSR inspection performed; interactive select behavior covered by existing tests and source inspection",
+    "webauditmcp": "not exposed in this session",
+    "fallback": "explicit .pen properties, source/CSS, localhost HTTP response and existing test suite"
+  },
+  "gates": {
+    "typescript": {"command": "npx tsc --noEmit", "exit_code": 0, "passed": true},
+    "lint": {"command": "npm run lint", "exit_code": 0, "warnings": 0, "passed": true},
+    "tests": {"command": "npm test -- --run", "exit_code": 0, "test_files": 6, "tests": 64, "passed": true},
+    "localhost": {"command": "curl -sSI http://localhost:3000", "status": 200, "passed": true},
+    "security_headers": {"status": "not_run", "reason": "WebAuditMCP unavailable; not inferred from static inspection"}
+  },
+  "findings": [
+    {
+      "id": "F-01",
+      "reported_defect": "Filtros mostram value técnico em vez do label",
+      "classification": "confirmed_runtime_behavior_and_visual_accessibility_defect",
+      "severity": "blocking",
+      "root_cause": "SelectTrigger renders SelectValue without an explicit display value. The Base UI select receives machine values (all, ultimo-mes, cobertura-vacinal) and the current runtime SSR/DOM exposes those values instead of the Portuguese SelectItem labels.",
+      "evidence": {"runtime": "UBS shows all; Período shows ultimo-mes; indicador shows cobertura-vacinal", "files": ["src/components/filters/ubs-filter.tsx:22-40", "src/components/filters/period-filter.tsx:27-41", "src/components/filters/indicator-filter.tsx", "src/components/ui/select.tsx:21-28"], "tests": "src/components/dashboard/dashboard-client.test.tsx:43-48 currently asserts the technical values, so it preserves the defect rather than detecting it"},
+      "expected_change": "Keep typed machine values for state and option values, but make each trigger display its Portuguese label (including selected UBS name) and update tests to assert visible labels while preserving selection behavior.",
+      "data_or_rule": "visual/presentation defect; filter state and business rule are correct",
+      "atomic_tasks": [{"files": ["src/components/filters/ubs-filter.tsx", "src/components/filters/period-filter.tsx", "src/components/filters/indicator-filter.tsx"], "scope": "explicit trigger labels and interaction tests"}, {"files": ["src/components/dashboard/dashboard-client.test.tsx"], "scope": "assert labels rather than internal values"}]
+    },
+    {
+      "id": "F-02",
+      "reported_defect": "Ícones de indicadores errados",
+      "classification": "confirmed_visual_mismatch_with_spec_conflict",
+      "severity": "major",
+      "root_cause": "pg1 uses indicator/domain iconography (💉, gestante, coração, diabetes) while production maps the status to CircleCheck/TriangleAlert/CircleX. The current implementation therefore changes the icon when status changes and does not identify the indicator itself.",
+      "evidence": {"pen": "docs/layout/painel-sus.pen:258-264, and analogous indicator cards", "source": "src/components/dashboard/indicator-card.tsx:35-45,66-70", "requirements": "SPEC 9.9 requires status by icon; DESIGN_SYSTEM 4.1 also shows an indicator icon"},
+      "expected_change": "Resolve the content conflict explicitly: retain a status icon/text for the WCAG state requirement and add a stable indicator-specific icon aligned to pg1, or obtain an approved Pencil revision. Do not replace status semantics with decorative icons only.",
+      "data_or_rule": "visual/iconography; not a data defect",
+      "atomic_tasks": [{"files": ["src/components/dashboard/indicator-card.tsx"], "scope": "stable per-indicator icon plus preserved status semantics"}, {"files": ["docs/layout/painel-sus.pen"], "scope": "only if Designer approves updating pg1 icon specification"}]
+    },
+    {
+      "id": "F-03",
+      "reported_defect": "Gráfico só mostra jun/26",
+      "classification": "not_a_production_defect_under_current_requirements;_reference_visual_gap",
+      "severity": "none_for_default_behavior",
+      "root_cause": "The initial period is ultimo-mes by PRD US-03, SPEC 9 and DashboardClient initialization. The deterministic latest month is 2026-06, so the valid default window contains exactly one point (jun/26). pg1 is a static 12-month composition and cannot override the relative-period rule.",
+      "evidence": {"source": "src/components/dashboard/dashboard-client.tsx:38-43,68-84", "rule": "docs/PRD.md:98-103 and docs/SPEC.md:306-312", "data": "src/data/history.ts covers 2025-07 through 2026-06", "runtime": "SSR chart description reports jun/26 and one point", "interaction": "existing test selects Último trimestre and verifies chart changes: src/components/dashboard/dashboard-client.test.tsx:86-102"},
+      "expected_change": "No code change for the default. If the visual requirement is that pg1 must show 12 points on first load, change the product requirement/task to initialize ultimo-ano; otherwise validate the interaction by selecting Último ano and keep the current rule.",
+      "data_or_rule": "expected business rule behavior, not bad data",
+      "atomic_tasks": [{"files": ["docs/TASKS.md"], "scope": "only if Owner decides to change the initial-period requirement; Reviewer did not edit it"}, {"files": ["src/components/dashboard/dashboard-client.tsx"], "scope": "only after approved requirement change"}]
+    },
+    {
+      "id": "F-04",
+      "reported_defect": "Título/subtítulo de página não existem no Pencil",
+      "classification": "reference_spec_mismatch_not_a_source_defect",
+      "severity": "major_reference_drift",
+      "root_cause": "The source includes the required TASK-031 page title and introduction, while pg1 begins with Filter Bar and has no matching title block. Removing source content would violate TASK-031 acceptance, which explicitly requires title and introduction identifying the panel and data period.",
+      "evidence": {"source": "src/app/page.tsx:8-16", "task": "docs/TASKS.md:339-347", "pen": "pg1 child sequence at docs/layout/painel-sus.pen:117 starts with Filter Bar"},
+      "expected_change": "Do not remove the title/subtitle from production. Align the Pencil pg1 by adding the approved title/introduction block before Filter Bar, or formally revise TASK-031 before any source removal. The Pencil must not silently contradict PRD/SPEC/TASKS.",
+      "data_or_rule": "reference/design artifact mismatch; requirements take precedence",
+      "atomic_tasks": [{"files": ["docs/layout/painel-sus.pen"], "scope": "Designer adds title/introduction to pg1"}, {"files": ["src/app/page.tsx"], "scope": "only if Owner-approved requirements replace the title block"}]
+    },
+    {
+      "id": "F-05",
+      "reported_defect": "Border-radius e line-height do item ativo no header",
+      "classification": "confirmed_visual_token_mismatch",
+      "severity": "major",
+      "root_cause": "The implementation applies rounded-md to the complete active link and leaves line-height implicit. pg1's reusable NavActive has cornerRadius 1 on the underline reference and a compact 26px vertical geometry; DESIGN_SYSTEM specifies active border-bottom with pb-2 and no rounded active container. This produces a different active underline/radius and text vertical alignment.",
+      "evidence": {"pen": "docs/layout/painel-sus.pen:5727-5755, with active underline cornerRadius 1", "source": "src/components/layout/header.tsx:43-50, rounded-md and border-b-2 on Link", "design_system": "docs/DESIGN_SYSTEM.md:580-585"},
+      "expected_change": "Separate active underline geometry from the link surface: remove/limit rounded-md on the active item, explicitly set the required line-height/vertical metrics, and preserve focus ring, aria-current, 44px target and underline.",
+      "data_or_rule": "visual/CSS token mismatch; navigation rule is otherwise correct",
+      "atomic_tasks": [{"files": ["src/components/layout/header.tsx"], "scope": "active link radius, underline geometry and explicit line-height"}, {"files": ["src/components/layout/header.tsx", "docs/layout/painel-sus.pen"], "scope": "only if exact shared metric must be synchronized by Designer"}]
+    },
+    {
+      "id": "F-06",
+      "reported_defect": "Footer não mostra texto completo",
+      "classification": "production_pass_reference_artifact_defect",
+      "severity": "none_in_production; major_in_pen",
+      "root_cause": "The production footer intentionally contains the complete required disclaimer, three sources and version on separate full-width lines. The pg1 reusable footer instead contains an obsolete personal promotional suffix (raigomes.dev), which is not in PRD/SPEC and is not the production text. The reported truncation is not reproduced in the localhost DOM.",
+      "evidence": {"source": "src/components/layout/footer.tsx:3-10", "pen": "docs/layout/painel-sus.pen:5690-5717", "requirements": "docs/SPEC.md:331-333 and docs/DESIGN_SYSTEM.md:603-628", "runtime": "localhost HTML contains Dados simulados, Fontes: CNES/e-SUS AB/DATASUS and Protótipo v1.0 — Saúde Itapira"},
+      "expected_change": "Update the Pencil footer to the complete, non-promotional production copy and verify its frame width/line wrapping; do not shorten or alter the production footer without an approved requirement.",
+      "data_or_rule": "reference artifact/content mismatch, not runtime data",
+      "atomic_tasks": [{"files": ["docs/layout/painel-sus.pen"], "scope": "replace obsolete promotional footer copy and verify no clipping"}, {"files": ["src/components/layout/footer.tsx"], "scope": "only if a runtime clipping reproduction is later supplied"}]
+    }
+  ],
+  "passed": false,
+  "decision": "FAIL_FOR_F-01_F-02_F-05; F-03 and F-06 are not production defects; F-04 is Pencil/reference drift",
+  "tasks_file_updated": false,
+  "production_code_modified_by_reviewer": false,
+  "webauditmcp_required_followup": true
+}

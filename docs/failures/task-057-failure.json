@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-09-07T14:00:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-057",
+  "error_category": "stale_test_expectation",
+  "severity": "non_blocking",
+  "file_path": "src/components/dashboard/dashboard-client.test.tsx",
+  "line_number": 46,
+  "error_message": "Three legacy dashboard assertions expect technical trigger values ('all' and 'ultimo-trimestre'), while TASK-057 requires human-readable labels ('Todas as UBS' and 'Último trimestre').",
+  "code_snippet": "expect(screen.getByRole(\"combobox\", { name: \"UBS\" })).toHaveTextContent(\"all\");",
+  "root_cause": "dashboard-client.test.tsx belongs explicitly to TASK-059 and was not updated for the TASK-057 presentation-label contract.",
+  "correction_applied": "",
+  "prevention_rule": "Assert visible labels on Select triggers and assert technical values through callbacks/state, never by requiring IDs as rendered text.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "production_assessment": "Production satisfies TASK-057: initial and post-selection triggers show human labels, technical IDs/callback types remain preserved, 44px targets remain, and src/components/ui/select.tsx was not changed.",
+  "task_057_decision": "PASS_WITH_NON_BLOCKING_TASK_059_DEBT",
+  "owner_action": "Update/expand TASK-059 dashboard tests when TASK-059 is reviewed; no TASK-057 scope expansion required because its acceptance does not require the full suite to be green."
+}

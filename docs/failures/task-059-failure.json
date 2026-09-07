@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-09-07T14:09:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-059",
+  "error_category": "dashboard_reset_state_violation",
+  "severity": "blocking",
+  "file_path": "src/components/dashboard/dashboard-client.tsx",
+  "line_number": 125,
+  "error_message": "O EmptyState recebe resetFilters diretamente e não restaura periodTouched=false; após a primeira alteração do período, limpar filtros pelo estado vazio mantém a janela do gráfico no período selecionado em vez de restaurar os 12 pontos iniciais.",
+  "code_snippet": "<EmptyState onClear={resetFilters} />",
+  "root_cause": "O reset do hook restaura apenas ubsId e period. O DashboardClient possui estado independente periodTouched, mas o caminho de limpeza do EmptyState não usa handleReset.",
+  "correction_applied": "",
+  "prevention_rule": "Todo caminho de limpeza do dashboard deve chamar o handler composto que restaura filtros e periodTouched=false; testar reset após selecionar período, inclusive no EmptyState.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "evidence": {
+    "directed_test": "passed: 5 tests",
+    "full_suite": "passed: 68 tests",
+    "typescript": "passed",
+    "lint": "passed without warnings",
+    "coverage": "passed; aggregate 72.25% statements",
+    "build": "passed",
+    "diff_check": "passed",
+    "npm_audit": "0 vulnerabilities",
+    "smoke": "HTTP 200 at http://localhost:3000",
+    "dynamic_webaudit_mcp": "not available in this execution environment"
+  }
+}

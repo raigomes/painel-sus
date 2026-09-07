@@ -2,8 +2,8 @@
 
 > **Projeto:** Protótipo de Painel SUS  
 > **Cliente:** Secretaria Municipal de Saúde (fictícia: Saúde Itapira)  
-> **Versão:** 1.2
-> **Data:** 2026-08-22
+> **Versão:** 1.3
+> **Data:** 2026-09-07
 
 ## 1. Visão do produto
 
@@ -23,7 +23,7 @@ Painel público para gestores municipais acompanharem quatro indicadores do Prev
 
 - Dashboard consolidado e filtrável por UBS e janela relativa.
 - Quatro indicadores: Cobertura Vacinal, Pré-natal, Hipertensão e Diabetes.
-- Série histórica em gráfico de linha, com seletor de indicador iniciado em Cobertura Vacinal.
+- Série histórica em gráfico de linha, com seletor de indicador iniciado em Cobertura Vacinal e visão inicial própria de 12 meses.
 - Ranking comparativo das 15 UBS, preservado mesmo quando uma UBS é selecionada nos demais painéis.
 - Detalhe de cada UBS.
 - Detalhes expansíveis dos indicadores na rota `/indicadores`.
@@ -131,11 +131,20 @@ Cenário: Resultado vermelho
 ```gherkin
 Cenário: Exibir a evolução inicial
   Dado que o gestor acessou o dashboard
-  Quando observar a seção de evolução
+  Quando observar a seção de evolução antes de alterar o período
   Então Cobertura Vacinal deve estar selecionada inicialmente
-  E um gráfico de linha deve exibir seus meses na janela selecionada
+  E o gráfico de linha deve exibir os 12 meses disponíveis
+  E os cartões e o ranking devem continuar representando o Último mês
   E uma linha de referência deve representar sua meta
   E os eixos devem identificar mês e percentual
+
+Cenário: Aplicar o filtro de período ao gráfico
+  Dado que o gráfico exibe inicialmente os 12 meses disponíveis
+  Quando o gestor selecionar Último trimestre
+  Então o gráfico deve passar a exibir os três meses da janela selecionada
+  E cartões e ranking também devem usar o Último trimestre
+  E limpar filtros deve restaurar cartões e ranking para Último mês
+  E o gráfico deve restaurar sua visão inicial de 12 meses
 
 Cenário: Escolher outro indicador no gráfico
   Dado que Cobertura Vacinal está selecionada na seção de evolução
@@ -296,6 +305,33 @@ Cenário: Exibir breadcrumb da UBS
   Então o breadcrumb deve informar "Dashboard > UBS > UBS Jardim Paulista"
 ```
 
+### US-14 — Reconhecer a apresentação visual
+
+**Como** gestor, **quero** reconhecer rapidamente filtros, indicadores e informações institucionais, **para** interpretar a tela sem códigos técnicos.
+
+```gherkin
+Cenário: Exibir nomes nos filtros
+  Dado que o dashboard foi aberto
+  Quando os filtros forem exibidos
+  Então devem mostrar “Todas as UBS”, “Último mês” e “Cobertura Vacinal”
+  E não devem mostrar identificadores técnicos ao usuário
+
+Cenário: Identificar os indicadores por ícone
+  Dado que os quatro cartões estão visíveis
+  Quando o gestor observar seus cabeçalhos
+  Então Cobertura Vacinal deve usar o símbolo “💉”
+  E Pré-natal deve usar o símbolo “🤰”
+  E Hipertensão deve usar o símbolo “❤️”
+  E Diabetes deve usar o símbolo “🩸”
+  E o estado de cada cartão deve continuar compreensível sem depender do ícone
+
+Cenário: Exibir a apresentação e o rodapé completos
+  Dado que o gestor acessou o dashboard
+  Quando a página for exibida
+  Então o título “Painel SUS” e sua introdução devem permanecer visíveis
+  E o rodapé deve exibir disclaimer, fontes, versão e a referência “raigomes.dev”
+```
+
 ## 6. Regras de negócio
 
 | Regra | Definição |
@@ -312,7 +348,8 @@ Cenário: Exibir breadcrumb da UBS
 | RB-10 | Tendência compara a média dos últimos três meses com os três anteriores: acima de +5% é alta, abaixo de -5% é queda, demais casos são estáveis |
 | RB-11 | Dados locais inválidos são erro de desenvolvimento; filtros válidos sem registros produzem estado vazio com ação “Limpar filtros” |
 | RB-12 | O gráfico do dashboard possui seletor próprio, inicia em Cobertura Vacinal e exibe uma única série por vez |
-| RB-13 | O filtro de UBS afeta cartões e gráfico, mas não o ranking municipal; a janela relativa afeta os três |
+| RB-13 | O filtro de UBS afeta cartões e gráfico, mas não o ranking municipal; após interação, a janela relativa afeta os três |
+| RB-14 | Antes da primeira alteração do período, o gráfico usa 12 meses enquanto cartões e ranking usam Último mês; selecionar um período aplica essa janela aos três, e Limpar filtros restaura essa composição inicial |
 
 ## 7. Critérios consolidados de sucesso
 

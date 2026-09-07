@@ -2,9 +2,6 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUp,
-  CircleCheck,
-  CircleX,
-  TriangleAlert,
 } from "lucide-react";
 
 import { STATUS_CLASSES } from "@/lib/constants";
@@ -32,10 +29,11 @@ const TREND_CLASSES: Record<Trend, string> = {
   queda: "bg-red-50 text-red-700",
 };
 
-const STATUS_ICONS: Record<IndicatorStatus, typeof CircleCheck> = {
-  verde: CircleCheck,
-  amarelo: TriangleAlert,
-  vermelho: CircleX,
+const INDICATOR_SYMBOLS: Record<IndicatorDisplay["indicator"]["id"], string> = {
+  "cobertura-vacinal": "💉",
+  "pre-natal": "🤰",
+  hipertensao: "❤️",
+  diabetes: "🩸",
 };
 
 const TREND_ICONS: Record<Trend, typeof ArrowUp> = {
@@ -50,8 +48,8 @@ function formatMeasure(value: number): string {
 
 export function IndicatorCard({ display }: IndicatorCardProps) {
   const { indicator, valorAtual, status, tendencia } = display;
-  const StatusIcon = STATUS_ICONS[status];
   const TrendIcon = TREND_ICONS[tendencia];
+  const indicatorSymbol = INDICATOR_SYMBOLS[indicator.id];
   const statusLabel = STATUS_LABELS[status];
   const trendLabel = TREND_LABELS[tendencia];
 
@@ -63,10 +61,9 @@ export function IndicatorCard({ display }: IndicatorCardProps) {
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
-          <StatusIcon
-            aria-hidden="true"
-            className={`size-5 shrink-0 ${STATUS_CLASSES[status].icon}`}
-          />
+          <span aria-hidden="true" className="flex size-5 shrink-0 items-center justify-center text-base leading-5">
+            {indicatorSymbol}
+          </span>
           <h2 className="text-sm font-medium text-zinc-900">{indicator.nome}</h2>
         </div>
 

@@ -116,6 +116,42 @@
         },
         {
           "type": "frame",
+          "id": "dashboardIntro",
+          "name": "Dashboard Title and Introduction",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 4,
+          "padding": [
+            24,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "dashboardTitle",
+              "name": "Dashboard Page Title",
+              "fill": "$color.zinc900",
+              "content": "Painel SUS",
+              "fontFamily": "Inter",
+              "fontSize": 24,
+              "fontWeight": "700",
+              "lineHeight": 1.25
+            },
+            {
+              "type": "text",
+              "id": "dashboardIntroduction",
+              "name": "Dashboard Page Introduction",
+              "fill": "$color.zinc500",
+              "content": "Acompanhe os indicadores do Previne Brasil da Saúde Itapira no período de julho de 2025 a junho de 2026.",
+              "fontFamily": "Inter",
+              "fontSize": 14,
+              "fontWeight": "400",
+              "lineHeight": 1.75
+            }
+          ]
+        },
+        {
+          "type": "frame",
           "id": "fil1",
           "name": "Filter Bar",
           "width": "fill_container",
@@ -768,7 +804,7 @@
                   "id": "indicatorChartSummary",
                   "name": "Chart Accessible Summary",
                   "fill": "$color.zinc600",
-                  "content": "Uma série • Cobertura Vacinal • Meta 95% • janela ativa",
+                  "content": "Uma série • Cobertura Vacinal • Meta 95% • 12 meses (jul/25–jun/26)",
                   "fontFamily": "Inter",
                   "fontSize": 14,
                   "fontWeight": "400"
@@ -5743,7 +5779,8 @@
           "content": "Dashboard",
           "fontFamily": "Inter",
           "fontSize": 14,
-          "fontWeight": "500"
+          "fontWeight": "600",
+          "lineHeight": 1.4285714286
         },
         {
           "type": "rectangle",
@@ -5751,7 +5788,8 @@
           "name": "Active Underline",
           "fill": "$color.primary",
           "width": 70,
-          "height": 2
+          "height": 2,
+          "cornerRadius": 1
         }
       ]
     }

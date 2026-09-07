@@ -20,6 +20,9 @@ export interface UBSFilterProps {
 export function UBSFilter({ ubs, value, onChange }: UBSFilterProps) {
   const labelId = useId()
   const selectValue = value === null ? "all" : String(value)
+  const selectedLabel = value === null
+    ? "Todas as UBS"
+    : ubs.find((unit) => unit.id === value)?.nome ?? "Todas as UBS"
 
   const handleChange = (nextValue: string | null) => {
     if (nextValue === null || nextValue === "all") {
@@ -38,7 +41,7 @@ export function UBSFilter({ ubs, value, onChange }: UBSFilterProps) {
       </label>
       <Select value={selectValue} onValueChange={handleChange}>
         <SelectTrigger id={labelId} className="min-h-11 w-full lg:w-[200px]">
-          <SelectValue />
+          <SelectValue>{selectedLabel}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Todas as UBS</SelectItem>

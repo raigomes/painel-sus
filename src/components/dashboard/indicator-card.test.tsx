@@ -22,21 +22,39 @@ const baseDisplay: IndicatorDisplay = {
 
 describe("IndicatorCard", () => {
   it.each([
-    ["verde", "Dentro ou acima da meta", "lucide-circle-check"],
-    ["amarelo", "Próximo da meta", "lucide-triangle-alert"],
-    ["vermelho", "Abaixo da meta", "lucide-circle-x"],
-  ] as const)("exibe o estado %s com texto, ícone e classes completas", (status, label, iconName) => {
+    ["verde", "Dentro ou acima da meta"],
+    ["amarelo", "Próximo da meta"],
+    ["vermelho", "Abaixo da meta"],
+  ] as const)("exibe o estado %s com texto e classes completas", (status, label) => {
     render(<IndicatorCard display={{ ...baseDisplay, status }} />);
 
     const article = screen.getByRole("article");
     const classes = STATUS_CLASSES[status];
-    const icon = article.querySelector(`svg.${iconName}`);
 
     expect(screen.getByText(label)).toBeInTheDocument();
-    expect(icon).toBeInTheDocument();
     expect(article).toHaveClass("border-l-4", classes.background, classes.border);
-    expect(icon).toHaveClass(classes.icon);
     expect(article.querySelector(`div.${classes.text}`)).toHaveTextContent(label);
+  });
+
+  it.each([
+    ["cobertura-vacinal", "Cobertura Vacinal", "💉"],
+    ["pre-natal", "Pré-natal", "🤰"],
+    ["hipertensao", "Hipertensão", "❤️"],
+    ["diabetes", "Diabetes", "🩸"],
+  ] as const)("exibe o símbolo correto para %s", (id, name, symbol) => {
+    render(
+      <IndicatorCard
+        display={{
+          ...baseDisplay,
+          indicator: { ...baseDisplay.indicator, id, nome: name },
+        }}
+      />,
+    );
+
+    const header = screen.getByRole("heading", { name });
+    const symbolElement = header.previousElementSibling;
+    expect(symbolElement).toHaveTextContent(symbol);
+    expect(symbolElement).toHaveAttribute("aria-hidden", "true");
   });
 
   it("exibe conteúdo e nome acessível", () => {

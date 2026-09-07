@@ -37,10 +37,25 @@ const INITIAL_INDICATOR: Indicator['id'] = 'cobertura-vacinal';
 export function DashboardClient({ ubs, indicators, history, className }: DashboardClientProps) {
   const { filters, setUbsId, setPeriod, resetFilters } = useFilters();
   const [selectedIndicatorId, setSelectedIndicatorId] = useState<Indicator['id']>(INITIAL_INDICATOR);
+  const [periodTouched, setPeriodTouched] = useState(false);
+
+  const handlePeriodChange = (period: Parameters<typeof setPeriod>[0]): void => {
+    setPeriod(period);
+    setPeriodTouched(true);
+  };
+
+  const handleReset = (): void => {
+    resetFilters();
+    setPeriodTouched(false);
+  };
 
   const periodRecords = useMemo(
     () => filterByPeriod(history, filters.period),
     [history, filters.period],
+  );
+  const trendPeriodRecords = useMemo(
+    () => filterByPeriod(history, periodTouched ? filters.period : 'ultimo-ano'),
+    [history, filters.period, periodTouched],
   );
   const visibleRecords = useMemo(
     () => periodRecords.filter((record) => filters.ubsId === null || record.ubsId === filters.ubsId),
@@ -65,11 +80,15 @@ export function DashboardClient({ ubs, indicators, history, className }: Dashboa
   }), [indicators, filters.ubsId, visibleRecords, ubs, periodRecords]);
 
   const selectedIndicator = indicators.find((indicator) => indicator.id === selectedIndicatorId) ?? indicators[0];
+  const trendVisibleRecords = useMemo(
+    () => trendPeriodRecords.filter((record) => filters.ubsId === null || record.ubsId === filters.ubsId),
+    [trendPeriodRecords, filters.ubsId],
+  );
   const trendPoints = useMemo<TrendPoint[]>(() => {
     if (!selectedIndicator) return [];
-    const months = [...new Set(visibleRecords.map((record) => record.mes))].sort();
+    const months = [...new Set(trendVisibleRecords.map((record) => record.mes))].sort();
     return months.map((mes) => {
-      const monthRecords = visibleRecords.filter(
+      const monthRecords = trendVisibleRecords.filter(
         (record) => record.mes === mes && record.indicatorId === selectedIndicator.id,
       );
       const value = filters.ubsId === null
@@ -81,19 +100,19 @@ export function DashboardClient({ ubs, indicators, history, className }: Dashboa
         );
       return { mes, valor: value, meta: selectedIndicator.meta };
     });
-  }, [visibleRecords, selectedIndicator, filters.ubsId, ubs]);
+  }, [trendVisibleRecords, selectedIndicator, filters.ubsId, ubs]);
 
   const showEmpty = visibleRecords.length === 0;
-  const hasNonDefaultFilters = filters.ubsId !== null || filters.period !== 'ultimo-mes';
+  const hasNonDefaultFilters = filters.ubsId !== null || filters.period !== 'ultimo-mes' || periodTouched;
 
   return (
     <div className={className}>
       <div className="flex flex-wrap items-center gap-4 border-b border-zinc-200 bg-white px-6 py-4">
         <UBSFilter ubs={ubs} value={filters.ubsId} onChange={setUbsId} />
-        <PeriodFilter value={filters.period} onChange={setPeriod} />
+        <PeriodFilter value={filters.period} onChange={handlePeriodChange} />
         <button
           type="button"
-          onClick={resetFilters}
+          onClick={handleReset}
           disabled={!hasNonDefaultFilters || showEmpty}
           aria-label="Limpar filtros"
           className="min-h-11 rounded-md px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
@@ -103,7 +122,7 @@ export function DashboardClient({ ubs, indicators, history, className }: Dashboa
       </div>
 
       {showEmpty ? (
-        <EmptyState onClear={resetFilters} />
+        <EmptyState onClear={handleReset} />
       ) : (
         <>
           <IndicatorGrid items={cards} />

@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-09-07T16:30:00Z",
+  "agent_id": "coder",
+  "task_id": "dashboard-pen-followup",
+  "error_category": "visual_regression_mismatch",
+  "severity": "blocking",
+  "file_path": "src/components/filters/ubs-filter.tsx",
+  "line_number": 22,
+  "error_message": "SelectTrigger exposes technical state values (all, ultimo-mes, cobertura-vacinal) instead of the Portuguese labels required by pg1 and the visible-label acceptance criteria.",
+  "code_snippet": "const selectValue = value === null ? \"all\" : String(value); ... <SelectValue />",
+  "root_cause": "The selected machine value is passed to Base UI SelectValue without an explicit presentation label. Existing dashboard tests assert the technical values, masking the visual/runtime defect.",
+  "correction_applied": "",
+  "prevention_rule": "Separate controlled option values from trigger presentation labels; tests must assert user-visible labels and state transitions independently.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "findings": [
+    {
+      "error_category": "visual_regression_mismatch",
+      "severity": "blocking",
+      "file_path": "src/components/dashboard/indicator-card.tsx",
+      "line_number": 35,
+      "error_message": "Indicator cards render status icons as their primary icons instead of the stable indicator/domain icons shown in pg1.",
+      "root_cause": "STATUS_ICONS is keyed only by verde/amarelo/vermelho; indicator identity is never used for icon selection.",
+      "expected_change": "Add stable indicator-specific iconography while retaining visible/textual status semantics required by SPEC.",
+      "proposed_atomic_task": "One task, one file: indicator-card.tsx."
+    },
+    {
+      "error_category": "reference_spec_mismatch",
+      "severity": "major",
+      "file_path": "docs/layout/painel-sus.pen",
+      "line_number": 117,
+      "error_message": "pg1 omits the page title/introduction that TASK-031 requires in production.",
+      "root_cause": "Pencil frame starts at Filter Bar while src/app/page.tsx correctly renders required title and period introduction.",
+      "expected_change": "Designer adds the approved block to pg1; do not remove source content unless TASK-031 is formally revised.",
+      "proposed_atomic_task": "One task, one file: docs/layout/painel-sus.pen."
+    },
+    {
+      "error_category": "visual_regression_mismatch",
+      "severity": "major",
+      "file_path": "src/components/layout/header.tsx",
+      "line_number": 46,
+      "error_message": "Active header item uses rounded-md on the link and implicit line-height, diverging from the pg1 underline geometry and active-item vertical metrics.",
+      "root_cause": "Active underline is implemented as a full Link border with rounded corners rather than a compact, near-square underline geometry.",
+      "expected_change": "Align radius/underline and explicitly set line-height while preserving 44px target, focus and aria-current.",
+      "proposed_atomic_task": "One task, one file: header.tsx."
+    },
+    {
+      "error_category": "reference_artifact_content_mismatch",
+      "severity": "major",
+      "file_path": "docs/layout/painel-sus.pen",
+      "line_number": 5692,
+      "error_message": "Pencil footer contains obsolete promotional copy and is not aligned with the complete production footer.",
+      "root_cause": "Reusable Pencil footer says 'Para saber mais sobre o meu trabalho, visite raigomes.dev'; production correctly uses the required disclaimer, sources and version.",
+      "expected_change": "Replace Pencil footer copy with the complete non-promotional text and validate wrapping/clipping.",
+      "proposed_atomic_task": "One task, one file: docs/layout/painel-sus.pen."
+    }
+  ],
+  "non_failures": [
+    {
+      "id": "F-03",
+      "classification": "expected_rule_behavior",
+      "detail": "Default ultimo-mes is correctly anchored to latest local record 2026-06, hence one chart point jun/26. Selecting Último trimestre/ano changes the series; existing tests cover this."
+    },
+    {
+      "id": "F-06-runtime",
+      "classification": "not_reproduced_in_localhost",
+      "detail": "Production footer renders complete required text in three full-width paragraphs; only the Pencil artifact is stale."
+    }
+  ],
+  "validation": {
+    "typescript": {"command": "npx tsc --noEmit", "exit_code": 0},
+    "lint": {"command": "npm run lint", "exit_code": 0, "warnings": 0},
+    "tests": {"command": "npm test -- --run", "exit_code": 0, "test_files": 6, "tests": 64},
+    "localhost": {"status": 200},
+    "webauditmcp": {"status": "NOT_AVAILABLE", "follow_up_required": true}
+  },
+  "owner_action": "Return to Coder/Designer for F-01, F-02, F-04 reference alignment, F-05 and Pencil footer alignment. No production correction was applied by Reviewer."
+}

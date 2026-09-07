@@ -26,6 +26,7 @@ const periods: PeriodFilterValue[] = [
 
 export function PeriodFilter({ value, onChange }: PeriodFilterProps) {
   const labelId = useId()
+  const selectedLabel = PERIOD_LABELS[value]
 
   return (
     <div className="flex w-full min-w-0 flex-col gap-2 sm:w-auto lg:w-[180px]">
@@ -38,7 +39,7 @@ export function PeriodFilter({ value, onChange }: PeriodFilterProps) {
         }
       }}>
         <SelectTrigger id={labelId} className="min-h-11 w-full lg:w-[180px]">
-          <SelectValue />
+           <SelectValue>{selectedLabel}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           {periods.map((period) => (

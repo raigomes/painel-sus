@@ -1,7 +1,7 @@
 # SPEC — Painel SUS: Especificação Técnica
 
-> **Versão:** 1.2
-> **Data:** 2026-08-22
+> **Versão:** 1.3
+> **Data:** 2026-09-07
 > **Arquitetura:** Next.js App Router, TypeScript strict
 
 ## 1. Stack e dependências
@@ -303,12 +303,13 @@ getTrend(records: HistoryRecord[], indicatorId: Indicator["id"], ubsId: number |
 
 ### Dashboard
 
-- `DashboardClient` inicia filtros com `{ ubsId: null, period: "ultimo-mes" }` via `useFilters` e mantém `selectedIndicatorId` separado, iniciado em `"cobertura-vacinal"`.
-- A janela relativa é aplicada antes de cartões, gráfico e ranking.
-- O filtro de UBS é aplicado somente ao derivar cartões e gráfico; o ranking sempre recebe todas as UBS e todos os registros da janela relativa.
+- `DashboardClient` inicia filtros com `{ ubsId: null, period: "ultimo-mes" }` via `useFilters`, mantém `selectedIndicatorId` separado em `"cobertura-vacinal"` e mantém `periodTouched=false` para a janela inicial própria do gráfico.
+- Enquanto `periodTouched=false`, cartões e ranking usam `ultimo-mes`, mas o gráfico usa `ultimo-ano`. A primeira alteração do período define `periodTouched=true` e aplica o período selecionado aos três. `resetFilters` restaura filtros e `periodTouched=false`.
+- O filtro de UBS é aplicado somente ao derivar cartões e gráfico; o ranking sempre recebe todas as UBS e todos os registros da janela relativa correspondente.
+- `UBSFilter`, `PeriodFilter` e `IndicatorFilter` mantêm IDs técnicos no estado, mas `SelectValue` recebe explicitamente a label de apresentação correspondente. A UI nunca exibe `all`, `ultimo-mes`, `cobertura-vacinal` ou outros IDs internos.
 - `IndicatorFilter` possui label visível “Indicador do gráfico”, lista os quatro indicadores e altera somente `selectedIndicatorId`.
 - `TrendChart` recebe exclusivamente os pontos do indicador selecionado; a troca do indicador não altera cartões, filtros de UBS/período nem ranking.
-- `IndicatorCard`: card semântico, fundo suave e borda esquerda de 4px; nome, valor, unidade, meta, tendência, estado por ícone e texto. Estado vermelho mostra “Abaixo da meta”.
+- `IndicatorCard`: card semântico, fundo suave e borda esquerda de 4px; usa ícone visual por indicador (`💉`, `🤰`, `❤️`, `🩸`) e mantém estado/tendência por texto acessível. Estado vermelho mostra “Abaixo da meta”.
 - `TrendChart`: Recharts `LineChart`, uma `Line` com pontos mensais, `ReferenceLine` da meta, eixos, tooltip com mês/valor/meta e descrição acessível. Exibe somente o indicador escolhido e apenas os meses da janela ativa no dashboard; no detalhe de indicador exibe os 12 meses desse indicador.
 - `RankingTable`: tabela semântica com `caption`, posição, UBS, equipe, pontuação e estado. Nome da UBS é `<Link href={`/ubs/${id}`}>`; não recebe callback e não força Client Component.
 - `EmptyState`: texto de ausência e botão “Limpar filtros”.
@@ -328,8 +329,8 @@ getTrend(records: HistoryRecord[], indicatorId: Indicator["id"], ubsId: number |
 
 ### Layout
 
-- Header: links Dashboard, Indicadores e Sobre; item ativo usa `aria-current="page"`, peso/underline e cor.
-- Footer: disclaimer, fontes e “Protótipo v1.0 — Saúde Itapira”; sem texto promocional pessoal.
+- Header: links Dashboard, Indicadores e Sobre; item ativo usa `aria-current="page"`, cor, peso 600, `line-height: 20px`, sem raio visual no estado ativo e underline reto de 2px com cantos de 1px conforme o componente `DoffB` do Pencil.
+- Footer: três linhas completas com disclaimer, fontes, “Protótipo v1.0 — Saúde Itapira” e a referência promocional autorizada “Para saber mais sobre o meu trabalho, visite raigomes.dev”.
 - Skip link aponta para `#main-content`.
 
 ## 10. Acessibilidade e responsividade
@@ -374,6 +375,6 @@ Verificações manuais: rotas `/`, `/ubs/1`, `/ubs/999`, `/indicadores`, `/sobre
 - Headers de segurança, incluindo CSP, são configurados somente por tarefa explícita e auditados pelo Reviewer.
 - `npm install` deve terminar sem `ERESOLVE`; `npm audit --json` deve ser anexado ao gate de dependências e qualquer risco remanescente deve estar documentado.
 - Medição de bundle não usa limite não reproduzível; o Reviewer registra artefatos e métricas do build/Lighthouse.
-- PRD v1.2 e SPEC v1.2 são fontes vinculantes para comportamento: o histórico usa `LineChart`, não `BarChart`; o dashboard inclui seletor de indicador; e o ranking permanece municipal sob filtro de UBS.
+- PRD v1.3 e SPEC v1.3 são fontes vinculantes para comportamento: o histórico usa `LineChart`, não `BarChart`; o dashboard inclui seletor de indicador; o ranking permanece municipal sob filtro de UBS; e a visão inicial do gráfico usa 12 meses independentemente do período inicial de cartões/ranking.
 - Antes da implementação visual, o Designer deve alinhar `docs/DESIGN_SYSTEM.md` e `docs/layout/painel-sus.pen` a essas três decisões e validar o `.pen` com os guardrails do projeto.
 - O alinhamento visual deve ainda prevenir as falhas históricas: três estados semáforo, tendências alta/estável/queda, gráfico e ranking completos, 12 meses no histórico, 15 UBS nas comparações, link ativo com underline e footer sem recorte com fontes e versão.

@@ -43,9 +43,10 @@ describe("DashboardClient", () => {
   it("inicia com os filtros e indicador padrão visíveis", () => {
     renderDashboard();
 
-    expect(screen.getByRole("combobox", { name: "UBS" })).toHaveTextContent("all");
-    expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("ultimo-mes");
-    expect(screen.getByRole("combobox", { name: "Indicador do gráfico" })).toHaveTextContent("cobertura-vacinal");
+    expect(screen.getByRole("combobox", { name: "UBS" })).toHaveTextContent("Todas as UBS");
+    expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("Último mês");
+    expect(screen.getByRole("combobox", { name: "Indicador do gráfico" })).toHaveTextContent("Cobertura Vacinal");
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
     expect(screen.getByRole("article", { name: /Cobertura Vacinal:/i })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /Cobertura Vacinal/ })).toBeInTheDocument();
   });
@@ -83,7 +84,7 @@ describe("DashboardClient", () => {
     expect(trendRegion().textContent).not.toBe(initialChart);
   });
 
-  it("atualiza card, série/meta/resumo do gráfico e pontuações do ranking ao trocar período", () => {
+  it("atualiza card, gráfico real com três pontos e pontuações do ranking ao trocar período", () => {
     renderDashboard();
     const initialCard = screen.getByRole("article", { name: /Cobertura Vacinal:/i }).textContent;
     const initialChart = trendRegion().textContent;
@@ -93,8 +94,10 @@ describe("DashboardClient", () => {
 
     choose("Período", "Último trimestre");
 
-    expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("ultimo-trimestre");
+    expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("Último trimestre");
     expect(screen.getByRole("article", { name: /Cobertura Vacinal:/i }).textContent).not.toBe(initialCard);
+    expect(trendRegion()).toHaveTextContent("3 pontos");
+    expect(screen.getByRole("img", { name: /3 meses/ })).toBeInTheDocument();
     expect(trendRegion().textContent).not.toBe(initialChart);
     expect(trendSummary()).toBe(initialMeta);
     expect(trendRegion().textContent).not.toBe(initialSummary);
@@ -113,9 +116,28 @@ describe("DashboardClient", () => {
     expect(clearButton).toBeInTheDocument();
     fireEvent.click(clearButton);
 
-    expect(screen.getByRole("combobox", { name: "UBS" })).toHaveTextContent("all");
-    expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("ultimo-mes");
+    expect(screen.getByRole("combobox", { name: "UBS" })).toHaveTextContent("Todas as UBS");
+    expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("Último mês");
     expect(screen.getByRole("article", { name: /Cobertura Vacinal:/i })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /Cobertura Vacinal/ })).toBeInTheDocument();
+  });
+
+  it("restaura a janela de 12 pontos ao limpar EmptyState após alterar o período", () => {
+    const withoutJardimPaulista = historyData.filter((record) => record.ubsId !== 2);
+    renderDashboard(withoutJardimPaulista);
+
+    choose("Período", "Último trimestre");
+    choose("UBS", "UBS Jardim Paulista");
+
+    expect(screen.getByRole("heading", { name: "Nenhum registro encontrado" })).toBeInTheDocument();
+    fireEvent.click(
+      within(screen.getByRole("heading", { name: "Nenhum registro encontrado" }).closest("section") as HTMLElement)
+        .getByRole("button", { name: "Limpar filtros" }),
+    );
+
+    expect(screen.getByRole("combobox", { name: "UBS" })).toHaveTextContent("Todas as UBS");
+    expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("Último mês");
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /Gráfico de evolução da Cobertura Vacinal/ })).toBeInTheDocument();
   });
 });

@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-09-07T14:04:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-058",
+  "error_category": "temporary_task_059_test_debt",
+  "severity": "non_blocking",
+  "file_path": "src/components/dashboard/dashboard-client.test.tsx",
+  "line_number": 46,
+  "error_message": "Three full-suite assertions expect technical Select values ('all' and 'ultimo-trimestre') as visible trigger text; the implementation correctly renders human-readable labels.",
+  "code_snippet": "expect(screen.getByRole(\"combobox\", { name: \"UBS\" })).toHaveTextContent(\"all\");",
+  "root_cause": "The failing test file and its acceptance belong to TASK-059; it was not updated for the TASK-057 human-label contract. The failure is unrelated to TASK-058's IndicatorCard scope.",
+  "correction_applied": "",
+  "prevention_rule": "Keep TASK-059 dashboard assertions scoped to technical state/callbacks while asserting human labels in rendered Select triggers.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "temporary": true,
+  "blocking_for_task_058": false,
+  "task_058_assessment": "Directed TASK-058 tests pass: all four symbol mappings, aria-hidden decoration, accessible name/status/trend behavior, alignment-preserving slot, and all three semaphore states."
+}

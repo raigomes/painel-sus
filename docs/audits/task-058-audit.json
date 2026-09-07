@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-09-07T14:04:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-058",
+  "audit_type": "static_component_accessibility",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "authorization": {
+    "tasks_file_modified": false,
+    "source_modified": false,
+    "branch_changed": false,
+    "stash_used": false
+  },
+  "scope": {
+    "files": [
+      "src/components/dashboard/indicator-card.tsx",
+      "src/components/dashboard/indicator-card.test.tsx"
+    ],
+    "geometry_preserved": true,
+    "geometry_evidence": [
+      "Card remains h-[245px], p-6, rounded-lg, border-l-4 and shadow-sm.",
+      "Indicator header retains flex items-center gap-3 and the symbol retains size-5 shrink-0 alignment slot."
+    ]
+  },
+  "acceptance": {
+    "symbol_mapping": {
+      "cobertura-vacinal": "💉",
+      "pre-natal": "🤰",
+      "hipertensao": "❤️",
+      "diabetes": "🩸"
+    },
+    "mapping_exact": true,
+    "symbols_decorative": true,
+    "symbols_aria_hidden": true,
+    "header_alignment_preserved": true,
+    "accessible_name_status_trend": {
+      "name": "Indicator name is exposed by the h2 and included in article aria-label.",
+      "status": "Status remains available as visually-hidden text with the full status label.",
+      "trend": "Trend remains visible as text, has an accessible label, and retains its decorative icon aria-hidden."
+    },
+    "three_status_states": [
+      "verde / Dentro ou acima da meta",
+      "amarelo / Próximo da meta",
+      "vermelho / Abaixo da meta"
+    ],
+    "tests": {
+      "four_symbol_mappings": "passed",
+      "three_semaphore_states": "passed",
+      "directed_result": "13 tests passed"
+    }
+  },
+  "validation": {
+    "typescript": {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0,
+      "passed": true
+    },
+    "lint": {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "warnings": 0,
+      "passed": true
+    },
+    "build": {
+      "command": "npm run build",
+      "exit_code": 0,
+      "passed": true
+    },
+    "diff_check": {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "passed": true
+    },
+    "directed_test": {
+      "command": "npm test -- src/components/dashboard/indicator-card.test.tsx",
+      "exit_code": 0,
+      "passed": true,
+      "result": "13 tests passed"
+    },
+    "full_suite": {
+      "command": "npm test",
+      "exit_code": 1,
+      "passed": false,
+      "result": "68 tests: 65 passed, 3 failed; all 3 failures are in dashboard-client.test.tsx and assert TASK-059 technical trigger values."
+    },
+    "runtime": {
+      "command": "curl --fail http://localhost:3000",
+      "http_status": 200,
+      "passed": true
+    }
+  },
+  "task_059_failure_classification": {
+    "count": 3,
+    "category": "temporary_task_059_test_debt",
+    "temporary": true,
+    "blocking_for_task_058": false,
+    "reason": "The three failures are in the explicitly TASK-059-scoped dashboard client test and expect technical IDs ('all' and 'ultimo-trimestre') as rendered trigger text. TASK-058 concerns only IndicatorCard mapping, accessibility, alignment and state/mapping tests; its directed suite passes."
+  },
+  "webauditmcp": {
+    "status": "NOT_AVAILABLE_IN_EXECUTION_TOOLING",
+    "required_tools": ["audit_lighthouse", "scan_axe", "security_headers"],
+    "passed": false,
+    "note": "WebAuditMCP was not exposed in this session; dynamic Lighthouse, axe and security-header checks could not be executed. This is recorded as an audit limitation and does not invalidate the TASK-058-specific static criteria."
+  },
+  "issues": [],
+  "production_acceptance": "PASS",
+  "overall_review": "PASS_WITH_DOCUMENTED_TASK_059_TEMPORARY_FAILURES",
+  "passed": true
+}

@@ -43,13 +43,19 @@ export default function Header() {
                   <Link
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`inline-flex min-h-11 items-center rounded-md border-b-2 px-1 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:px-3 ${
+                    className={`relative inline-flex min-h-11 items-center px-1 py-2 text-sm leading-5 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:px-3 ${
                       active
-                        ? "border-primary font-semibold text-primary"
-                        : "border-transparent font-medium text-zinc-700 hover:border-primary hover:bg-primary-light hover:text-primary"
+                        ? "rounded-none font-semibold text-primary"
+                        : "rounded-md font-medium text-zinc-700 hover:bg-primary-light hover:text-primary"
                     }`}
                   >
                     {item.label}
+                    {active ? (
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-x-1 bottom-0 h-0.5 rounded-[1px] bg-primary sm:inset-x-3"
+                      />
+                    ) : null}
                   </Link>
                 </li>
               );

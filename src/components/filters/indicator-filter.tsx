@@ -19,6 +19,7 @@ export interface IndicatorFilterProps {
 
 export function IndicatorFilter({ indicators, value, onChange }: IndicatorFilterProps) {
   const labelId = useId()
+  const selectedLabel = indicators.find((indicator) => indicator.id === value)?.nome ?? ""
 
   const handleChange = (nextValue: string | null) => {
     if (nextValue !== null && indicators.some((indicator) => indicator.id === nextValue)) {
@@ -33,7 +34,7 @@ export function IndicatorFilter({ indicators, value, onChange }: IndicatorFilter
        </label>
        <Select value={value} onValueChange={handleChange}>
          <SelectTrigger id={labelId} className="h-11 min-h-11 w-full sm:w-[260px]">
-          <SelectValue />
+           <SelectValue>{selectedLabel}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           {indicators.map((indicator) => (

@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-09-07T14:17:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-060",
+  "error_category": "wcag_violation",
+  "severity": "blocking",
+  "file_path": "src/components/layout/footer.tsx",
+  "line_number": 5,
+  "error_message": "Footer usa text-zinc-500 (#71717a) em bg-zinc-50 (#fafafa), combinação aproximadamente 4.4:1, abaixo de 4.5:1 para texto normal.",
+  "code_snippet": "className=\"... bg-zinc-50 ... text-zinc-500 ...\"",
+  "root_cause": "Cor de texto secundário não alcança o contraste AA exigido pelo PRD/SPEC v1.3.",
+  "correction_applied": "",
+  "prevention_rule": "Validar contraste efetivo do texto contra o fundo em cada superfície antes do gate.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "additional_blockers": [
+    {
+      "error_category": "route_smoke_failure",
+      "file_path": "src/app",
+      "error_message": "/ubs/1, /ubs/999, /indicadores e /sobre retornam 404; rotas requeridas pelo PRD/SPEC não estão no runtime."
+    },
+    {
+      "error_category": "visual_regression_mismatch",
+      "file_path": "src/components/layout/footer.tsx",
+      "line_number": 5,
+      "error_message": "leading-relaxed implementa 1.625, divergindo do token DESIGN_SYSTEM relaxed 1.75 e do footer Pencil lineHeight 1.6."
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-09-07T14:12:00Z",
+  "task_id": "TASK-059",
+  "agent_id": "reviewer",
+  "audit_type": "task_revalidation",
+  "authorization": "PASS",
+  "scope": "Revalidação dirigida da correção de reset do dashboard; sem alteração em src, TASKS, branch ou stash.",
+  "web_audit_mcp": {
+    "executed": false,
+    "authorized_skip": true,
+    "reason": "Solicitação explícita do usuário: não executar WebAudit."
+  },
+  "criteria": {
+    "initial_trend_12_points": {
+      "passed": true,
+      "evidence": "dashboard-client.test.tsx confirma imagem acessível com 12 meses na carga inicial; trendPeriodRecords usa ultimo-ano quando periodTouched=false."
+    },
+    "period_change_updates_all_views": {
+      "passed": true,
+      "evidence": "Teste dirigido seleciona Último trimestre e confirma cards alterados, gráfico real com 3 pontos/3 meses e pontuações do ranking alteradas."
+    },
+    "reset_restores_last_month_and_12_points": {
+      "passed": true,
+      "evidence": "EmptyState recebe handleReset; handleReset chama resetFilters e setPeriodTouched(false). Novo teste altera período, provoca EmptyState por UBS sem registros e confirma labels humanas, Último mês e gráfico com 12 meses."
+    },
+    "independent_ubs_and_indicator_behaviors": {
+      "passed": true,
+      "evidence": "Testes confirmam 15 linhas do ranking ao selecionar UBS e troca independente de indicador sem alterar cards/ranking."
+    },
+    "human_labels": {
+      "passed": true,
+      "evidence": "Testes confirmam Todas as UBS, Último mês, Último trimestre e Cobertura Vacinal nos controles."
+    }
+  },
+  "commands": [
+    {"command": "npm test -- src/components/dashboard/dashboard-client.test.tsx", "exit_code": 0, "result": "6 tests passed"},
+    {"command": "npm test", "exit_code": 0, "result": "69 tests passed"},
+    {"command": "npm run test:coverage", "exit_code": 0, "result": "69 tests passed; 72.47% statements"},
+    {"command": "npx tsc --noEmit", "exit_code": 0, "result": "passed"},
+    {"command": "npm run lint", "exit_code": 0, "result": "passed without errors or warnings"},
+    {"command": "npm run build", "exit_code": 0, "result": "Next.js 16.3.2 production build passed"},
+    {"command": "git diff --check", "exit_code": 0, "result": "passed"}
+  ],
+  "passed": true,
+  "failure_reference": "docs/failures/task-059-failure.json",
+  "notes": "A falha histórica foi corrigida: o caminho do EmptyState agora usa handleReset e o teste de regressão cobre periodTouched/reset com labels humanas. Não atualizar TASKS conforme instrução explícita do usuário."
+}

@@ -65,3 +65,51 @@ O Coder aplicou atualizações compatíveis dentro das versões principais autor
 - `npm run build`: código zero com Next.js `16.3.2`.
 
 A `TASK-005` recebeu **PASS** do Reviewer e foi encerrada. A ausência atual de testes efetivos não reprova esta tarefa, mas deve ser eliminada pelas tarefas de testes antes do gate `TASK-042`.
+
+---
+
+## Esclarecimento de paridade visual — Dashboard (2026-09-07)
+
+**Status:** RESOLVIDO — 2026-09-07
+
+A comparação entre `http://localhost:3000/` e o frame `pg1` de `docs/layout/painel-sus.pen` confirmou dois defeitos diretos e três conflitos entre a referência visual e os requisitos vinculantes. Os defeitos diretos são: os Selects exibem valores técnicos e os cards usam ícones de status no lugar dos ícones dos indicadores. Eles serão especificados após as decisões abaixo para que a correção seja validada como um único conjunto coerente.
+
+### Decisões necessárias
+
+1. **Período inicial do gráfico**
+   - **Opção A — manter PRD/SPEC:** o padrão continua “Último mês”; o gráfico mostra somente jun/26 inicialmente e passa a mostrar 3, 6 ou 12 pontos quando o período é alterado.
+   - **Opção B — seguir o exemplo do Pencil:** o gráfico mostra 12 meses inicialmente. Isso exige mudar o período padrão global ou separar a janela do gráfico, atualizando primeiro PRD, SPEC, regras, testes e tarefas dependentes.
+
+2. **Título e introdução da página**
+   - **Opção A — manter PRD/SPEC/TASK-031:** preservar “Painel SUS” e o texto do período no site e atualizar o frame `pg1` do Pencil para representá-los.
+   - **Opção B — seguir literalmente `pg1`:** remover o bloco do site. Isso exige revisar PRD/SPEC e reabrir a TASK-031 antes da implementação.
+
+3. **Texto completo do footer**
+   - **Opção A — manter PRD/SPEC:** usar as três linhas oficiais já presentes no site: disclaimer, fontes e versão; corrigir apenas eventual clipping/visibilidade e remover do Pencil a promoção `raigomes.dev`.
+   - **Opção B — copiar literalmente o Pencil:** incluir a promoção pessoal `raigomes.dev` no site. Isso conflita com a SPEC §9, que proíbe texto promocional, e exige atualização prévia da SPEC.
+
+4. **Ícones dos indicadores**
+   - Confirme se devem ser exatamente os símbolos demonstrados em `pg1`: Cobertura Vacinal `💉`, Pré-natal `🤰`, Hipertensão `❤️` e Diabetes `🩸`. Os ícones de estado continuarão disponíveis por texto/semântica acessível, sem substituir a identidade visual do indicador.
+
+### Alterações não ambíguas já identificadas
+
+- Selects devem manter IDs técnicos no estado, mas exibir “Todas as UBS”, “Último mês” e “Cobertura Vacinal”.
+- Item ativo do header deve usar a geometria do componente `DoffB` do Pencil, com line-height e radius explícitos, preservando `aria-current`, foco e alvo mínimo.
+
+### Respostas do responsável — 2026-09-07
+
+- **1B:** o gráfico deve mostrar 12 meses inicialmente.
+- **2A:** o título “Painel SUS” e a introdução permanecem no site; o Pencil deve ser atualizado para representá-los.
+- **3B:** o site deve copiar o texto completo do footer do Pencil, incluindo `raigomes.dev`; a proibição de promoção pessoal na SPEC deixa de valer para este footer.
+- **4 confirmado:** usar `💉`, `🤰`, `❤️` e `🩸` como ícones visuais dos quatro indicadores.
+
+### Resolução operacional de 1B
+
+O responsável escolheu **1B-Gráfico** em 2026-09-07:
+
+- cartões e ranking iniciam em “Último mês”;
+- o gráfico inicia com os 12 meses disponíveis;
+- a primeira alteração do filtro de período aplica a janela escolhida também ao gráfico;
+- “Limpar filtros” restaura cartões/ranking para “Último mês” e o gráfico para sua visão inicial de 12 meses.
+
+A decisão foi propagada para `docs/PRD.md` v1.3 e `docs/SPEC.md` v1.3. O blocker está encerrado.

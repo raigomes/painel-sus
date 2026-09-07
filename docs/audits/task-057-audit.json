@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-09-07T14:00:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-057",
+  "audit_type": "static_runtime_select_labels",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "authorization": {
+    "tasks_file_modified": false,
+    "source_modified": false,
+    "branch_changed": false,
+    "stash_used": false
+  },
+  "scope": {
+    "files": [
+      "src/components/filters/ubs-filter.tsx",
+      "src/components/filters/period-filter.tsx",
+      "src/components/filters/indicator-filter.tsx"
+    ],
+    "select_ui_changed": false
+  },
+  "acceptance": {
+    "initial_labels": {
+      "ubs": "Todas as UBS",
+      "period": "Último mês",
+      "indicator": "Cobertura Vacinal"
+    },
+    "human_labels_after_selection": true,
+    "technical_values_preserved": {
+      "ubs": "all and numeric string values remain internal Select values; callback returns null or number",
+      "period": "technical PeriodFilter IDs remain internal Select values; callback returns typed PeriodFilter",
+      "indicator": "technical Indicator IDs remain internal Select values; callback returns typed Indicator[id]"
+    },
+    "callbacks_and_types_preserved": true,
+    "minimum_target_44px": true,
+    "select_ui_unchanged": true
+  },
+  "validation": {
+    "typescript": {"command": "npx tsc --noEmit", "exit_code": 0, "passed": true},
+    "lint": {"command": "npm run lint", "exit_code": 0, "warnings": 0, "passed": true},
+    "build": {"command": "npm run build", "exit_code": 0, "passed": true},
+    "diff_check": {"command": "git diff --check", "exit_code": 0, "passed": true},
+    "directed_test": {
+      "command": "npm test -- src/components/dashboard/dashboard-client.test.tsx",
+      "exit_code": 1,
+      "passed": false,
+      "result": "5 tests: 2 passed, 3 failed; failures are stale expectations for technical trigger text"
+    },
+    "filter_related_test": {
+      "command": "npm test -- src/components/filters src/hooks/use-filters.test.tsx",
+      "exit_code": 0,
+      "passed": true,
+      "result": "4 tests passed"
+    },
+    "full_suite": {
+      "command": "npm test",
+      "exit_code": 1,
+      "passed": false,
+      "result": "64 tests: 61 passed, 3 failed; all 3 are in dashboard-client.test.tsx"
+    },
+    "runtime": {"http": "200", "server": "http://localhost:3000 responded"}
+  },
+  "webauditmcp": {
+    "status": "NOT_AVAILABLE_IN_EXECUTION_TOOLING",
+    "required_tools": ["audit_lighthouse", "scan_axe", "security_headers"],
+    "passed": false,
+    "note": "WebAuditMCP não foi exposto nesta sessão; Lighthouse, axe e security headers não puderam ser executados."
+  },
+  "legacy_test_classification": {
+    "count": 3,
+    "category": "temporary_task_059_test_debt",
+    "blocking_for_task_057": false,
+    "reason": "As três falhas pertencem explicitamente a dashboard-client.test.tsx, arquivo e acceptance da TASK-059. TASK-057 não exige suite verde; os asserts esperam IDs técnicos no trigger e contradizem sua própria acceptance de labels humanas."
+  },
+  "issues": [],
+  "production_acceptance": "PASS",
+  "overall_review": "PASS_WITH_DOCUMENTED_TASK_059_DEBT",
+  "passed": true
+}

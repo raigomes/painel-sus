@@ -1,6 +1,6 @@
 # Tasks — Painel SUS
 
-> Fonte de requisitos: `docs/PRD.md` v1.2 e `docs/SPEC.md` v1.2. Ordem definida por dependências. Cada tarefa altera no máximo três arquivos, deve caber em menos de 30 minutos e possui critérios verificáveis.
+> Fonte de requisitos: `docs/PRD.md` v1.3 e `docs/SPEC.md` v1.3. Ordem definida por dependências. Cada tarefa altera no máximo três arquivos, deve caber em menos de 30 minutos e possui critérios verificáveis.
 >
 > Precondição do fluxo da Squad: antes das tarefas visuais, o Designer deve alinhar `docs/DESIGN_SYSTEM.md` e `docs/layout/painel-sus.pen` ao LineChart, ao seletor de indicador e ao ranking municipal definidos na SPEC v1.2.
 >
@@ -423,6 +423,66 @@
     - [x] Cache de desenvolvimento `.next` é regenerado após encerrar o servidor Next.js anterior
     - [x] Nova instância de `next dev` responde HTTP 200 sem referenciar o chunk obsoleto `building-2.mjs`
     - [x] TypeScript, lint, testes e build continuam passando
+
+## Ajustes visuais aprovados — PRD/SPEC v1.3
+
+> Decisões do responsável em 2026-09-07: gráfico inicia com 12 meses próprios; título/introdução permanecem e devem ser refletidos no Pencil; footer inclui `raigomes.dev`; cards usam `💉`, `🤰`, `❤️`, `🩸`.
+
+- [x] **ID**: `TASK-057`
+  - **Files**: `src/components/filters/ubs-filter.tsx`, `src/components/filters/period-filter.tsx`, `src/components/filters/indicator-filter.tsx`
+  - **Dependencies**: `TASK-056`
+  - **Acceptance**:
+    - [x] Selects mantêm IDs técnicos no estado e exibem as labels selecionadas ao usuário
+    - [x] Estado inicial mostra “Todas as UBS”, “Último mês” e “Cobertura Vacinal”
+    - [x] Após interação, cada trigger mostra o nome da opção escolhida e nunca `all`, `ultimo-*` ou IDs de indicador
+    - [x] Labels, tipos, callbacks e alvos mínimos de 44 px permanecem preservados
+
+- [x] **ID**: `TASK-058`
+  - **Files**: `src/components/dashboard/indicator-card.tsx`, `src/components/dashboard/indicator-card.test.tsx`
+  - **Dependencies**: `TASK-057`
+  - **Acceptance**:
+    - [x] Cobertura Vacinal, Pré-natal, Hipertensão e Diabetes exibem respectivamente `💉`, `🤰`, `❤️` e `🩸`
+    - [x] Ícones de indicador são decorativos e não substituem texto acessível de nome, estado e tendência
+    - [x] Os quatro ícones permanecem alinhados ao cabeçalho dos cards sem alterar a geometria aprovada na TASK-052
+    - [x] Testes cobrem o mapeamento completo e os três estados semafóricos
+
+- [x] **ID**: `TASK-059`
+  - **Files**: `src/components/dashboard/dashboard-client.tsx`, `src/components/dashboard/dashboard-client.test.tsx`
+  - **Dependencies**: `TASK-057`
+  - **Acceptance**:
+    - [x] Na carga inicial o gráfico recebe 12 pontos, enquanto cartões e ranking usam somente o último mês
+    - [x] A primeira alteração do período aplica 1, 3, 6 ou 12 meses a cartões, gráfico e ranking
+    - [x] “Limpar filtros” restaura cartões/ranking para Último mês e o gráfico para 12 pontos
+    - [x] Filtro de UBS e seletor de indicador preservam os comportamentos independentes definidos na SPEC
+    - [x] Testes exercitam o `TrendChart` real e comprovam estado inicial, interação e reset
+
+- [x] **ID**: `TASK-060`
+  - **Files**: `src/components/layout/header.tsx`, `src/components/layout/footer.tsx`
+  - **Dependencies**: `TASK-058`
+  - **Acceptance**:
+    - [x] Item ativo do Header usa line-height de 20 px, sem raio visual e underline reto de 2 px com cantos de 1 px
+    - [x] Estado ativo preserva alvo de 44 px, foco visível, `aria-current`, cor e peso 600
+    - [x] Footer exibe integralmente disclaimer, promoção `raigomes.dev`, fontes e “Protótipo v1.0 — Saúde Itapira”
+    - [x] Footer usa altura fluida, wrapping e contraste legível sem cortar texto em 375 px
+
+- [x] **ID**: `TASK-061`
+  - **Files**: `docs/layout/painel-sus.pen`
+  - **Dependencies**: `TASK-060`
+  - **Acceptance**:
+    - [x] Designer adiciona ao `pg1` o título “Painel SUS” e a introdução preservados pela TASK-031
+    - [x] Footer do Pencil mantém as três linhas completas autorizadas, incluindo `raigomes.dev`, fontes e versão
+    - [x] Filtros e gráfico representam labels de apresentação e visão inicial de 12 meses sem IDs técnicos
+    - [x] Arquivo `.pen` permanece válido no schema 2.15 e abre sem erro no Pencil
+
+- [x] **ID**: `TASK-062`
+  - **Files**: `docs/audits/dashboard-pen-followup-remediation.json`, `docs/failures/dashboard-pen-followup-remediation-failure.json`, `docs/TASKS.md`
+  - **Dependencies**: `TASK-057`, `TASK-058`, `TASK-059`, `TASK-060`, `TASK-061`
+  - **Acceptance**:
+    - [x] Reviewer compara localhost e `pg1` em 1280 px e 375 px para filtros, ícones, gráfico, título, header e footer
+    - [x] Auditoria comprova labels humanas nos três Selects e 12 pontos no gráfico inicial
+    - [x] Auditoria comprova geometria ativa do Header, título/introdução e footer completos sem recorte
+    - [x] TypeScript, lint, testes, cobertura e build passam sem regressões
+    - [x] Qualquer desvio mantém a tarefa aberta e gera o arquivo de falha
 
 ## Detalhe de UBS
 

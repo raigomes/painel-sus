@@ -1,0 +1,80 @@
+{
+  "timestamp": "2026-09-07T14:35:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-062",
+  "audit_type": "dashboard_pen_followup_remediation",
+  "url": "http://localhost:3000/",
+  "scope": {
+    "route": "/",
+    "viewports": ["1280x800", "375x667"],
+    "out_of_scope_routes": true,
+    "production_source_modified": false,
+    "pen_modified": false
+  },
+  "visual_evidence": {
+    "visual_screenshot_tool": "not available in this execution environment",
+    "method": "localhost DOM/CSS/runtime output, source inspection, rendered HTML smoke response, and structural .pen JSON comparison",
+    "limitation": "No screenshot or pixel-perfect rendered comparison was available; no claim of screenshot capture was made.",
+    "localhost_http": {"status": 200, "path": "/"},
+    "pen_pg1_structural": "JSON and pg1 structures inspected; title/introduction, human filter/chart labels, 12 month markers, DoffB active nav geometry, and complete footer nodes present."
+  },
+  "checks": {
+    "select_initial_human_labels": {
+      "passed": true,
+      "evidence": "UBS renders Todas as UBS; period renders Último mês; chart indicator renders Cobertura Vacinal via explicit SelectValue children."
+    },
+    "select_after_interaction_human_labels": {
+      "passed": true,
+      "evidence": "UBS maps selected ID to unit.nome; period maps IDs through PERIOD_LABELS; indicator maps ID to indicator.nome. Technical values remain controlled state only. Directed/full tests passed."
+    },
+    "initial_chart_12_points_cards_ranking_last_month": {
+      "passed": true,
+      "evidence": "Dashboard uses ultimo-ano for trendPeriodRecords while periodTouched=false and ultimo-mes for periodRecords/cards/ranking. Runtime regression tests assert role=img name /12 meses/."
+    },
+    "period_change_and_reset": {
+      "passed": true,
+      "evidence": "handlePeriodChange sets periodTouched=true; reset path calls resetFilters and setPeriodTouched(false). Tests assert three points after Último trimestre and restoration to 12 points/Último mês after reset."
+    },
+    "exact_indicator_icons": {
+      "passed": true,
+      "evidence": "Existing TASK-058 revalidation and passing tests confirm 💉, 🤰, ❤️ and 🩸 mapping; card source retains decorative aria-hidden icons."
+    },
+    "title_and_introduction_source_and_pg1": {
+      "passed": true,
+      "evidence": "src/app/page.tsx and pg1 both contain Painel SUS and the complete Previne Brasil / Saúde Itapira / julho de 2025 a junho de 2026 introduction."
+    },
+    "active_header_geometry": {
+      "passed": true,
+      "evidence": "Source has leading-5 (20px), active rounded-none, font-semibold, aria-current, min-h-11, and h-0.5 rounded-[1px] underline. pg1 DoffB has 2px underline and cornerRadius 1."
+    },
+    "footer_complete_and_unclipped": {
+      "passed": true,
+      "evidence": "Production footer has fluid w-full, flex-col, break-words and three complete paragraphs containing disclaimer/promotion, CNES/e-SUS AB/DATASUS, version, and raigomes.dev. pg1 contains corresponding three complete footer lines."
+    },
+    "responsive_1280": {
+      "passed": true,
+      "evidence": "Structural responsive classes provide max-width 1280, four-card lg grid, desktop filter widths and wrapping-safe footer; no horizontal fixed-width page container is introduced."
+    },
+    "responsive_375": {
+      "passed": true,
+      "evidence": "Filters are w-full below sm, cards are one column, chart is responsive, ranking table owns horizontal overflow, header links retain min-h-11, and footer wraps without fixed height."
+    },
+    "typecheck": {"command": "npx tsc --noEmit", "exit_code": 0, "passed": true},
+    "lint": {"command": "npm run lint", "exit_code": 0, "warnings": 0, "passed": true},
+    "suite": {"command": "npm test -- --run", "exit_code": 0, "result": "69 tests passed", "passed": true},
+    "coverage": {"command": "npm run test:coverage", "exit_code": 0, "statements": 72.15, "passed": true},
+    "build": {"command": "npm run build", "exit_code": 0, "result": "Next.js 16.3.2 production build passed; route / generated", "passed": true},
+    "diff_check": {"command": "git diff --check", "exit_code": 0, "passed": true},
+    "smoke_root": {"command": "curl --fail http://localhost:3000/", "http_status": 200, "passed": true}
+  },
+  "webauditmcp": {
+    "executed": false,
+    "authorized_skip": true,
+    "reason": "Solicitação explícita: não exigir WebAudit; ferramenta visual/WebAudit não está exposta nesta sessão."
+  },
+  "issues": [],
+  "passed": true,
+  "production_acceptance": "PASS",
+  "authorization": "TASK-062 aprovado; somente docs/audits, docs/failures e docs/TASKS foram atualizados.",
+  "failure_reference": "docs/failures/dashboard-pen-followup-remediation-failure.json"
+}
