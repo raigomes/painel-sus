@@ -268,15 +268,15 @@
     - [x] A label visível é “Indicador do gráfico”
     - [x] Alterar a seleção retorna um `Indicator["id"]`
 
-- [ ] **ID**: `TASK-024`
+- [x] **ID**: `TASK-024`
   - **Files**: `src/components/dashboard/indicator-card.tsx`, `src/components/dashboard/indicator-card.test.tsx`
   - **Dependencies**: `TASK-006`, `TASK-007`, `TASK-012`
   - **Acceptance**:
-    - [ ] Card exibe nome, valor, unidade, meta, tendência e estado
-    - [ ] Fundo e borda correspondem ao estado recebido
-    - [ ] Verde, amarelo e vermelho possuem texto e ícone; vermelho mostra “Abaixo da meta”
-    - [ ] O artigo possui nome acessível e números tabulares
-    - [ ] Testes cobrem conteúdo e os três estados
+    - [x] Card exibe nome, valor, unidade, meta, tendência e estado
+    - [x] Fundo e borda correspondem ao estado recebido
+    - [x] Verde, amarelo e vermelho possuem texto e ícone; vermelho mostra “Abaixo da meta”
+    - [x] O artigo possui nome acessível e números tabulares
+    - [x] Testes cobrem conteúdo e os três estados
 
 - [ ] **ID**: `TASK-025`
   - **Files**: `src/components/dashboard/indicator-grid.tsx`

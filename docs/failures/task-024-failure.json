@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-09-07T03:06:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-024",
+  "error_category": "acceptance_criteria_not_satisfied",
+  "severity": "blocking",
+  "file_path": "src/components/dashboard/indicator-card.test.tsx",
+  "line_number": 22,
+  "error_message": "Os testes verificam texto e algumas classes, mas não validam de forma robusta os três ícones/estados, a borda esquerda de 4px e as três variantes de tendência por ícone/classe. Além disso, a classe tabular-nums foi aplicada ao valor principal, mas não ao número da meta.",
+  "code_snippet": "expect(screen.getByText(label)).toBeInTheDocument(); ... expect(screen.getByRole(\"article\")).toHaveClass(...); ... <span>Meta: {formatMeasure(indicator.meta)}%</span>",
+  "root_cause": "A cobertura foi limitada à presença de rótulos e ao background, sem asserções semânticas/estruturais suficientes para impedir regressões de ícones, borda e estilos de tendência; a formatação numérica não reutiliza tabular-nums na meta.",
+  "correction_applied": "",
+  "prevention_rule": "Para componentes com variantes visuais e requisitos de acessibilidade, testar cada variante com texto, ícone/nome acessível, classes semânticas e estrutura exigida; aplicar tabular-nums a todos os números comparáveis do card.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "failed_criteria": [
+    "Testes cobrem conteúdo e os três estados",
+    "Formatação e tabular nums de valor e meta"
+  ],
+  "guidance": [
+    "Adicionar asserções para os ícones CircleCheck, TriangleAlert e CircleX (por exemplo, data-testid/aria-label não decorativo ou consulta por estrutura acessível sem tornar o ícone dependente apenas de cor).",
+    "Assegurar e testar border-l-4 e as quatro chaves de STATUS_CLASSES para cada estado.",
+    "Cobrir alta/estável/queda com ícone e classes de cada badge, não apenas texto/aria-label.",
+    "Aplicar tabular-nums à meta (ou a um wrapper numérico que contenha o valor da meta) e cobrir a formatação inteira/decimal nos testes."
+  ]
+}
