@@ -170,33 +170,33 @@
     - [x] A função não usa `new Date()` e ordena por mês crescente
     - [x] Testes cobrem virada de ano e entrada vazia
 
-- [ ] **ID**: `TASK-014`
+- [x] **ID**: `TASK-014`
   - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
   - **Dependencies**: `TASK-013`, `TASK-008`
   - **Acceptance**:
-    - [ ] `aggregateByIndicator` calcula a média temporal de cada UBS antes da consolidação
-    - [ ] A consolidação pondera somente UBS com registros por cadastrados
-    - [ ] O resultado usa uma casa decimal e entrada vazia retorna zero
-    - [ ] Testes verificam um resultado ponderado numérico exato
+    - [x] `aggregateByIndicator` calcula a média temporal de cada UBS antes da consolidação
+    - [x] A consolidação pondera somente UBS com registros por cadastrados
+    - [x] O resultado usa uma casa decimal e entrada vazia retorna zero
+    - [x] Testes verificam um resultado ponderado numérico exato
 
-- [ ] **ID**: `TASK-015`
+- [x] **ID**: `TASK-015`
   - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
   - **Dependencies**: `TASK-014`, `TASK-009`
   - **Acceptance**:
-    - [ ] `calculateUBSScore` aplica quatro parcelas iguais limitadas a 0–100
-    - [ ] `calculateRanking` exclui UBS sem os quatro indicadores
-    - [ ] Ordenação usa pontuação decrescente e desempate por nome `pt-BR`
-    - [ ] Testes cobrem teto, arredondamento, exclusão, ordem e empate
+    - [x] `calculateUBSScore` aplica quatro parcelas iguais limitadas a 0–100
+    - [x] `calculateRanking` exclui UBS sem os quatro indicadores
+    - [x] Ordenação usa pontuação decrescente e desempate por nome `pt-BR`
+    - [x] Testes cobrem teto, arredondamento, exclusão, ordem e empate
 
-- [ ] **ID**: `TASK-016`
+- [x] **ID**: `TASK-016`
   - **Files**: `src/lib/filters.ts`, `src/lib/filters.test.ts`
   - **Dependencies**: `TASK-014`
   - **Acceptance**:
-    - [ ] `getTrend` compara os três meses recentes aos três anteriores por padrão
-    - [ ] Variações acima de 5%, abaixo de -5% e intermediárias retornam os três estados corretos
-    - [ ] O consolidado municipal é ponderado por cadastrados
-    - [ ] Histórico insuficiente retorna `estavel`
-    - [ ] Testes cobrem os quatro comportamentos
+    - [x] `getTrend` compara os três meses recentes aos três anteriores por padrão
+    - [x] Variações acima de 5%, abaixo de -5% e intermediárias retornam os três estados corretos
+    - [x] O consolidado municipal é ponderado por cadastrados
+    - [x] Histórico insuficiente retorna `estavel`
+    - [x] Testes cobrem os quatro comportamentos
 
 - [ ] **ID**: `TASK-017`
   - **Files**: `src/hooks/use-filters.ts`, `src/hooks/use-filters.test.tsx`

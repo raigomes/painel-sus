@@ -1,0 +1,69 @@
+{
+  "timestamp": "2026-09-07T05:05:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-014",
+  "audit_type": "task_logic",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scores": {
+    "tests": 100,
+    "typescript": 100,
+    "lint": 100,
+    "coverage_filters_lines": 100
+  },
+  "criteria": {
+    "temporal_average_per_ubs_before_consolidation": {
+      "status": "PASS",
+      "evidence": "aggregateByIndicator acumula valores por UBS, calcula temporalAverage por UBS e somente depois soma temporalAverage * cadastrados."
+    },
+    "indicator_filter": {
+      "status": "PASS",
+      "evidence": "Registros de indicador diferente são ignorados antes da agregação."
+    },
+    "only_received_ubs_with_records": {
+      "status": "PASS",
+      "evidence": "A consolidação itera somente ubs recebidas; UBS sem valores e IDs de registros ausentes na lista não entram no denominador."
+    },
+    "registered_population_weight_and_matching_denominator": {
+      "status": "PASS",
+      "evidence": "Cada UBS elegível adiciona sua média multiplicada por cadastrados ao numerador e os mesmos cadastrados ao denominador."
+    },
+    "one_decimal_and_empty_zero": {
+      "status": "PASS",
+      "evidence": "Resultado usa Math.round(... * 10) / 10; população elegível zero retorna 0."
+    },
+    "no_mutation": {
+      "status": "PASS",
+      "evidence": "Implementação somente lê records/ubs e cria Map/arrays; teste preserva snapshot da entrada."
+    },
+    "exact_result_distinguishes_simple_record_mean": {
+      "status": "PASS",
+      "evidence": "Teste direcionado espera 65 e rejeita 50; cálculo independente temporal-ponderado confirma 65 versus média simples por registro 50."
+    },
+    "task_012_013_preserved": {
+      "status": "PASS",
+      "evidence": "getIndicatorStatus e filterByPeriod permanecem presentes e a suite cobre seus comportamentos; diff limita a alteração à adição de aggregateByIndicator e testes correspondentes."
+    },
+    "no_score_ranking_trend": {
+      "status": "PASS",
+      "evidence": "Não há calculateUBSScore, calculateRanking ou getTrend em src/lib/filters.ts; nenhuma implementação de score/ranking/tendência foi adicionada."
+    }
+  },
+  "commands": {
+    "targeted_test": "PASS — npx vitest run src/lib/filters.test.ts; 24/24",
+    "full_suite": "PASS — npm test; 29/29",
+    "typescript": "PASS — npx tsc --noEmit",
+    "lint": "PASS — npm run lint; sem erros ou warnings",
+    "coverage": "PASS — npm run test:coverage; filters.ts 100% statements/lines, 96.77% branches",
+    "diff_check": "PASS — git diff --check"
+  },
+  "dynamic_audit": {
+    "server": "PASS — http://localhost:3000 respondeu HTTP 200",
+    "webauditmcp": "NOT_RUN",
+    "reason": "As ferramentas MCP audit_lighthouse, scan_axe, security_headers, responsive_audit e report_merge não foram expostas nesta sessão. TASK-014 é uma função de dados sem alteração de UI; não foi inferido score dinâmico ausente.",
+    "passed": null
+  },
+  "issues": [],
+  "passed": true,
+  "authorization": "PASS. Owner autorizado a marcar TASK-014 como concluída e liberar TASK-015/TASK-016 conforme as dependências. TASKS.md não foi editado pelo Reviewer."
+}

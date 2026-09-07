@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-09-07T05:12:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-015",
+  "error_category": "test_coverage_acceptance_gap",
+  "severity": "blocking",
+  "file_path": "src/lib/filters.test.ts",
+  "line_number": 111,
+  "error_message": "Os testes de TASK-015 não cobrem efetivamente desempate por nome locale pt-BR nem arredondamento do score para uma casa decimal.",
+  "code_snippet": "it(\"exclui incompletas, ordena, desempata em pt-BR, posiciona e calcula status\", () => { ... expect(ranking.map(...)).toEqual([[\"UBS Zeta\", 1, 100, \"verde\"], [\"UBS Açaí\", 2, 80, \"amarelo\"], [\"UBS Incompleta\", 3, 75, \"vermelho\"]]); })",
+  "root_cause": "O cenário nomeado como empate usa pontuações 100, 80 e 75, portanto não exercita o ramo de empate; os cenários de score também produzem somente resultados inteiros e não verificam uma saída arredondada para uma casa decimal.",
+  "correction_applied": "",
+  "prevention_rule": "Cada critério de aceitação deve possuir um caso que force o ramo específico: duas UBS com a mesma pontuação e nomes que validem locale pt-BR, além de score fracionário cuja expectativa tenha exatamente uma casa decimal.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false
+}
