@@ -4,7 +4,7 @@ import { ubsList } from "@/data/ubs";
 import { indicatorsList } from "@/data/indicators";
 import { historyData } from "@/data/history";
 import { UBSInfoCard } from "@/components/ubs/ubs-info-card";
-import { RadarChart } from "@/components/ubs/radar-chart";
+import { RadarChartInner as RadarChart } from "@/components/ubs/radar-chart-client";
 import { HistoryTable } from "@/components/ubs/history-table";
 import type { RadarDataPoint } from "@/lib/types";
 

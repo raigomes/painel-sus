@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
-import { IndicatorList } from "@/components/indicadores/indicator-list";
 import { historyData } from "@/data/history";
 import { indicatorsList } from "@/data/indicators";
 import { ubsList } from "@/data/ubs";
+import { IndicatorListClient as IndicatorList } from "@/components/indicadores/indicator-list-client";
 
 export const metadata: Metadata = {
   title: "Indicadores - Painel SUS",

@@ -2,7 +2,7 @@
 
 import { CircleCheck, CircleX, TriangleAlert } from 'lucide-react';
 
-import { TrendChart } from '@/components/dashboard/trend-chart';
+import { TrendChartInner as TrendChart } from '@/components/dashboard/trend-chart';
 import { STATUS_CLASSES } from '@/lib/constants';
 import type {
   HistoryRecord,

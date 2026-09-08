@@ -3,10 +3,7 @@
 import type { TrendChartProps } from '@/components/dashboard/trend-chart-inner';
 import { TrendChartInner } from '@/components/dashboard/trend-chart-inner';
 
-// Componente para uso em produção (com dynamic e ssr: false)
-// Componente para uso em testes (sem dynamic)
-
-// Para testes, importe diretamente o TrendChartInner
-export { TrendChartInner };
+// Exporta o componente interno diretamente para uso em testes
+export { TrendChartInner as TrendChart };
 
 export type { TrendChartProps };

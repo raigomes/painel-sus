@@ -1,18 +1,14 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import type { RadarChartProps } from '@/components/ubs/radar-chart-inner';
 
 const RadarChartInner = dynamic(
   () => import('@/components/ubs/radar-chart-inner').then((mod) => mod.RadarChartInner),
-  { ssr: false, loading: () => <div className="h-[350px] w-full animate-pulse rounded-xl bg-zinc-200" /> },
+  { ssr: false, loading: () => <Skeleton className="h-[350px] w-full" /> },
 );
 
-// Exporta o componente interno para testes
 export { RadarChartInner };
-
-// Exporta o wrapper para uso em produção
-export { RadarChartInner as RadarChart };
-
 export type { RadarChartProps };

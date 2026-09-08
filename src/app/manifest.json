@@ -1,0 +1,16 @@
+{
+  "name": "Painel SUS",
+  "short_name": "Painel SUS",
+  "description": "Dashboard de indicadores do Previne Brasil para gestores municipais",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#004B87",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}

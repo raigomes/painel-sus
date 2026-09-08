@@ -1,11 +1,20 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-
+import { describe, expect, it, vi } from "vitest";
 import { historyData } from "@/data/history";
 import { indicatorsList } from "@/data/indicators";
 import { ubsList } from "@/data/ubs";
 import type { HistoryRecord } from "@/lib/types";
 import { DashboardClient } from "./dashboard-client";
+
+// Mock next/dynamic para testes
+// O dynamic recebe uma função que retorna uma promise e um objeto de opções
+vi.mock("next/dynamic", () => ({
+  default: vi.fn((factory: () => Promise<{ TrendChartInner: React.ComponentType }>) => {
+    // O factory é uma função que retorna uma promise com o módulo
+    // Simula o comportamento do dynamic: resolve o componente
+    return factory().then((mod) => mod.TrendChartInner);
+  }),
+}));
 
 function renderDashboard(history: HistoryRecord[] = historyData) {
   return render(<DashboardClient ubs={ubsList} indicators={indicatorsList} history={history} />);

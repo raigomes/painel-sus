@@ -8,7 +8,7 @@ import { UBSFilter } from '@/components/filters/ubs-filter';
 import { EmptyState } from '@/components/dashboard/empty-state';
 import { IndicatorGrid } from '@/components/dashboard/indicator-grid';
 import { RankingTable } from '@/components/dashboard/ranking-table';
-import { TrendChart } from '@/components/dashboard/trend-chart';
+import { TrendChartInner as TrendChart } from '@/components/dashboard/trend-chart';
 import { useFilters } from '@/hooks/use-filters';
 import {
   aggregateByIndicator,

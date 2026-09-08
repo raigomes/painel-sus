@@ -1,0 +1,301 @@
+{
+  "timestamp": "2026-09-08T04:00:00Z",
+  "audit_type": "review-visual-v2",
+  "agent_id": "reviewer",
+  "task_id": "TASK-046",
+  "scope": "Structural validation of all 4 routes against pg1-pg4 frames and DESIGN_SYSTEM.md tokens",
+  "method": "Source code DOM structure review (Playwright/Pencil MCP unavailable)",
+  "environment": {
+    "platform": "linux",
+    "next_version": "16.3.2",
+    "build_exit_code": 0
+  },
+  "routes": {
+    "/": {
+      "frame_reference": "pg1",
+      "structure": {
+        "h1": {
+          "present": true,
+          "text": "Painel SUS",
+          "classes": "text-2xl font-bold leading-tight text-zinc-900"
+        },
+        "subtitle": {
+          "present": true,
+          "text_contains": "Previne Brasil",
+          "period": "julho de 2025 a junho de 2026"
+        },
+        "filter_bar": {
+          "present": true,
+          "container_classes": "border-b border-zinc-200 bg-white px-6 py-4",
+          "layout": "flex flex-wrap",
+          "filters": [
+            {
+              "name": "UBS",
+              "component": "UBSFilter",
+              "options": ["Todas as UBS", "15 UBS units"],
+              "default": "Todas as UBS",
+              "width": "lg:w-[200px]",
+              "aria_label": "sr-only UBS label"
+            },
+            {
+              "name": "Período",
+              "component": "PeriodFilter",
+              "options": ["Último mês", "Último trimestre", "Último semestre", "Último ano"],
+              "default": "Último mês",
+              "width": "lg:w-[180px]"
+            },
+            {
+              "name": "Indicador",
+              "component": "IndicatorFilter",
+              "options": ["4 indicators"],
+              "label": "Indicador do gráfico",
+              "width": "sm:w-[260px]",
+              "scope": "trend chart only (does not affect cards/ranking)"
+            }
+          ],
+          "clear_button": {
+            "present": true,
+            "aria_label": "Limpar filtros",
+            "disabled_when_default": true
+          }
+        },
+        "indicator_cards": {
+          "count": 4,
+          "icons": ["💉", "🤰", "❤️", "🩸"],
+          "names": ["Cobertura Vacinal", "Pré-natal", "Hipertensão", "Diabetes"],
+          "grid_classes": "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6",
+          "card_height": "h-[245px]",
+          "card_border": "border-l-4 (semaphore color)",
+          "card_shadow": "shadow-sm hover:shadow-md",
+          "card_padding": "p-6",
+          "card_radius": "rounded-lg",
+          "content_anatomy": {
+            "icon": "aria-hidden emoji",
+            "name": "h2 text-sm font-medium text-zinc-900",
+            "value": "font-mono text-3xl font-bold tabular-nums text-zinc-900",
+            "meta": "text-sm text-zinc-500",
+            "trend_badge": "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium",
+            "status_label": "text-sm font-medium (color-coded)"
+          },
+          "status_semantics": {
+            "verde": { "bg": "bg-emerald-50", "border": "border-emerald-500", "text": "text-emerald-700", "label": "Dentro ou acima da meta" },
+            "amarelo": { "bg": "bg-amber-50", "border": "border-amber-500", "text": "text-amber-700", "label": "Próximo da meta" },
+            "vermelho": { "bg": "bg-red-50", "border": "border-red-500", "text": "text-red-700", "label": "Abaixo da meta" }
+          },
+          "trend_semantics": {
+            "alta": { "classes": "bg-emerald-50 text-emerald-700", "arrow": "ArrowUp", "label": "alta" },
+            "estavel": { "classes": "bg-zinc-100 text-zinc-700", "arrow": "ArrowRight", "label": "estável" },
+            "queda": { "classes": "bg-red-50 text-red-700", "arrow": "ArrowDown", "label": "queda" }
+          },
+          "accessibility": {
+            "role": "article",
+            "aria_label_format": "{indicator}: {value}%, meta {meta}%, tendência {trend}"
+          }
+        },
+        "trend_chart": {
+          "present": true,
+          "title": "Evolução histórica",
+          "chart_type": "LineChart (exactly 1 Line)",
+          "reference_line": true,
+          "axes": {
+            "x": "Month labels (MMM/YY), tickLine=false, axisLine=false",
+            "y": "0-120%, tickLine=false, axisLine=false, %suffix"
+          },
+          "line_stroke": "#004B87",
+          "line_stroke_width": 3,
+          "dot_radius": 4,
+          "active_dot_radius": 6,
+          "legend": { "present": true, "items": ["Valor", "Meta"] },
+          "responsive_height": "250px default, 280px sm, 300px md+",
+          "accessibility": {
+            "role": "img",
+            "aria_label": "Gráfico de evolução da {indicator}...",
+            "aria_describedby": "trend-chart-description",
+            "sr_only_data_list": true
+          },
+          "initial_points": "12 months (ultimo-ano default)"
+        },
+        "ranking": {
+          "present": true,
+          "title": "Ranking municipal das UBS",
+          "note": "Comparação municipal — 15 UBS na janela selecionada. O filtro de UBS não altera este ranking.",
+          "table_semantics": {
+            "aria_label": "Ranking municipal das 15 UBS por desempenho",
+            "caption": "sr-only: Ranking das 15 UBS por pontuação composta",
+            "columns": ["Posição", "UBS", "Equipe", "Pontuação", "Estado"],
+            "th_scope": "col on all 5 columns"
+          },
+          "rows": 15,
+          "row_height": "h-12 (48px)",
+          "ubs_links": "Link to /ubs/{id}",
+          "score_format": "toFixed(1) (1 decimal)",
+          "overflow": "overflow-x-auto",
+          "min_width": "min-w-[600px]"
+        }
+      },
+      "header": {
+        "height": "h-16 (64px)",
+        "position": "sticky top-0 z-200",
+        "border": "border-b border-zinc-200",
+        "logo": {
+          "present": true,
+          "src": "/logo.png",
+          "dimensions": "44x24",
+          "alt": "empty (decorative)"
+        },
+        "title": {
+          "text": "Painel SUS",
+          "classes": "text-lg font-bold text-primary"
+        },
+        "aria_label": "Painel SUS - Início",
+        "navigation": {
+          "items": ["Dashboard", "Indicadores", "Sobre"],
+          "aria_label": "Navegação principal",
+          "gap": "gap-1 sm:gap-6",
+          "active_state": {
+            "aria_current": "page",
+            "font_weight": "font-semibold",
+            "color": "text-primary",
+            "underline": "absolute inset-x-1 bottom-0 h-0.5 rounded-[1px] bg-primary"
+          }
+        }
+      },
+      "footer": {
+        "role": "contentinfo",
+        "border": "border-t border-zinc-200",
+        "background": "bg-zinc-50",
+        "lines": [
+          "Dados simulados para fins de demonstração. Para saber mais sobre o meu trabalho, visite raigomes.dev",
+          "Fontes: CNES, e-SUS AB, DATASUS.",
+          "Protótipo v1.0 — Saúde Itapira"
+        ],
+        "formatting": "text-sm leading-[1.75] text-zinc-600"
+      }
+    },
+    "/ubs/[id]": {
+      "frame_reference": "pg2",
+      "structure": {
+        "breadcrumb": {
+          "present": true,
+          "items": ["Dashboard", ">", "UBS", ">", "{nome}"],
+          "aria_label": "Breadcrumb",
+          "aria_current": "page on UBS name"
+        },
+        "info_card": {
+          "present": true,
+          "component": "UBSInfoCard",
+          "fields": ["nome", "CNES", "equipe", "cadastrados (pt-BR format)", "endereco"],
+          "responsive_grid": "sm:grid-cols-2 lg:grid-cols-3"
+        },
+        "radar_chart": {
+          "present": true,
+          "component": "RadarChart",
+          "title": "Radar comparativo",
+          "axes": 4,
+          "series": {
+            "valor": { "stroke": "#10b981", "fill": "#a7f3d0", "fillOpacity": 0.3 },
+            "meta": { "stroke": "#a1a1aa", "strokeDasharray": "5 5", "fill": "none" }
+          },
+          "legend": "Valor + Meta",
+          "accessibility": { "role": "img", "aria_label": "Gráfico radar comparando 4 indicadores da {ubs}..." }
+        },
+        "history_table": {
+          "present": true,
+          "component": "HistoryTable",
+          "title": "Histórico mensal",
+          "columns": 5 (Month + 4 indicators),
+          "rows": "12 months",
+          "status_badges": "Verde/Amarelo/Vermelho with icons",
+          "overflow": "overflow-x-auto"
+        }
+      }
+    },
+    "/indicadores": {
+      "frame_reference": "pg3",
+      "structure": {
+        "h1": "Indicadores",
+        "intro": "Detalhe de cada indicador do Previne Brasil...",
+        "accordion": {
+          "component": "IndicatorList",
+          "count": 4,
+          "buttons": {
+            "aria_expanded": true,
+            "aria_controls": true,
+            "min_height": "min-h-[44px]",
+            "icons": ["💉", "🤰", "❤️", "🩸"]
+          },
+          "panel": {
+            "role": "region",
+            "aria-labelledby": "btn-{indicator.id}",
+            "component": "IndicatorDetail",
+            "content": ["description", "meta", "fonte", "TrendChart", "comparison_table (15 UBS)"]
+          },
+          "behavior": {
+            "initially_closed": true,
+            "max_one_open": true,
+            "no_url_change": true
+          }
+        }
+      }
+    },
+    "/sobre": {
+      "frame_reference": "pg4",
+      "structure": {
+        "h1": "Sobre o Painel SUS",
+        "sections": [
+          "O que é o Previne Brasil?",
+          "Objetivo deste protótipo",
+          "Dados simulados (amber warning box)",
+          "Fontes de dados (CNES, e-SUS AB, DATASUS)",
+          "Indicadores monitorados (4 items)"
+        ],
+        "hierarchy": "h2 for each section (text-lg font-semibold)",
+        "disclaimer": "amber-50 bg with amber-800 text, clearly marked simulated data"
+      }
+    }
+  },
+  "design_tokens": {
+    "primary": "#004B87",
+    "primary_hover": "#003d6f",
+    "primary_light": "#e8f1fa",
+    "background": "#fafafa",
+    "card": "#ffffff",
+    "border": "#e4e4e7",
+    "font_sans": "Geist Sans",
+    "font_mono": "Geist Mono",
+    "status_classes": "STATUS_CLASSES from constants.ts (bg-emerald-50/border-emerald-500 etc.)",
+    "variables_in_globals_css": true
+  },
+  "accessibility_evidence": {
+    "skip_link": "sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4",
+    "html_lang": "pt-BR",
+    "main_id": "main-content",
+    "footer_role": "contentinfo",
+    "nav_aria_label": "Navegação principal",
+    "aria_current_page": "present on active nav link",
+    "aria_current_page_on_breadcrumb": "present on UBS name",
+    "tables_with_caption_and_scope": "ranking-table, history-table, indicator-detail comparison table",
+    "charts_with_role_img_and_aria_label": "trend-chart, radar-chart",
+    "touch_targets_min_44px": "min-h-11 on buttons/selects",
+    "focus_visible": "ring-2 ring-primary ring-offset-2 on all interactive elements",
+    "reduced_motion": "@media (prefers-reduced-motion: reduce) in globals.css"
+  },
+  "issues": [
+    {
+      "id": "permissions-policy-missing",
+      "severity": "observation",
+      "description": "Permissions-Policy header not present in next.config.ts. Previous audit noted this as non-blocking."
+    },
+    {
+      "id": "csp-unsafe-eval",
+      "severity": "observation",
+      "description": "CSP script-src includes 'unsafe-eval'. Required for Next.js production SSR patterns. Previously approved."
+    },
+    {
+      "id": "csp-unsafe-inline-script",
+      "severity": "observation",
+      "description": "CSP script-src includes 'unsafe-inline'. Required for Next.js inline scripts. Previously approved in TASK-064."
+    }
+  ],
+  "passed": true
+}

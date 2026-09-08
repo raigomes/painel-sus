@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-200 border-b border-zinc-200 bg-white">
-      <div className="flex h-16 w-full items-center justify-between gap-2 px-2 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-[1280px] w-full items-center justify-between gap-2 px-2 sm:px-6">
         <Link
           href="/"
           aria-label="Painel SUS - Início"

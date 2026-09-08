@@ -7,16 +7,22 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  preload: true,
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: true,
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Painel SUS",
   description: "Painel de indicadores do Previne Brasil para a Saúde Itapira.",
+  metadataBase: new URL("https://painel-sus.example.com"),
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -37,7 +43,9 @@ export default function RootLayout({
           Pular para conteúdo principal
         </a>
         <Header />
-        <main id="main-content" className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
