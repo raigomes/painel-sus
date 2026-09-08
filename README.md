@@ -1,37 +1,37 @@
-# Next.js Harness Template
+# Painel SUS
 
-Template Next.js 15+ com harness de agentes AI para squads.
+Dashboard de indicadores do Previne Brasil para a Saúde Itapira.
 
-## Fluxo
+## Sobre o Projeto
 
-1. **Preencha** `docs/briefing.md` com o briefing do projeto
-2. **Owner** gera `docs/PRD.md` e `docs/TASKS.md`
-3. **Designer** gera `docs/DESIGN_SYSTEM.md` via Pencil.dev
-4. **Coder** implementa tarefas em `src/`
-5. **Reviewer** valida tipografia e layout
+O Painel SUS é um protótipo de dashboard interativo que monitora os indicadores de saúde da Atenção Primária em conformidade com o Previne Brasil. Permite analisar métricas como cobertura vacinal, pré-natal, hipertensão e diabetes por Unidade Básica de Saúde (UBS).
 
-## Estrutura
+## Funcionalidades
 
-```
-.opencode/agents/    # Definições dos agentes (Owner, Designer, Coder, Reviewer)
-.opencode/plugins/   # Plugin Pencil.dev
-docs/                # Briefing, PRD, Design System, Tasks, Failures
-specs/               # (opcional) Artefatos do Spec Kit — planejamento formal
-src/                 # Código Next.js
-AGENTS.md            # Regras globais do repositório
-open-code.config.json
-```
+- **Dashboard**: Visão geral com cards de indicadores, tabela de ranking e gráfico de tendências
+- **Indicadores**: Detalhamento individual de cada métrica com status (verde/amarelo/vermelho)
+- **Sobre**: Contexto sobre o Previne Brasil e metodologia do projeto
 
-## Spec Kit (opcional)
+## Tecnologias
 
-O fluxo da squad (AGENTS.md) é a **fonte única de execução**. O Spec Kit pode ser usado
-**apenas como camada de planejamento formal** (spec, plan, research, data-model, contracts,
-quickstart, checklists em `specs/`), preenchendo lacunas de especificação e ambiguidade.
+- [Next.js 16](https://nextjs.org/) (App Router)
+- [React 19](https://react.dev/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- [Shadcn UI](https://ui.shadcn.com/)
+- [Recharts](https://recharts.org/)
+- [TypeScript Strict](https://www.typescriptlang.org/)
+- [Vitest](https://vitest.dev/) (testes unitários)
 
-⚠️ **Não gere `specs/<feature>/tasks.md`** (comando `/speckit.tasks`) — as tarefas vivem
-exclusivamente em `docs/TASKS.md`, gerenciadas pelo Owner.
+## Fluxo de Desenvolvimento
 
-## Início rápido
+Este projeto utiliza um **harness de agentes AI** para o ciclo de desenvolvimento:
+
+1. **Owner** → Gera PRD e TASKS a partir do briefing
+2. **Designer** → Cria protótipos `.pen` e design system
+3. **Coder** → Implementa tarefas no código
+4. **Reviewer** → Valida com tsc, testes e auditoria WebAuditMCP
+
+## Instalação
 
 ```bash
 npm install
@@ -39,3 +39,50 @@ npm run dev
 ```
 
 Abra [http://localhost:3000](http://localhost:3000).
+
+## Scripts
+
+```bash
+npm run dev      # Inicia o servidor de desenvolvimento
+npm run build    # Gera build de produção
+npm run start    # Inicia o servidor de produção
+npm run lint     # Executa ESLint
+npm run test     # Roda testes unitários
+npm run test:coverage  # Testes com cobertura
+```
+
+## Testes
+
+```bash
+npm run test          # Roda todos os testes
+npm run test:watch    # Modo watch
+npm run test:coverage # Gera relatório de cobertura
+```
+
+## Auditoria Web
+
+Para auditoria completa de performance e acessibilidade:
+
+1. Instale o [WebAuditMCP](https://github.com/iberi22/WebAuditMCP)
+2. Inicie o servidor: `npm run dev &`
+3. O **Reviewer** executará automaticamente Lighthouse, axe e security headers
+
+## Estrutura
+
+```
+src/app/           # Rotas e componentes da interface
+src/components/    # Componentes reutilizáveis
+  dashboard/       # Cards, gráficos, tabelas
+  filters/         # Filtros de período e UBS
+  indicadores/     # Listas de indicadores
+  layout/          # Header, Footer
+src/data/          # Dados mockados (UBS, indicadores, histórico)
+src/hooks/         # Hooks customizados
+src/lib/           # Funções de filtro, tipos e utilitários
+docs/              # PRD, SPEC, TASKS, Design System, Audits
+.opencode/         # Configuração dos agentes AI
+```
+
+## Licença
+
+Protótipo — Saúde Itapira
