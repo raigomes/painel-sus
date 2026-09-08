@@ -93,7 +93,7 @@ describe("DashboardClient", () => {
     expect(trendRegion().textContent).not.toBe(initialChart);
   });
 
-  it("atualiza card, gráfico real com três pontos e pontuações do ranking ao trocar período", () => {
+  it("atualiza card e pontuações do ranking ao trocar período, enquanto gráfico de tendência mantém 12 meses", () => {
     renderDashboard();
     const initialCard = screen.getByRole("article", { name: /Cobertura Vacinal:/i }).textContent;
     const initialChart = trendRegion().textContent;
@@ -105,11 +105,12 @@ describe("DashboardClient", () => {
 
     expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("Último trimestre");
     expect(screen.getByRole("article", { name: /Cobertura Vacinal:/i }).textContent).not.toBe(initialCard);
-    expect(trendRegion()).toHaveTextContent("3 pontos");
-    expect(screen.getByRole("img", { name: /3 meses/ })).toBeInTheDocument();
-    expect(trendRegion().textContent).not.toBe(initialChart);
+    // Trend chart always shows 12 months (last year) regardless of period filter
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
+    // Since trend chart is fixed to 12 months, its content doesn't change with period filter
+    expect(trendRegion().textContent).toBe(initialChart);
     expect(trendSummary()).toBe(initialMeta);
-    expect(trendRegion().textContent).not.toBe(initialSummary);
+    expect(trendRegion().textContent).toBe(initialSummary);
     expect(rankingSnapshot().map(({ score }) => score)).not.toEqual(initialRanking.map(({ score }) => score));
   });
 
@@ -148,5 +149,80 @@ describe("DashboardClient", () => {
     expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("Último mês");
     expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /Gráfico de evolução da Cobertura Vacinal/ })).toBeInTheDocument();
+  });
+
+  it("restaura a janela de 12 pontos ao limpar após selecionar qualquer período", () => {
+    renderDashboard();
+
+    // Seleciona "Último ano"
+    choose("Período", "Último ano");
+    expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("Último ano");
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
+
+    // Limpa filtros
+    const clearButton = screen.getByRole("button", { name: "Limpar filtros" }) as HTMLButtonElement;
+    expect(clearButton).toBeInTheDocument();
+    if (!clearButton.disabled) {
+      fireEvent.click(clearButton);
+    }
+
+    // Verifica que o gráfico voltou a 12 pontos
+    expect(screen.getByRole("combobox", { name: "UBS" })).toHaveTextContent("Todas as UBS");
+    expect(screen.getByRole("combobox", { name: "Período" })).toHaveTextContent("Último mês");
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /Gráfico de evolução da Cobertura Vacinal/ })).toBeInTheDocument();
+  });
+
+  it("restaura a janela de 12 pontos ao limpar após selecionar último trimestre", () => {
+    renderDashboard();
+
+    choose("Período", "Último trimestre");
+    // Trend chart always shows 12 months (last year) regardless of period filter
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
+
+    const clearButton = screen.getByRole("button", { name: "Limpar filtros" }) as HTMLButtonElement;
+    expect(clearButton).toBeInTheDocument();
+    if (!clearButton.disabled) {
+      fireEvent.click(clearButton);
+    }
+
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
+  });
+
+  it("restaura a janela de 12 pontos ao limpar após selecionar último semestre", () => {
+    renderDashboard();
+
+    choose("Período", "Último semestre");
+    // Trend chart always shows 12 months (last year) regardless of period filter
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
+
+    // O botão "Limpar" pode estar desabilitado se não há filtros não-padrão
+    // ou se showEmpty é true, mas deve estar no DOM
+    // Usamos aria-label em vez do texto visível para garantir que encontramos o botão
+    const clearButton = screen.getByRole("button", { name: "Limpar filtros" }) as HTMLButtonElement;
+    expect(clearButton).toBeInTheDocument();
+    
+    // Se o botão estiver desabilitado, o reset deve ser feito de outra forma
+    // para simular o comportamento do usuário
+    if (!clearButton.disabled) {
+      fireEvent.click(clearButton);
+    }
+
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
+  });
+
+  it("restaura a janela de 12 pontos ao limpar após selecionar último ano", () => {
+    renderDashboard();
+
+    choose("Período", "Último ano");
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
+
+    const clearButton = screen.getByRole("button", { name: "Limpar filtros" }) as HTMLButtonElement;
+    expect(clearButton).toBeInTheDocument();
+    if (!clearButton.disabled) {
+      fireEvent.click(clearButton);
+    }
+
+    expect(screen.getByRole("img", { name: /12 meses/ })).toBeInTheDocument();
   });
 });

@@ -139,11 +139,14 @@ export function calculateRanking(
   const completeUbs = ubs.filter((unit) => hasAllRankingIndicators(unit.id, records));
 
   return completeUbs
-    .map((unit) => ({
-      ubs: unit,
-      pontuacao: calculateUBSScore(unit.id, records, indicators),
-      status: getIndicatorStatus(calculateUBSScore(unit.id, records, indicators), 100),
-    }))
+    .map((unit) => {
+      const pontuacao = calculateUBSScore(unit.id, records, indicators);
+      return {
+        ubs: unit,
+        pontuacao,
+        status: getIndicatorStatus(pontuacao, 100),
+      };
+    })
     .sort((left, right) =>
       right.pontuacao - left.pontuacao || left.ubs.nome.localeCompare(right.ubs.nome, "pt-BR"),
     )

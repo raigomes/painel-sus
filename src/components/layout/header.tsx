@@ -10,7 +10,10 @@ const navigation = [
   { label: "Sobre", href: "/sobre" },
 ] as const;
 
-function isActiveRoute(pathname: string, href: (typeof navigation)[number]["href"]): boolean {
+function isActiveRoute(
+  pathname: string,
+  href: (typeof navigation)[number]["href"],
+): boolean {
   if (href === "/") {
     return pathname === "/" || pathname.startsWith("/ubs/");
   }
@@ -23,13 +26,13 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-200 border-b border-zinc-200 bg-white">
-      <div className="mx-auto flex h-16 max-w-[1280px] w-full items-center justify-between gap-2 px-2 sm:px-6">
+      <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between gap-2 px-4 sm:px-8">
         <Link
           href="/"
           aria-label="Painel SUS - Início"
-          className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md px-1 text-primary transition-colors hover:bg-primary-light focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:px-2"
+          className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md px-1 text-primary transition-colors hover:bg-primary-light focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
-          <Image src="/logo.png" alt="" width={44} height={24} priority />
+          <Image src="/logo.png" alt="" width={24} height={24} priority />
           <span className="text-lg font-bold text-primary">Painel SUS</span>
         </Link>
 

@@ -70,7 +70,7 @@ export default async function UBSPage({ params }: UBSPageProps) {
   );
 
   return (
-    <div className="mx-auto w-full max-w-[1280px] bg-zinc-50 px-6 py-6">
+    <div className="mx-auto w-full max-w-[1280px] bg-zinc-50 px-4 sm:px-8 py-6">
       <nav aria-label="Breadcrumb" className="mb-4 text-sm text-zinc-600">
         <ol className="flex flex-wrap items-center gap-1">
           <li>

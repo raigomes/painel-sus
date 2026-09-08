@@ -6,12 +6,12 @@ export const metadata: Metadata = {
 
 export default function SobrePage() {
   return (
-    <div className="mx-auto w-full max-w-[1280px] bg-zinc-50 px-6 py-6">
+    <div className="mx-auto w-full max-w-[1280px] bg-zinc-50 px-4 sm:px-8 py-6">
       <header className="mb-6 space-y-1">
         <h1 className="text-2xl font-bold leading-tight text-zinc-900">
           Sobre o Painel SUS
         </h1>
-        <p className="max-w-3xl text-sm leading-relaxed text-zinc-500">
+          <p className="text-sm leading-relaxed text-zinc-500">
           Entenda o objetivo deste protótipo e como os dados são
           apresentados.
         </p>
@@ -22,7 +22,7 @@ export default function SobrePage() {
           <h2 className="text-lg font-semibold text-zinc-900">
             O que é o Previne Brasil?
           </h2>
-          <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+          <p className="text-sm leading-relaxed text-zinc-600">
             O Previne Brasil é o programa de financiamento federal para a
             Atenção Primária à Saúde, instituído pela Portaria GM/MS nº
             3.493/2019. O programa substitui o Piso Fixo e variável da
@@ -31,7 +31,7 @@ export default function SobrePage() {
             prevenção de doenças e ao cuidado centrado nas necessidades da
             população.
           </p>
-          <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+          <p className="text-sm leading-relaxed text-zinc-600">
             Os indicadores do Previne Brasil são monitorados por meio do
             Cadastro Nacional de Estabelecimentos de Saúde (CNES), do
             Sistema de Informação em Saúde para a Atenção Básica (e-SUS AB)
@@ -44,7 +44,7 @@ export default function SobrePage() {
           <h2 className="text-lg font-semibold text-zinc-900">
             Objetivo deste protótipo
           </h2>
-          <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+          <p className="text-sm leading-relaxed text-zinc-600">
             Este painel é um protótipo interativo criado para demonstrar
             como os indicadores do Previne Brasil podem ser visualizados
             de forma clara e acessível, facilitando o acompanhamento dos
@@ -65,7 +65,7 @@ export default function SobrePage() {
               utilizados para tomada de decisão clínica ou administrativa.
             </p>
           </div>
-          <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+          <p className="text-sm leading-relaxed text-zinc-600">
             Os dados foram gerados artificialmente seguindo a estrutura e
             as faixas de valores esperadas para os indicadores do Previne
             Brasil. As UBS, endereços e códigos CNES são fictícios e
@@ -77,11 +77,11 @@ export default function SobrePage() {
           <h2 className="text-lg font-semibold text-zinc-900">
             Fontes de dados
           </h2>
-          <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+          <p className="text-sm leading-relaxed text-zinc-600">
             Os dados reais do Previne Brasil são obtidos a partir das
             seguintes fontes oficiais do Sistema Único de Saúde (SUS):
           </p>
-          <ul className="max-w-3xl list-inside list-disc space-y-2 text-sm leading-relaxed text-zinc-600">
+          <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed text-zinc-600">
             <li>
               <strong className="font-medium text-zinc-800">CNES</strong>{" "}
               &mdash; Cadastro Nacional de Estabelecimentos de Saúde:
@@ -114,11 +114,11 @@ export default function SobrePage() {
           <h2 className="text-lg font-semibold text-zinc-900">
             Indicadores monitorados
           </h2>
-          <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+          <p className="text-sm leading-relaxed text-zinc-600">
             Este painel acompanha quatro indicadores fundamentais do
             Previne Brasil:
           </p>
-          <ul className="max-w-3xl list-inside list-disc space-y-2 text-sm leading-relaxed text-zinc-600">
+          <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed text-zinc-600">
             <li>
               <strong className="font-medium text-zinc-800">
                 Cobertura Vacinal

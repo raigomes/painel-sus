@@ -5,7 +5,7 @@ import { DashboardClient } from "@/components/dashboard/dashboard-client";
 
 export default function Home() {
   return (
-    <div className="mx-auto w-full max-w-[1280px] bg-zinc-50 px-6 py-6">
+    <div className="mx-auto w-full max-w-[1280px] bg-zinc-50 px-4 sm:px-8 py-6">
       <header className="mb-6 space-y-1">
         <h1 className="text-2xl font-bold leading-tight text-zinc-900">
           Painel SUS

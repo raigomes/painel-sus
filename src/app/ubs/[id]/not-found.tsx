@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="mx-auto w-full max-w-[1280px] bg-zinc-50 px-6 py-16 text-center">
+    <div className="mx-auto w-full max-w-[1280px] bg-zinc-50 px-4 sm:px-8 py-16 text-center">
       <h1 className="text-xl font-semibold text-zinc-900">UBS não encontrada</h1>
       <p className="mt-2 text-sm text-zinc-600">
         Verifique o identificador informado ou volte para o painel principal.
