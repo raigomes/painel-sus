@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-09-07T21:04:00Z",
+  "audit_type": "task_validation",
+  "task_id": "TASK-038",
+  "agent_id": "coder",
+  "scope": [
+    "src/components/indicadores/indicator-list.tsx",
+    "src/components/indicadores/indicator-list.test.tsx",
+    "src/components/indicadores/indicator-detail.tsx",
+    "docs/PRD.md",
+    "docs/SPEC.md",
+    "docs/TASKS.md",
+    "docs/layout/painel-sus.pen",
+    "docs/DESIGN_SYSTEM.md"
+  ],
+  "criteria": {
+    "four_buttons": { "passed": true, "evidence": "Focused test found exactly four buttons; implementation maps all supplied indicators." },
+    "aria_expanded_and_controls": { "passed": true, "evidence": "Each button exposes aria-expanded and aria-controls panel-{indicator.id}; panels expose aria-labelledby." },
+    "exclusive_expansion": { "passed": true, "evidence": "Single openId state and focused test confirm opening a second item closes the first." },
+    "minimum_target_44px": { "passed": true, "evidence": "Button uses min-h-[44px]." },
+    "indicator_detail_no_fetch_or_url": { "passed": true, "evidence": "IndicatorDetail receives local props, contains no fetch/router/navigation usage, and focused test confirms pathname remains unchanged." },
+    "tests_initial_state": { "passed": true, "evidence": "indicator-list.test.tsx covers all collapsed initially." },
+    "tests_switch": { "passed": true, "evidence": "indicator-list.test.tsx covers selected detail and replacement of the previously open item." },
+    "tests_collapse": { "passed": true, "evidence": "indicator-list.test.tsx covers clicking the open button again." },
+    "pg3_visual_alignment": { "passed": true, "evidence": "Implementation follows pg3 indicator card composition: four indicator entries, white bordered rounded surfaces, primary-light icon treatment, 24px horizontal padding, and expandable detail region." }
+  },
+  "commands": {
+    "npx tsc --noEmit": { "exit_code": 0 },
+    "npm run lint": { "exit_code": 0, "warnings": 0 },
+    "npm test -- --run src/components/indicadores/indicator-list.test.tsx": { "exit_code": 0, "tests": 3 },
+    "npm test": { "exit_code": 0, "tests": 72 },
+    "npm run test:coverage": { "exit_code": 0, "line_coverage_percent": 59.62, "indicator_list_line_coverage_percent": 100 },
+    "npm run build": { "exit_code": 0 },
+    "git diff --check": { "exit_code": 0 }
+  },
+  "dynamic_audit": {
+    "status": "not_available",
+    "reason": "WebAuditMCP tools are not exposed in this reviewer session; localhost smoke check was executed instead.",
+    "localhost": {
+      "root_http_status": 200,
+      "indicadores_http_status": 404,
+      "note": "The /indicadores route is outside TASK-038 scope and belongs to TASK-039."
+    }
+  },
+  "issues": [],
+  "passed": true,
+  "decision": "PASS"
+}

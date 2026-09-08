@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-07T21:12:00Z",
+  "agent_id": "coder",
+  "task_id": "TASK-039",
+  "error_category": "smoke_route_unavailable",
+  "severity": "blocking",
+  "file_path": "src/app/indicadores/page.tsx",
+  "line_number": 12,
+  "error_message": "Smoke check at http://localhost:3000/indicadores returned HTTP 404. A newly started Next.js server served the route at http://localhost:3001/indicadores (HTTP 200), because port 3000 was already occupied by another process.",
+  "code_snippet": "export default function IndicadoresPage() {",
+  "root_cause": "The required localhost:3000 smoke target was stale or occupied by a different Next.js instance; the route could not be validated at the mandated URL.",
+  "correction_applied": "",
+  "prevention_rule": "Before dynamic validation, stop stale Next.js instances and ensure the application under review is responding on the mandated port 3000.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "additional_blockers": [
+    "WebAuditMCP tools were not exposed in this reviewer session, so Lighthouse, axe, security headers, responsive audit, and report merge could not be executed.",
+    "The existing working tree already contains an unrelated modification to docs/TASKS.md; it was not changed by this review."
+  ]
+}

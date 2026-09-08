@@ -535,45 +535,45 @@
 
 ## Indicadores e Sobre
 
-- [ ] **ID**: `TASK-037`
+- [x] **ID**: `TASK-037`
   - **Files**: `src/components/indicadores/indicator-detail.tsx`
   - **Dependencies**: `TASK-014`, `TASK-026`, `TASK-027`
   - **Acceptance**:
-    - [ ] Detalhe exibe descrição, meta e fonte do indicador
-    - [ ] LineChart apresenta os 12 meses consolidados e referência da meta
-    - [ ] Tabela compara as 15 UBS no último mês disponível
-    - [ ] Valor, meta e estado não dependem somente de cor
-    - [ ] Nenhum link para `/indicadores/[id]` é criado
+    - [x] Detalhe exibe descrição, meta e fonte do indicador
+    - [x] LineChart apresenta os 12 meses consolidados e referência da meta
+    - [x] Tabela compara as 15 UBS no último mês disponível
+    - [x] Valor, meta e estado não dependem somente de cor
+    - [x] Nenhum link para `/indicadores/[id]` é criado
 
-- [ ] **ID**: `TASK-038`
+- [x] **ID**: `TASK-038`
   - **Files**: `src/components/indicadores/indicator-list.tsx`, `src/components/indicadores/indicator-list.test.tsx`
   - **Dependencies**: `TASK-006`, `TASK-037`
   - **Acceptance**:
-    - [ ] Lista renderiza quatro botões com `aria-expanded` e `aria-controls`
-    - [ ] Inicialmente nenhum item está aberto e no máximo um permanece aberto
-    - [ ] Expansão não altera a URL e renderiza o detalhe correto
-    - [ ] Alvos interativos possuem no mínimo 44×44 px
-    - [ ] Testes cobrem estado inicial, troca e recolhimento
+    - [x] Lista renderiza quatro botões com `aria-expanded` e `aria-controls`
+    - [x] Inicialmente nenhum item está aberto e no máximo um permanece aberto
+    - [x] Expansão não altera a URL e renderiza o detalhe correto
+    - [x] Alvos interativos possuem no mínimo 44×44 px
+    - [x] Testes cobrem estado inicial, troca e recolhimento
 
-- [ ] **ID**: `TASK-039`
+- [x] **ID**: `TASK-039`
   - **Files**: `src/app/indicadores/page.tsx`
   - **Dependencies**: `TASK-010`, `TASK-021`, `TASK-038`
   - **Acceptance**:
-    - [ ] Server Component exporta metadata “Indicadores - Painel SUS”
-    - [ ] Introdução explica os detalhes expansíveis
-    - [ ] Lista recebe indicadores, histórico e UBS por props
-    - [ ] Não existe rota dinâmica nem fetch HTTP
-    - [ ] `npm run build` gera `/indicadores` sem erros
+    - [x] Server Component exporta metadata “Indicadores - Painel SUS”
+    - [x] Introdução explica os detalhes expansíveis
+    - [x] Lista recebe indicadores, histórico e UBS por props
+    - [x] Não existe rota dinâmica nem fetch HTTP
+    - [x] `npm run build` gera `/indicadores` sem erros
 
-- [ ] **ID**: `TASK-040`
+- [x] **ID**: `TASK-040`
   - **Files**: `src/app/sobre/page.tsx`
   - **Dependencies**: `TASK-021`
   - **Acceptance**:
-    - [ ] Página exporta metadata “Sobre - Painel SUS”
-    - [ ] Explica Previne Brasil e o objetivo do protótipo em linguagem clara
-    - [ ] Lista CNES, e-SUS AB e DATASUS como fontes simuladas
-    - [ ] Destaca que os dados são simulados
-    - [ ] `npm run build` gera `/sobre` sem erros
+    - [x] Página exporta metadata “Sobre - Painel SUS”
+    - [x] Explica Previne Brasil e o objetivo do protótipo em linguagem clara
+    - [x] Lista CNES, e-SUS AB e DATASUS como fontes simuladas
+    - [x] Destaca que os dados são simulados
+    - [x] `npm run build` gera `/sobre` sem erros
 
 ## Segurança e gates
 

@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-09-07T21:12:00Z",
+  "audit_type": "task_validation",
+  "task_id": "TASK-039",
+  "url": "http://localhost:3000/indicadores",
+  "device": "desktop",
+  "scope": [
+    "docs/PRD.md",
+    "docs/SPEC.md",
+    "docs/TASKS.md",
+    "docs/layout/painel-sus.pen",
+    "docs/DESIGN_SYSTEM.md",
+    "src/app/indicadores/page.tsx"
+  ],
+  "criteria": {
+    "server_component": { "passed": true, "evidence": "page.tsx has no use client directive and exports a synchronous page component." },
+    "metadata": { "passed": true, "evidence": "Static metadata title is Indicadores - Painel SUS." },
+    "introduction": { "passed": true, "evidence": "Intro explains expandable indicator details, consolidated history, and comparison of 15 UBS." },
+    "indicator_list_props": { "passed": true, "evidence": "IndicatorList receives indicatorsList, historyData, and ubsList through indicators, history, and ubs props." },
+    "no_fetch_or_dynamic_url": { "passed": true, "evidence": "No fetch, router, params, search params, or dynamic /indicadores/[id] route usage found in the page." },
+    "standard_container": { "passed": true, "evidence": "Page uses a centered full-width max-w-[1280px] zinc-50 container with responsive horizontal and vertical padding." },
+    "build_route_generation": { "passed": true, "evidence": "npm run build completed successfully and generated static route /indicadores." },
+    "smoke_at_required_url": { "passed": false, "evidence": "http://localhost:3000/indicadores returned HTTP 404. The newly started app detected port 3000 occupied and served http://localhost:3001/indicadores with HTTP 200." },
+    "webauditmcp": { "passed": false, "evidence": "WebAuditMCP tools were not exposed in this reviewer session; Lighthouse, axe, security headers, responsive audit, and report merge were unavailable." }
+  },
+  "commands": {
+    "npx tsc --noEmit": { "exit_code": 0 },
+    "npm run lint": { "exit_code": 0, "warnings": 0 },
+    "npm test": { "exit_code": 0, "tests": 72 },
+    "npm run test:coverage": { "exit_code": 0, "line_coverage_percent": 58.95 },
+    "npm run build": { "exit_code": 0 },
+    "git diff --check": { "exit_code": 0 },
+    "smoke http://localhost:3000/indicadores": { "http_status": 404 },
+    "smoke http://localhost:3001/indicadores": { "http_status": 200 }
+  },
+  "issues": [
+    {
+      "category": "smoke_route_unavailable",
+      "severity": "blocking",
+      "reference": "docs/failures/task-039-failure.json"
+    },
+    {
+      "category": "dynamic_audit_unavailable",
+      "severity": "blocking",
+      "reference": "docs/failures/task-039-failure.json"
+    }
+  ],
+  "passed": false,
+  "decision": "FAIL"
+}
