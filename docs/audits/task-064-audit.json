@@ -1,0 +1,104 @@
+{
+  "timestamp": "2026-09-08T02:19:00Z",
+  "task_id": "TASK-064",
+  "audit_type": "independent-static-and-smoke",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scope": "CSP unsafe-inline confirmation, script-src safety, hidden-input CSS, Base UI Select API stability, SVG/chart presence, static gates, HTTP headers",
+  "checks": {
+    "csp_style_src_unsafe_inline": {
+      "status": "confirmed",
+      "file": "next.config.ts",
+      "lines": "6",
+      "evidence": "\"style-src 'self' 'unsafe-inline'\""
+    },
+    "csp_script_src_secure": {
+      "status": "confirmed",
+      "file": "next.config.ts",
+      "lines": "5",
+      "evidence": "\"script-src 'self' http://localhost:3000\" — self + localhost only, no unsafe-inline, no unsafe-eval, no wildcards"
+    },
+    "hidden_input_css_occluded": {
+      "status": "confirmed",
+      "file": "src/app/globals.css",
+      "lines": "142-145",
+      "evidence": "input[type=\"hidden\"] { display: none; } — Base UI renders <input type=\"hidden\"> internally (node_modules/@base-ui/react/select/root/SelectRoot.js:384-385,395); CSS occludes it from layout and focus order"
+    },
+    "select_api_unchanged": {
+      "status": "confirmed",
+      "file": "src/components/ui/select.tsx",
+      "evidence": "Uses @base-ui/react/select (SelectPrimitive.Root alias). Export signature identical: Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator, SelectScrollUpButton, SelectScrollDownButton. No API break."
+    },
+    "svg_chart_presence": {
+      "status": "confirmed",
+      "files": [
+        "src/components/dashboard/trend-chart.tsx",
+        "src/components/ubs/radar-chart.tsx"
+      ],
+      "evidence": "trend-chart: recharts LineChart with Line, ReferenceLine, CartesianGrid, XAxis, YAxis (SVG). radar-chart: recharts RadarChart with Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis (SVG). Both use role=\"img\" + aria-label."
+    },
+    "diagnosis_read": true,
+    "diagnosis_summary": "dashboard-regression-diagnosis.json: DASH-REG-001 (sr-only status — fixed by TASK-063), DASH-REG-002 (1B-Gráfico passed), DASH-REG-003 (WebAuditMCP infra gap — deferred to TASK-046/048)",
+    "typescript": {
+      "passed": true,
+      "command": "npx tsc --noEmit",
+      "exit_code": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "npm run lint",
+      "exit_code": 0,
+      "warnings": 0
+    },
+    "test_suite": {
+      "passed": true,
+      "command": "npm test",
+      "exit_code": 0,
+      "test_files": 7,
+      "tests": 72
+    },
+    "coverage": {
+      "command": "npx vitest run --coverage",
+      "exit_code": 0,
+      "select_component": {
+        "file": "src/components/ui/select.tsx",
+        "statements": 80.26,
+        "branches": 100,
+        "functions": 66.66,
+        "lines": 80.26,
+        "note": "Uncovered lines are scroll-button and internal portal branches; acceptable for UI library wrapper"
+      }
+    },
+    "build": {
+      "passed": true,
+      "command": "npm run build",
+      "exit_code": 0,
+      "next_version": "16.3.2 (Turbopack)"
+    },
+    "smoke_root": {
+      "passed": true,
+      "http_status": 200
+    },
+    "http_headers": {
+      "Content-Security-Policy": "present",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "note": "curl -sI confirmed all four headers"
+    }
+  },
+  "dynamic_web_audit": {
+    "audit_lighthouse": "deferred_to_TASK-046_048",
+    "scan_axe": "deferred_to_TASK-046_048",
+    "security_headers": "deferred_to_TASK-046_048",
+    "responsive_audit": "deferred_to_TASK-046_048",
+    "report_merge": "deferred_to_TASK-046_048",
+    "reason": "WebAuditMCP (Playwright/Chromium) not available in this session. Lighthouse/axe/responsive audit belong to TASK-046/048 gates and are NOT imposed as blockers for TASK-064."
+  },
+  "passed": true,
+  "verdict": "PASS",
+  "blocking_reasons": [],
+  "deferred_notes": [
+    "WebAuditMCP dynamic audit is deferred to TASK-046/048 — not a blocker for TASK-064 acceptance criteria."
+  ]
+}

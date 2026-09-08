@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-08T02:03:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-063",
+  "error_category": "webaudit_unavailable_deferred",
+  "severity": "informational",
+  "file_path": "docs/audits/task-063-audit.json",
+  "line_number": 1,
+  "error_message": "WebAuditMCP não executado nesta revisão atômica; auditoria dinâmica deferred para os gates TASK-046–048.",
+  "code_snippet": "WebAuditMCP/Playwright/Chromium indisponíveis no ambiente.",
+  "root_cause": "A infraestrutura dinâmica não está disponível, e esses gates não pertencem à acceptance declarada de TASK-063.",
+  "correction_applied": "Reclassificado como não bloqueante/deferred; TASK-063 aprovada pela acceptance declarada.",
+  "prevention_rule": "Avaliar somente os critérios da tarefa ativa; reservar WebAudit/Lighthouse/axe/security/responsive para TASK-046–048.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "evidence": "docs/audits/task-063-audit.json",
+  "static_result": "Todos os critérios da acceptance declarada, testes direcionado/suite, build e smoke HTTP passaram; a auditoria dinâmica fica deferred para os gates 046–048 e não bloqueia TASK-063.",
+  "blocking": false,
+  "task_authorization": "TASK-063 autorizada para finalização"
+}

@@ -484,6 +484,34 @@
     - [x] TypeScript, lint, testes, cobertura e build passam sem regressões
     - [x] Qualquer desvio mantém a tarefa aberta e gera o arquivo de falha
 
+## Diagnóstico de regressão Combobox/Gráfico — 2026-09-08
+
+- [ ] **ID**: `dashboard-combobox-chart-regression` — REJEITADA/INCONCLUSIVA: relato de combos sem interação, inputs sob combos e gráfico ausente requer reprodução client/runtime em browser; evidências em `docs/audits/dashboard-combobox-chart-regression.json` e `docs/failures/dashboard-combobox-chart-regression.json`. Não aprovar nem corrigir sem console, network, computed styles e dimensões do DOM.
+
+## Correção de regressão do Dashboard
+
+- [x] **ID**: `TASK-063`
+  - **Files**: `src/components/dashboard/indicator-card.tsx`, `src/components/dashboard/indicator-card.test.tsx`
+  - **Dependencies**: `TASK-058`
+  - **Acceptance**:
+    - [x] Cada card exibe visualmente o rótulo textual do estado, sem depender somente da cor
+    - [x] Verde, amarelo e vermelho exibem respectivamente “Dentro ou acima da meta”, “Próximo da meta” e “Abaixo da meta”
+    - [x] A mensagem “Abaixo da meta” permanece visível no estado vermelho
+    - [x] Ícone de indicador, tendência, altura de 245 px e demais critérios da TASK-058 permanecem preservados
+    - [x] Testes confirmam que os rótulos dos três estados estão visíveis
+
+## Correção de regressão de interação do Dashboard
+
+- [x] **ID**: `TASK-064`
+  - **Files**: `next.config.ts`, `src/app/globals.css`
+  - **Dependencies**: `TASK-063`
+  - **Acceptance**:
+    - [x] CSP permite somente o estilo inline estritamente necessário para Base UI, sem liberar `unsafe-eval` e sem ampliar `script-src`
+    - [x] Inputs ocultos gerados pelo Base UI Select permanecem visualmente ocultos, fora da ordem de tabulação e não afetam o layout
+    - [x] Os três Selects abrem, mostram opções e atualizam UBS, período e indicador no browser
+    - [x] `TrendChart` permanece visível e atualiza após cada interação de filtro
+    - [x] TypeScript, lint, testes, build e validação HTTP dos headers passam
+
 ## Detalhe de UBS
 
 - [x] **ID**: `TASK-032`

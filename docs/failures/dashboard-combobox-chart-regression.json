@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-09-08T02:15:00Z",
+  "agent_id": "reviewer",
+  "task_id": "dashboard-combobox-chart-regression",
+  "error_category": "combobox_chart_runtime_regression_unconfirmed",
+  "severity": "blocking",
+  "file_path": "src/components/ui/select.tsx",
+  "line_number": 40,
+  "error_message": "Relato de falha nos três Selects, inputs visíveis sob cada combo e desaparecimento do TrendChart após seleção; static checks passam, mas reprodução client/runtime está bloqueada pela ausência de Chromium/Playwright/WebAuditMCP.",
+  "code_snippet": "<SelectPrimitive.Trigger ...> ... </SelectPrimitive.Trigger>",
+  "root_cause": "Causa final não pode ser afirmada sem inspeção runtime. O DOM SSR confirma 3 inputs ocultos deliberadamente gerados pelo Base UI SelectRoot (node_modules/@base-ui/react/select/root/SelectRoot.mjs:371-447). O gráfico é montado condicionalmente apenas por selectedIndicator e possui altura explícita; testes confirmam as transições. Pontos suspeitos ficam no contrato Base UI Select/estilo do input e em estado/dimensões Recharts, a confirmar.",
+  "evidence": {
+    "localhost": "HTTP 200 em http://localhost:3000/",
+    "hidden_inputs": "3 inputs no SSR, um por Select Root; type=hidden/aria-hidden/tabIndex=-1 via Base UI",
+    "static": "tsc, lint sem warnings, 72 testes e build passaram",
+    "browser": "não executado: tooling browser/WebAudit indisponível"
+  },
+  "affected_files": [
+    "src/components/ui/select.tsx:40-95",
+    "src/components/filters/ubs-filter.tsx:42-52",
+    "src/components/filters/period-filter.tsx:36-50",
+    "src/components/filters/indicator-filter.tsx:35-46",
+    "src/components/dashboard/dashboard-client.tsx:82-141",
+    "src/components/dashboard/trend-chart.tsx:86-122"
+  ],
+  "reproduction_steps": [
+    "Abrir http://localhost:3000.",
+    "Abrir e selecionar UBS Centro, Último trimestre e Diabetes.",
+    "Após cada ação, registrar console/network, texto do trigger, trendPoints.length, SVG e boundingClientRect do container.",
+    "Inspecionar os 3 inputs e computed style para confirmar se algum aparece visualmente."
+  ],
+  "correction_applied": "",
+  "atomic_fix_proposal": "Disponibilizar browser e capturar a primeira falha; então alterar somente o wrapper/contrato ou componente causal, mantendo os inputs Base UI ocultos de forma acessível, preservando a regra de dados 12/3 pontos e adicionando teste de interação/DOM para os três combos e TrendChart.",
+  "prevention_rule": "Não concluir regressão de UI apenas por SSR/testes; registrar console, network, computed styles, dimensões e dados do gráfico em browser real.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false
+}

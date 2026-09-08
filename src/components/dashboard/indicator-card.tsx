@@ -84,8 +84,7 @@ export function IndicatorCard({ display }: IndicatorCardProps) {
           </span>
         </div>
 
-        {/* Status text: accessible to screen readers but visually hidden to prevent card misalignment */}
-        <div className={`sr-only flex items-center gap-1 text-sm font-medium ${STATUS_CLASSES[status].text}`}>
+        <div className={`flex items-center gap-1 text-sm font-medium ${STATUS_CLASSES[status].text}`}>
           <span>{statusLabel}</span>
         </div>
 

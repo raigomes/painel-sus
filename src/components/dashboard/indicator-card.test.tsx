@@ -31,7 +31,7 @@ describe("IndicatorCard", () => {
     const article = screen.getByRole("article");
     const classes = STATUS_CLASSES[status];
 
-    expect(screen.getByText(label)).toBeInTheDocument();
+    expect(screen.getByText(label)).toBeVisible();
     expect(article).toHaveClass("border-l-4", classes.background, classes.border);
     expect(article.querySelector(`div.${classes.text}`)).toHaveTextContent(label);
   });

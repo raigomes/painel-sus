@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-09-08T02:15:00Z",
+  "audit_type": "dashboard-combobox-chart-regression",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scope": ["UBS", "período", "indicador", "TrendChart", "DOM hidden inputs", "runtime/network"],
+  "web_audit_gate": "not_run",
+  "environment": {
+    "server": {
+      "status": "up",
+      "http_status": 200,
+      "evidence": "curl http://localhost:3000/ retornou 200; HTML 107920 bytes"
+    },
+    "console_network": {
+      "status": "not_observable",
+      "reason": "Não há Chromium/Playwright nem WebAuditMCP exposto nesta sessão; não inventar console, network ou Lighthouse/Axe. curl não substitui inspeção runtime."
+    },
+    "static_commands": {
+      "npx tsc --noEmit": {"passed": true, "exit_code": 0},
+      "npm run lint": {"passed": true, "exit_code": 0, "warnings": 0},
+      "npm test -- --run": {"passed": true, "exit_code": 0, "test_files": 7, "tests": 72},
+      "npm run build": {"passed": true, "exit_code": 0}
+    }
+  },
+  "reproduction": {
+    "steps": [
+      "Abrir http://localhost:3000.",
+      "Inspecionar os triggers com nomes UBS, Período e Indicador do gráfico.",
+      "Abrir e selecionar UBS Centro, Último trimestre e Diabetes, um por vez.",
+      "Após cada seleção, verificar texto do trigger, callbacks/estado refletido nos cards e gráfico.",
+      "Inspecionar input elements no DOM e seus estilos computados; contar um input oculto por Select.",
+      "Verificar a região role=img do gráfico, data length, SVG/LineChart e altura do container após seleção.",
+      "Observar console e requests durante abertura/seleção."
+    ],
+    "available_evidence": [
+      "SSR contém exatamente 3 ocorrências de <input, correspondentes aos 3 Select Roots; Base UI SelectRoot cria um input type=hidden por root.",
+      "Esses inputs são irmãos do conteúdo do SelectRoot, não filhos visuais dos triggers, e Base UI aplica style visuallyHidden/visuallyHiddenInput, tabIndex=-1 e aria-hidden=true.",
+      "SSR contém Evolução histórica, Todas as UBS, Último mês e Indicador do gráfico.",
+      "Testes de interação existentes selecionam os três controles por role/option; todos os 6 testes de DashboardClient passam.",
+      "TrendChart mantém um container com classes h-[250px] sm:h-[280px] md:h-[300px], ResponsiveContainer, uma Line, ReferenceLine e Tooltip."
+    ],
+    "browser_reproduction_status": "blocked_by_missing_browser_tooling; não afirmar que console/network/runtime foram limpos"
+  },
+  "findings": [
+    {
+      "id": "DASH-CB-001",
+      "severity": "blocking",
+      "category": "combobox_regression",
+      "status": "not_reproduced_by_available_runtime; code path passes tests",
+      "reported": "Os três combos não abrem/selecionam.",
+      "evidence": "UBSFilter, PeriodFilter e IndicatorFilter usam Select controlado e os testes reais executam click + pointerDown/pointerUp/click em options. tsc, lint, 72 testes e build passam.",
+      "root_cause_assessment": "Não há root cause confirmada sem browser/runtime. O ponto de integração sensível é src/components/ui/select.tsx:40-55/73-95, que combina Base UI 1.7 Trigger/Portal/Positioner/Popup, e os filtros em src/components/filters/ubs-filter.tsx:42-52, period-filter.tsx:36-50 e indicator-filter.tsx:35-46. A seleção é delegada a onValueChange e não há erro estático.",
+      "recent_change": "Commit 921961c passou a fornecer children explícitos a SelectValue e alterou o período do dashboard; o diff não alterou a mecânica de abertura do Select.",
+      "atomic_fix_proposal": "Com browser disponível, capturar o primeiro evento/erro e corrigir somente o contrato Base UI Select (ou o filtro específico que falhar), adicionando teste de interação reproduzível para abertura e seleção do controle afetado. Não alterar ainda."
+    },
+    {
+      "id": "DASH-CB-002",
+      "severity": "blocking",
+      "category": "layout_dom_regression",
+      "status": "confirmed_dom_structure; visual effect unconfirmed",
+      "reported": "Um input aparece abaixo de cada combo.",
+      "evidence": "Há 3 inputs SSR. Base UI SelectRoot os injeta deliberadamente em SelectRoot.mjs:371-447; cada input tem type hidden, aria-hidden, tabIndex -1 e estilo visuallyHidden. O wrapper de src/components/ui/select.tsx não filtra esse elemento.",
+      "root_cause": "É comportamento estrutural do Base UI para formulário/validação, não um input criado pelos filtros. Se aparece visualmente, o defeito é CSS/runtime de estilo (style visuallyHidden não aplicado, sobrescrito ou mostrado pelo inspector como box), a confirmar via getComputedStyle no browser. Não há regra local em globals.css que crie inputs visíveis.",
+      "files": [
+        {"path": "src/components/ui/select.tsx", "lines": "9,40-55", "role": "SelectRoot/Trigger wrapper"},
+        {"path": "node_modules/@base-ui/react/select/root/SelectRoot.mjs", "lines": "371-447", "role": "origem do input oculto"},
+        {"path": "src/components/filters/ubs-filter.tsx", "lines": "20-55"},
+        {"path": "src/components/filters/period-filter.tsx", "lines": "27-53"},
+        {"path": "src/components/filters/indicator-filter.tsx", "lines": "20-49"}
+      ],
+      "atomic_fix_proposal": "Somente após confirmar computed style, ajustar o wrapper/configuração do Select para manter o input Base UI visualmente oculto sem remover acessibilidade/form behavior; adicionar assert de DOM/computed style. Não remover inputs arbitrariamente."
+    },
+    {
+      "id": "DASH-CB-003",
+      "severity": "blocking",
+      "category": "chart_regression",
+      "status": "not_reproduced_by_available runtime; static contract passes",
+      "reported": "O gráfico desapareceu após seleção.",
+      "evidence": "TrendChart é sempre renderizado quando selectedIndicator existe (dashboard-client.tsx:129-141). trendPoints deriva de trendVisibleRecords (87-103); testes confirmam 12 pontos iniciais, 3 no trimestre e troca de indicador. O container tem altura explícita em trend-chart.tsx:86-122.",
+      "root_cause_assessment": "Não há causa confirmada sem DOM client/runtime. Pontos de diagnóstico obrigatórios são: trendPoints.length e valores finitos após cada seleção; boundingClientRect do container 86-91; presença de SVG; erros Recharts/ResizeObserver; e se showEmpty remove toda a região quando o filtro UBS não tem registros (dashboard-client.tsx:105-126). O código não apresenta caminho estático que remova o gráfico ao trocar indicador.",
+      "files": [
+        {"path": "src/components/dashboard/dashboard-client.tsx", "lines": "82-103,105-141"},
+        {"path": "src/components/dashboard/trend-chart.tsx", "lines": "65-122"}
+      ],
+      "atomic_fix_proposal": "Reproduzir com browser e corrigir somente a primeira quebra observada: dados inválidos, altura/ResizeObserver ou montagem condicional. Adicionar teste que inspecione o TrendChart real após cada uma das três seleções. Não substituir o gráfico nem alterar a regra de 12/3 pontos sem evidência."
+    }
+  ],
+  "controls": {
+    "ubs": "static_and_testing_pass; browser_pending",
+    "period": "static_and_testing_pass; browser_pending",
+    "indicator": "static_and_testing_pass; browser_pending",
+    "hidden_inputs": "3 expected Base UI inputs; visual computed-style check pending",
+    "trend_chart": "static_and_testing_pass; browser DOM/runtime pending",
+    "console_network": "not_run",
+    "webauditmcp": "not_run; no gate invented"
+  },
+  "overall_passed": false,
+  "blocking_findings": ["DASH-CB-001", "DASH-CB-002", "DASH-CB-003"],
+  "correction_applied": "",
+  "next_evidence_required": "Chromium/Playwright ou WebAuditMCP disponível; registrar console, requests, DOM client, computed styles, bounding boxes e resultado de cada seleção."
+}

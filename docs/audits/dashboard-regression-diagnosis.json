@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-09-08T01:58:10Z",
+  "audit_type": "dashboard-regression-diagnosis",
+  "url": "http://localhost:3000",
+  "scope": "UBS, período, indicador, limpar, cards, LineChart, ranking e EmptyState",
+  "spec_reference": "PRD/SPEC v1.3, especialmente RB-14 / regra 1B-Gráfico",
+  "environment": {
+    "server": {
+      "status": "up",
+      "http_status": 200,
+      "evidence": "curl http://localhost:3000"
+    },
+    "static_commands": {
+      "npx tsc --noEmit": {"passed": true, "exit_code": 0},
+      "npm run lint": {"passed": true, "exit_code": 0, "warnings": 0},
+      "npm test": {"passed": true, "exit_code": 0, "test_files": 7, "tests": 72},
+      "npm run build": {"passed": true, "exit_code": 0}
+    },
+    "interactive_limit": "Não há Playwright/Chromium instalado neste workspace; a validação dinâmica foi feita por DOM SSR/HTTP e pelos testes de interação Testing Library existentes. WebAuditMCP não está exposto como ferramenta nesta sessão."
+  },
+  "findings": [
+    {
+      "id": "DASH-REG-001",
+      "priority": "P1",
+      "status": "reproduced-by-code-and-DOM-contract",
+      "category": "visual_regression_mismatch",
+      "title": "Estado semafórico dos cards fica invisível para o usuário",
+      "steps": [
+        "Abrir http://localhost:3000.",
+        "Observar qualquer um dos quatro cards.",
+        "Procurar o texto do estado (Dentro ou acima da meta, Próximo da meta ou Abaixo da meta)."
+      ],
+      "expected": "Cada card comunica visualmente o estado por texto e ícone, além da cor, conforme PRD US-04, SPEC 9 e TASK-024/TASK-058.",
+      "observed": "O texto de status é renderizado em um div com classe sr-only; o usuário visual vê valor, meta e tendência, mas não o estado semafórico textual.",
+      "root_files": [
+        {"path": "src/components/dashboard/indicator-card.tsx", "lines": "87-90", "cause": "statusLabel está deliberadamente oculto com sr-only"},
+        {"path": "src/lib/constants.ts", "lines": "1-60", "cause": "cores/ícones existem, mas não compensam a ausência do texto visual"}
+      ],
+      "acceptance_impact": "Falha em US-04 e no requisito de estado comunicado por texto além de cor; não é corrigida pelos aria-labels porque a exigência é também apresentação visível.",
+      "atomic_fix_proposal": "Alterar somente indicator-card.tsx para renderizar statusLabel visível, preservando aria-hidden apenas no ícone e a geometria aprovada dos quatro cards; adicionar/ajustar teste visual/DOM para exigir os três rótulos.",
+      "correction_applied": ""
+    },
+    {
+      "id": "DASH-REG-002",
+      "priority": "P2",
+      "status": "passed",
+      "category": "behavioral_regression_check",
+      "title": "Regra 1B-Gráfico verificada e sem regressão nos testes atuais",
+      "steps": [
+        "Carregar o dashboard.",
+        "Verificar o gráfico inicial.",
+        "Selecionar Último trimestre.",
+        "Verificar o gráfico após interação.",
+        "Ativar uma combinação sem registros e usar Limpar filtros."
+      ],
+      "expected": "Inicial: 12 pontos; após período: 3 pontos e cartões/ranking também no trimestre; reset: cartões/ranking no último mês e gráfico novamente com 12 pontos.",
+      "observed": "Os 6 testes de dashboard passam, incluindo estado inicial de 12 meses, alteração para 3 pontos e reset do EmptyState para 12 pontos.",
+      "root_files": [
+        {"path": "src/components/dashboard/dashboard-client.tsx", "lines": "40-59, 105-116", "cause": "periodTouched separa janela inicial do gráfico e reset restaura false"},
+        {"path": "src/components/dashboard/dashboard-client.test.tsx", "lines": "42-142", "cause": "cobertura DOM da regra 1B-Gráfico"}
+      ],
+      "atomic_fix_proposal": "Nenhuma correção indicada; preservar a implementação e ampliar somente a validação E2E quando WebAudit/browser estiver disponível.",
+      "correction_applied": ""
+    },
+    {
+      "id": "DASH-REG-003",
+      "priority": "P1",
+      "status": "blocked",
+      "category": "audit_infrastructure_gap",
+      "title": "Auditoria WebAuditMCP obrigatória não pôde ser executada",
+      "steps": [
+        "Validar localhost:3000 via curl.",
+        "Tentar localizar Playwright/Chromium e ferramentas WebAuditMCP no ambiente.",
+        "Executar os gates estáticos disponíveis."
+      ],
+      "expected": "Executar audit_lighthouse, scan_axe, security_headers e, para release, responsive_audit/report_merge.",
+      "observed": "localhost responde 200 e expõe CSP, X-Content-Type-Options, Referrer-Policy e Permissions-Policy; porém não há Playwright/Chromium instalado e WebAuditMCP não está disponível nesta sessão, portanto scores Lighthouse/Axe/responsivos não foram produzidos.",
+      "root_files": [
+        {"path": "docs/TASKS.md", "lines": "643-662", "cause": "TASK-047/TASK-048 exigem WebAuditMCP e permanecem dependentes"},
+        {"path": "next.config.ts", "lines": "1-42", "cause": "headers foram observados via HTTP, mas não substituem a auditoria dinâmica"}
+      ],
+      "acceptance_impact": "Não há aprovação dinâmica de performance/acessibilidade/responsividade; tarefa deve permanecer rejeitada até a execução do WebAuditMCP.",
+      "atomic_fix_proposal": "Preparar somente a infraestrutura de auditoria (WebAuditMCP + browser), repetir os quatro comandos obrigatórios e anexar os resultados; não alterar src como parte deste diagnóstico.",
+      "correction_applied": ""
+    }
+  ],
+  "controls": {
+    "ubs": {"status": "passed", "evidence": "dashboard-client.test.tsx:73-85; ranking permanece com 15 linhas"},
+    "period": {"status": "passed", "evidence": "dashboard-client.test.tsx:87-105; trimestre produz 3 pontos"},
+    "indicator": {"status": "passed", "evidence": "dashboard-client.test.tsx:54-71; troca apenas série/meta/resumo"},
+    "clear": {"status": "passed", "evidence": "dashboard-client.test.tsx:107-142; reset restaura labels e 12 pontos"},
+    "cards": {"status": "failed", "evidence": "indicator-card.tsx:87-90; status visual oculto"},
+    "line_chart": {"status": "passed_static_and_dom", "evidence": "trend-chart.tsx:92-119; uma Line, ReferenceLine e testes de 12/3 pontos"},
+    "ranking": {"status": "passed", "evidence": "ranking-table.tsx:23-71; testes passam e 15 linhas preservadas"},
+    "empty_state": {"status": "passed", "evidence": "empty-state.tsx:9-27; teste de fixture sem registros e limpeza passa"}
+  },
+  "overall_passed": false,
+  "blocking_findings": ["DASH-REG-001", "DASH-REG-003"]
+}

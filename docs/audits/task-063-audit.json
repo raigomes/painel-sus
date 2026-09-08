@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-09-08T02:03:00Z",
+  "task_id": "TASK-063",
+  "audit_type": "independent-static-and-smoke",
+  "url": "http://localhost:3000/",
+  "device": "desktop",
+  "scope": "indicator-card status labels, three states, indicator/trend symbols, meta, 245px height, tests and repository gates",
+  "checks": {
+    "diagnosis_read": true,
+    "tasks_read_without_modification": true,
+    "status_labels_visible_in_component": true,
+    "three_status_labels": [
+      "Dentro ou acima da meta",
+      "Próximo da meta",
+      "Abaixo da meta"
+    ],
+    "red_below_target_visible": true,
+    "indicator_symbols_preserved": ["💉", "🤰", "❤️", "🩸"],
+    "meta_preserved": true,
+    "trend_icons_preserved": ["ArrowUp", "ArrowRight", "ArrowDown"],
+    "height_245px_preserved": true,
+    "real_visibility_assertions": true,
+    "targeted_test": {"passed": true, "tests": 13},
+    "full_suite": {"passed": true, "test_files": 7, "tests": 72},
+    "typescript": {"passed": true, "command": "npx tsc --noEmit"},
+    "lint": {"passed": true, "warnings": 0},
+    "build": {"passed": true},
+    "smoke_root": {"passed": true, "http_status": 200},
+    "diff_review": {"passed": true, "task_files_only": true}
+  },
+  "dynamic_web_audit": {
+    "audit_lighthouse": "deferred_to_TASK-046_048",
+    "scan_axe": "deferred_to_TASK-046_048",
+    "security_headers": "deferred_to_TASK-046_048",
+    "responsive_audit": "deferred_to_TASK-046_048",
+    "report_merge": "deferred_to_TASK-046_048",
+    "reason": "Não faz parte da acceptance declarada de TASK-063; gates WebAudit pertencem às TASKs 046–048 e já estão registrados como bloqueados ambientalmente."
+  },
+  "manual_http_headers": {
+    "observed": ["Content-Security-Policy", "X-Content-Type-Options", "Referrer-Policy", "Permissions-Policy"],
+    "note": "Inspeção HTTP não substitui WebAuditMCP."
+  },
+  "passed": true,
+  "verdict": "PASS",
+  "blocking_reasons": [],
+  "deferred_notes": ["Auditoria WebAudit não é critério de acceptance desta correção atômica; permanece deferred para os gates TASK-046–048."],
+  "failure_reference": "docs/failures/task-063-failure.json"
+}

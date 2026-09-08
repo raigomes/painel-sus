@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-09-08T01:58:10Z",
+  "agent_id": "coder",
+  "task_id": "dashboard-regression-diagnosis",
+  "error_category": "visual_regression_mismatch",
+  "severity": "blocking",
+  "file_path": "src/components/dashboard/indicator-card.tsx",
+  "line_number": 88,
+  "error_message": "O estado semafórico textual está oculto com sr-only; o card visual não exibe 'Dentro ou acima da meta', 'Próximo da meta' ou 'Abaixo da meta'.",
+  "code_snippet": "<div className={`sr-only flex items-center gap-1 text-sm font-medium ${STATUS_CLASSES[status].text}`}>",
+  "root_cause": "A implementação priorizou evitar desalinhamento geométrico, mas violou PRD/SPEC que exigem estado comunicado visualmente por texto e ícone, não apenas por cor/aria-label.",
+  "correction_applied": "",
+  "prevention_rule": "Todo estado semafórico deve possuir texto visível e ícone decorativo, além de nome acessível; sr-only não atende o requisito visual.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "evidence": "docs/audits/dashboard-regression-diagnosis.json#DASH-REG-001",
+  "additional_gate_blocker": {
+    "category": "webaudit_unavailable",
+    "severity": "blocking_for_final_approval",
+    "message": "localhost:3000 responde 200 e headers existem, mas WebAuditMCP/Playwright/Chromium não estão disponíveis; Lighthouse, axe e responsive_audit não foram executados.",
+    "evidence": "docs/audits/dashboard-regression-diagnosis.json#DASH-REG-003"
+  }
+}
