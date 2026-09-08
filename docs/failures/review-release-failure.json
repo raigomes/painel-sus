@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-09-08T01:05:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-048",
+  "error_category": "release_gate_blocked",
+  "severity": "blocking",
+  "file_path": "docs/audits/review-release.json",
+  "line_number": null,
+  "error_message": "Final release rejected because TASK-046 and TASK-047 are not proven PASS; required visual captures and WebAuditMCP scores are missing.",
+  "code_snippet": "",
+  "root_cause": "Upstream visual and dynamic audit evidence unavailable.",
+  "correction_applied": "",
+  "prevention_rule": "Release passed must be true only when every upstream gate is true and all budgets have numeric evidence.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false
+}

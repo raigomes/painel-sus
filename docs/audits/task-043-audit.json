@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-09-07T22:00:00Z",
+  "task_id": "TASK-043",
+  "audit_type": "smoke_http_and_static",
+  "source": "PRD/SPEC v1.3",
+  "server": "http://localhost:3000",
+  "checks": {
+    "dashboard": {
+      "route": "/",
+      "http_status": 200,
+      "response_time_seconds": 0.173599,
+      "four_indicator_cards": true,
+      "indicator_selector": true,
+      "line_chart": true,
+      "ranking_rows": 15,
+      "ranking_links": 15,
+      "ranking_note": true
+    },
+    "ubs_existing": {
+      "route": "/ubs/1",
+      "http_status": 200,
+      "response_time_seconds": 0.253555,
+      "profile": true,
+      "radar_chart": true,
+      "history_months": 12,
+      "breadcrumb": true
+    },
+    "ubs_missing": {
+      "route": "/ubs/999",
+      "http_status": 404,
+      "safe_not_found_message": true,
+      "dashboard_return_link": true
+    },
+    "indicators": {
+      "route": "/indicadores",
+      "http_status": 200,
+      "expandable_controls": true,
+      "route_remains_static_on_expansion": true,
+      "automated_component_tests": "3 passed"
+    },
+    "about": {
+      "route": "/sobre",
+      "http_status": 200,
+      "explanation": true,
+      "sources_cnes_esus_datasus": true,
+      "simulated_data_disclaimer": true
+    },
+    "ranking_preservation": {
+      "source": "DashboardClient implementation and existing tests",
+      "ranking_uses_all_ubs": true,
+      "ubs_filter_excluded_from_ranking": true,
+      "period_recomputes_dashboard_and_ranking": true
+    }
+  },
+  "static_gates": {
+    "typescript": { "command": "npx tsc --noEmit", "exit_code": 0 },
+    "lint": { "command": "npm run lint", "exit_code": 0, "warnings": 0 },
+    "tests": { "command": "npm test", "exit_code": 0, "tests": 72 },
+    "coverage": { "command": "npm run test:coverage", "exit_code": 0 },
+    "build": { "command": "npm run build", "exit_code": 0 }
+  },
+  "passed": true,
+  "limitations": ["WebAuditMCP was not available as an executable tool in this environment; this report is limited to HTTP smoke and static evidence."]
+}

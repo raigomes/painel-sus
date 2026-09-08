@@ -577,48 +577,50 @@
 
 ## Segurança e gates
 
-- [ ] **ID**: `TASK-041`
+- [x] **ID**: `TASK-041`
   - **Files**: `next.config.ts`
   - **Dependencies**: `TASK-031`, `TASK-036`, `TASK-039`, `TASK-040`
   - **Acceptance**:
-    - [ ] `headers()` aplica CSP a todas as rotas
-    - [ ] Headers incluem `X-Content-Type-Options`, `Referrer-Policy` e `Permissions-Policy`
-    - [ ] CSP permite somente origens necessárias ao aplicativo local e ao Next.js
-    - [ ] `npm run build` termina sem erros
+    - [x] `headers()` aplica CSP a todas as rotas
+    - [x] Headers incluem `X-Content-Type-Options`, `Referrer-Policy` e `Permissions-Policy`
+    - [x] CSP permite somente origens necessárias ao aplicativo local e ao Next.js
+    - [x] `npm run build` termina sem erros
 
-- [ ] **ID**: `TASK-042`
+- [x] **ID**: `TASK-042`
   - **Files**: `package.json`, `tsconfig.json`, `vitest.config.ts`
   - **Dependencies**: `TASK-005`, `TASK-011`, `TASK-024`, `TASK-027`, `TASK-030`, `TASK-038`, `TASK-041`
   - **Acceptance**:
-    - [ ] `npx tsc --noEmit` termina com código zero
-    - [ ] `npm run lint` termina com código zero e sem warnings
-    - [ ] `npm test` e `npm run test:coverage` terminam sem falhas
-    - [ ] `npm audit --json` não contém vulnerabilidade alta ou crítica com correção disponível
-    - [ ] `npm run build` termina com código zero
+    - [x] `npx tsc --noEmit` termina com código zero
+    - [x] `npm run lint` termina com código zero e sem warnings
+    - [x] `npm test` e `npm run test:coverage` terminam sem falhas
+    - [x] `npm audit --json` não contém vulnerabilidade alta ou crítica com correção disponível
+    - [x] `npm run build` termina com código zero
 
-- [ ] **ID**: `TASK-043`
+- [x] **ID**: `TASK-043`
   - **Files**: `src/app/page.tsx`, `src/app/ubs/[id]/page.tsx`, `src/app/indicadores/page.tsx`
   - **Dependencies**: `TASK-042`
   - **Acceptance**:
-    - [ ] `/` exibe quatro cards, seletor e LineChart, além do ranking completo
-    - [ ] Filtro de UBS preserva 15 UBS no ranking e período atualiza todo o dashboard
-    - [ ] `/ubs/1` exibe perfil, radar e 12 meses; `/ubs/999` exibe retorno seguro
-    - [ ] `/indicadores` expande detalhes sem mudar a rota
-    - [ ] `/sobre` exibe explicação, fontes e disclaimer
+    - [x] `/` exibe quatro cards, seletor e LineChart, além do ranking completo
+    - [x] Filtro de UBS preserva 15 UBS no ranking e período atualiza todo o dashboard
+    - [x] `/ubs/1` exibe perfil, radar e 12 meses; `/ubs/999` exibe retorno seguro
+    - [x] `/indicadores` expande detalhes sem mudar a rota
+    - [x] `/sobre` exibe explicação, fontes e disclaimer
+  - **Audit**: `docs/audits/task-043-audit.json`
 
-- [ ] **ID**: `TASK-044`
+- [x] **ID**: `TASK-044`
   - **Files**: `src/app/globals.css`, `src/app/layout.tsx`, `src/components/dashboard/dashboard-client.tsx`
   - **Dependencies**: `TASK-043`
   - **Acceptance**:
-    - [ ] 375×667 usa uma coluna e não corta horizontalmente a página
-    - [ ] 768×1024 usa no máximo duas colunas e gráficos ocupam a largura disponível
-    - [ ] 1280×800 e 1920×1080 mostram quatro cards na mesma linha com largura legível
-    - [ ] Tab percorre controles e links com foco visível e sem foco preso
-    - [ ] Conteúdo principal aparece em menos de 3 segundos sob simulação 3G
+    - [x] 375×667 usa uma coluna e não corta horizontalmente a página
+    - [x] 768×1024 usa no máximo duas colunas e gráficos ocupam a largura disponível
+    - [x] 1280×800 e 1920×1080 mostram quatro cards na mesma linha com largura legível
+    - [x] Tab percorre controles e links com foco visível e sem foco preso
+    - [x] Conteúdo principal aparece em menos de 3 segundos sob simulação 3G
+  - **Audit**: `docs/audits/task-044-audit.json`
 
 ## Gate independente do Reviewer
 
-- [ ] **ID**: `TASK-045`
+- [x] **ID**: `TASK-045`
   - **Files**: `docs/audits/review-static.json`, `docs/failures/review-static-failure.json`, `docs/TASKS.md`
   - **Dependencies**: `TASK-044`
   - **Acceptance**:
@@ -629,6 +631,7 @@
 
 - [ ] **ID**: `TASK-046`
   - **Files**: `docs/audits/review-visual.json`, `docs/failures/review-visual-failure.json`, `docs/TASKS.md`
+  - **Status**: REJEITADA — evidência pixel-level ausente; ver `docs/failures/review-visual-failure.json`.
   - **Dependencies**: `TASK-045`
   - **Acceptance**:
     - [ ] Reviewer compara as quatro rotas com `.pen` e Design System alinhados à SPEC v1.2
@@ -639,6 +642,7 @@
 
 - [ ] **ID**: `TASK-047`
   - **Files**: `docs/audits/review-web.json`, `docs/failures/review-web-failure.json`, `docs/TASKS.md`
+  - **Status**: REJEITADA — WebAuditMCP indisponível; ver `docs/failures/review-web-failure.json`.
   - **Dependencies**: `TASK-046`
   - **Acceptance**:
     - [ ] Reviewer confirma `http://localhost:3000` antes das auditorias
@@ -649,6 +653,7 @@
 
 - [ ] **ID**: `TASK-048`
   - **Files**: `docs/audits/review-release.json`, `docs/failures/review-release-failure.json`, `docs/TASKS.md`
+  - **Status**: REJEITADA — gates upstream não comprovados; ver `docs/failures/review-release-failure.json`.
   - **Dependencies**: `TASK-047`
   - **Acceptance**:
     - [ ] Relatório consolida auditorias estática, visual, responsiva, Lighthouse, axe e segurança

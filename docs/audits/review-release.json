@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-09-08T01:05:00Z",
+  "task_id": "TASK-048",
+  "audit_type": "release",
+  "url": "http://localhost:3000",
+  "inputs": ["docs/audits/review-static.json", "docs/audits/review-visual.json", "docs/audits/review-web.json", "docs/audits/task-044-audit.json"],
+  "budgets": {"accessibility": 95, "performance": 90, "security": 85},
+  "responsive_viewports": ["375x667", "768x1024", "1920x1080"],
+  "gate_results": {"TASK-045": true, "TASK-046": false, "TASK-047": false},
+  "scores": {"accessibility": null, "performance": null, "security": null},
+  "passed": false,
+  "verdict": "REJECTED",
+  "reason": "Release cannot be approved while pixel-level visual evidence and mandatory WebAuditMCP Lighthouse/axe/security scores are unavailable."
+}

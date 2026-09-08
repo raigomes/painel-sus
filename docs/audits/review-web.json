@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-09-08T01:05:00Z",
+  "task_id": "TASK-047",
+  "audit_type": "web",
+  "url": "http://localhost:3000",
+  "server_check": {"reachable": true, "root_status": 200, "routes": {"/": 200, "/ubs/1": 200, "/ubs/999": 404, "/indicadores": 200, "/sobre": 200}},
+  "manual_security_headers": {
+    "Content-Security-Policy": "present; default-src self; object-src none; base-uri self; form-action self; frame-ancestors self",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "present"
+  },
+  "static_security_scan": {"eval": false, "new_Function": false, "dangerouslySetInnerHTML": false, "inline_script_tag": false, "inline_event_handlers": false},
+  "web_audit_mcp": {"audit_lighthouse": "unavailable", "scan_axe": "unavailable", "security_headers": "unavailable"},
+  "scores": {"performance": null, "accessibility": null, "security": null},
+  "passed": false,
+  "blocking_limitation": "Required WebAuditMCP Lighthouse, axe and security_headers scores could not be executed in this session; threshold compliance is therefore unproven."
+}

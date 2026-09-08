@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-09-08T01:05:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-047",
+  "error_category": "security_header_missing",
+  "severity": "blocking",
+  "file_path": "next.config.ts",
+  "line_number": null,
+  "error_message": "Manual HTTP inspection found CSP and required headers, and static scanning found no eval/inline handlers; however mandatory WebAuditMCP Lighthouse, axe and security_headers execution was unavailable, so performance, WCAG and security scores cannot be gated.",
+  "code_snippet": "",
+  "root_cause": "WebAuditMCP tools were not available in the execution session.",
+  "correction_applied": "",
+  "prevention_rule": "Do not approve the web gate without saved Lighthouse, axe and security_headers results and threshold scores.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false
+}

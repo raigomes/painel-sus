@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-09-07T21:37:40Z",
+  "agent_id": "reviewer",
+  "task_id": "019",
+  "error_category": "security_header_violation",
+  "severity": "blocking",
+  "file_path": "next.config.ts",
+  "line_number": 6,
+  "error_message": "CSP style-src contains 'unsafe-inline'. Task requires CSP to NOT use unsafe-eval or unsafe-inline.",
+  "code_snippet": "\"style-src 'self' 'unsafe-inline'\",",
+  "root_cause": "The style-src directive was configured with 'unsafe-inline' to support Tailwind CSS inline styles. However, the task acceptance criteria explicitly states that CSP must not use unsafe-eval or unsafe-inline.",
+  "correction_applied": "",
+  "prevention_rule": "When implementing CSP, audit every directive against the blocklist (unsafe-eval, unsafe-inline). Tailwind CSS v4+ with PostCSS does not require 'unsafe-inline' in style-src when CSS is extracted to external stylesheets during build.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false,
+  "details": {
+    "current_csp_style_src": "style-src 'self' 'unsafe-inline'",
+    "required_by_task": "CSP must NOT use unsafe-eval/unsafe-inline",
+    "suggested_fix": "Remove 'unsafe-inline' from style-src. Change to: style-src 'self'. Next.js 16 + Tailwind v4 extracts CSS to external files, so 'unsafe-inline' is unnecessary."
+  }
+}

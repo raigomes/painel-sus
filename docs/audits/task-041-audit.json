@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-09-08T00:49:10Z",
+  "audit_type": "security_headers",
+  "task_id": "TASK-041",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "scores": {
+    "typescript": 100,
+    "lint": 100,
+    "test_suite": 100,
+    "coverage_command": 100,
+    "build": 100,
+    "security_headers": 100
+  },
+  "static_validation": {
+    "tsc_noemit": { "status": "PASS", "errors": 0 },
+    "lint": { "status": "PASS", "errors": 0, "warnings": 0 },
+    "test_suite": { "status": "PASS", "test_files": 7, "tests": 72, "passed": 72, "failed": 0 },
+    "coverage": { "status": "PASS", "command": "npm run test:coverage", "overall_statements_percent": 55.6 },
+    "build": { "status": "PASS", "next_version": "16.3.2", "routes_generated": 5 }
+  },
+  "security_headers": {
+    "source_file": "next.config.ts",
+    "route_pattern": "/(.*)",
+    "routes_verified": ["/", "/indicadores", "/sobre", "/ubs/test-id"],
+    "content_security_policy": {
+      "present": true,
+      "contains_unsafe_eval": false,
+      "contains_unsafe_inline": false,
+      "value": "default-src 'self'; script-src 'self' http://localhost:3000; style-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' http://localhost:3000 ws://localhost:3000; frame-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; manifest-src 'self'"
+    },
+    "x_content_type_options": { "present": true, "value": "nosniff" },
+    "referrer_policy": { "present": true, "value": "strict-origin-when-cross-origin" },
+    "permissions_policy": { "present": true, "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()" }
+  },
+  "issues": [],
+  "passed": true,
+  "verdict": "PASS",
+  "notes": [
+    "No source or response CSP contains unsafe-eval or unsafe-inline.",
+    "Required security headers were observed on successful and 404 responses.",
+    "docs/TASKS.md was intentionally not modified."
+  ]
+}

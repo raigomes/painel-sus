@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-09-08T01:05:00Z",
+  "agent_id": "reviewer",
+  "task_id": "TASK-046",
+  "error_category": "visual_regression_mismatch",
+  "severity": "blocking",
+  "file_path": "docs/layout/painel-sus.pen",
+  "line_number": null,
+  "error_message": "Pixel-level comparison of /, /ubs/1, /indicadores and /sobre against pg1/pg2/pg3/pg4 at 375, 768, 1280 and 1920 px could not be completed because the Pencil renderer/browser viewport audit tool was unavailable.",
+  "code_snippet": "",
+  "root_cause": "Required visual audit tooling was not exposed in the session.",
+  "correction_applied": "",
+  "prevention_rule": "Run a reproducible renderer or Playwright capture for every required route and viewport before approval.",
+  "recurrence_count": 1,
+  "auto_update_prompt": false
+}

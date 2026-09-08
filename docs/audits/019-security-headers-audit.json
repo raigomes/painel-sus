@@ -1,0 +1,125 @@
+{
+  "timestamp": "2026-09-07T21:37:40Z",
+  "audit_type": "security_headers",
+  "url": "http://localhost:3000",
+  "device": "desktop",
+  "task_id": "019",
+  "route_pattern_source": "/(.*)",
+  "scores": {
+    "headers_coverage": 100,
+    "csp_directives_present": 100,
+    "csp_safety": 0,
+    "overall": "FAIL"
+  },
+  "static_analysis": {
+    "tsc_noemit": { "status": "PASS", "errors": 0 },
+    "lint": { "status": "PASS", "errors": 0, "warnings": 0 },
+    "build": { "status": "PASS", "routes_generated": 5 },
+    "test_suite": { "status": "PASS", "files": 7, "tests": 72, "passed": 72, "failed": 0 }
+  },
+  "csp_analysis": {
+    "source_code": {
+      "default-src": "'self'",
+      "script-src": "'self' http://localhost:3000",
+      "style-src": "'self' 'unsafe-inline'",
+      "img-src": "'self' data: blob:",
+      "font-src": "'self' data:",
+      "connect-src": "'self' http://localhost:3000 ws://localhost:3000",
+      "frame-src": "'self' blob:",
+      "worker-src": "'self' blob:",
+      "object-src": "'none'",
+      "base-uri": "'self'",
+      "form-action": "'self'",
+      "frame-ancestors": "'self'",
+      "manifest-src": "'self'"
+    },
+    "required_directives": {
+      "script-src": { "present": true, "value": "'self' http://localhost:3000" },
+      "style-src": { "present": true, "value": "'self' 'unsafe-inline'", "compliant": false },
+      "img-src_data": { "present": true, "value": "'self' data: blob:" },
+      "frame-src_blob": { "present": true, "value": "'self' blob:" },
+      "worker-src_blob": { "present": true, "value": "'self' blob:" }
+    },
+    "safety_check": {
+      "unsafe_eval": { "found": false },
+      "unsafe_inline": { "found": true, "directive": "style-src", "compliant": false }
+    }
+  },
+  "security_headers_analysis": {
+    "content_security_policy": { "present": true, "value_matches_config": true },
+    "x_content_type_options": { "present": true, "value": "nosniff" },
+    "referrer_policy": { "present": true, "value": "strict-origin-when-cross-origin" },
+    "permissions_policy": { "present": true, "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()" }
+  },
+  "route_verification": [
+    {
+      "route": "/",
+      "status": 200,
+      "csp": true,
+      "x_content_type_options": true,
+      "referrer_policy": true,
+      "permissions_policy": true,
+      "all_present": true
+    },
+    {
+      "route": "/indicadores",
+      "status": 200,
+      "csp": true,
+      "x_content_type_options": true,
+      "referrer_policy": true,
+      "permissions_policy": true,
+      "all_present": true
+    },
+    {
+      "route": "/sobre",
+      "status": 200,
+      "csp": true,
+      "x_content_type_options": true,
+      "referrer_policy": true,
+      "permissions_policy": true,
+      "all_present": true
+    },
+    {
+      "route": "/ubs/test-id",
+      "status": 404,
+      "csp": true,
+      "x_content_type_options": true,
+      "referrer_policy": true,
+      "permissions_policy": true,
+      "all_present": true
+    }
+  ],
+  "applied_to_all_routes": true,
+  "csp_applied_on_error_pages": true,
+  "verdict": "FAIL",
+  "blocking_issues": [
+    {
+      "issue": "CSP style-src contains 'unsafe-inline'",
+      "severity": "blocking",
+      "file": "next.config.ts",
+      "line": 6,
+      "directive": "style-src 'self' 'unsafe-inline'",
+      "expected": "style-src 'self'",
+      "failure_report": "docs/failures/019-security-headers-csp-unsafe-inline.json"
+    }
+  ],
+  "passed_checks": [
+    "TypeScript compilation (tsc --noEmit) passed",
+    "ESLint passed with 0 errors and 0 warnings",
+    "Production build compiled successfully",
+    "72/72 tests passed",
+    "CSP applied via source pattern /(.*) to all routes",
+    "Headers verified on 4 routes (including 404 page)",
+    "X-Content-Type-Options: nosniff present",
+    "Referrer-Policy: strict-origin-when-cross-origin present",
+    "Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=() present",
+    "script-src does NOT contain unsafe-eval or unsafe-inline",
+    "img-src includes data: and blob:",
+    "frame-src includes blob:",
+    "worker-src includes blob:",
+    "object-src: 'none'",
+    "base-uri: 'self'",
+    "form-action: 'self'",
+    "frame-ancestors: 'self'"
+  ]
+}

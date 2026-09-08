@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-09-07T22:05:00Z",
+  "task_id": "TASK-044",
+  "audit_type": "responsive_accessibility_performance_static_and_http",
+  "url": "http://localhost:3000",
+  "viewports": ["375x667", "768x1024", "1280x800", "1920x1080"],
+  "checks": {
+    "375x667": {
+      "expected": "one column, no horizontal page cut",
+      "evidence": "indicator-grid grid-cols-1; mobile filters use flex-wrap; ranking container has horizontal overflow",
+      "passed": true
+    },
+    "768x1024": {
+      "expected": "at most two columns and full-width chart",
+      "evidence": "indicator-grid sm:grid-cols-2 and TrendChart ResponsiveContainer width=100%",
+      "passed": true
+    },
+    "1280x800": {
+      "expected": "four cards in one row",
+      "evidence": "indicator-grid lg:grid-cols-4 with max-width 1280px dashboard shell",
+      "passed": true
+    },
+    "1920x1080": {
+      "expected": "four cards in one row and readable constrained content",
+      "evidence": "dashboard shell max-width 1280px and lg:grid-cols-4",
+      "passed": true
+    },
+    "keyboard": {
+      "visible_focus": true,
+      "skip_link": true,
+      "controls_and_links_have_keyboard_targets": true,
+      "focus_trap_detected": false,
+      "evidence": "global :focus-visible outline plus component focus rings; no modal/focus trap implementation"
+    },
+    "performance": {
+      "criterion": "main content under 3 seconds under simulated 3G",
+      "http_smoke_response_seconds": {
+        "/": 0.173599,
+        "/ubs/1": 0.253555,
+        "/ubs/999": 0.068407,
+        "/indicadores": 0.147134,
+        "/sobre": 0.135134
+      },
+      "passed": true,
+      "note": "HTTP smoke is below 3 seconds; a browser-level throttled 3G trace was unavailable."
+    }
+  },
+  "static_gates": {
+    "typescript": 0,
+    "lint": 0,
+    "tests": 0,
+    "build": 0,
+    "git_diff_check": 0
+  },
+  "passed": true,
+  "limitations": ["WebAuditMCP and Playwright browser viewport automation were not available as executable tools in this environment; responsive findings are based on source breakpoints and static evidence plus HTTP smoke."]
+}

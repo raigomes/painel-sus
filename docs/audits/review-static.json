@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-09-08T01:05:00Z",
+  "task_id": "TASK-045",
+  "audit_type": "static",
+  "environment": {"node": "v24.16.0", "npm": "11.16.0", "next": "16.3.2", "typescript": "5.9.3", "eslint": "9.39.5", "vitest": "3.2.7"},
+  "commands": {
+    "npx tsc --noEmit": {"exit_code": 0},
+    "npm run lint": {"exit_code": 0, "warnings": 0},
+    "npm test -- --run": {"exit_code": 0, "test_files": 7, "tests": 72},
+    "npm run test:coverage": {"exit_code": 0, "overall_statements_percent": 55.6},
+    "npm run build": {"exit_code": 0, "routes": ["/", "/indicadores", "/sobre", "/ubs/[id]"]},
+    "npm install --no-audit --no-fund": {"exit_code": 0, "eresolve": false, "warnings": ["allow-scripts warning for esbuild and unrs-resolver"]},
+    "npm audit --json": {"exit_code": 0, "vulnerabilities": {"info": 0, "low": 0, "moderate": 0, "high": 0, "critical": 0}},
+    "git diff --check": {"exit_code": 0}
+  },
+  "passed": true,
+  "limitations": ["No WebAuditMCP score is part of this static gate; dynamic evidence is recorded separately."]
+}
